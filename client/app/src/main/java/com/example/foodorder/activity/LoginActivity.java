@@ -1,5 +1,7 @@
 package com.example.foodorder.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -55,10 +57,22 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công! Token: " + user.getToken(), Toast.LENGTH_SHORT).show();
-                    // TODO: chuyển màn hình khác hoặc lưu token
+                    String token = user.getToken();
+
+                    // Lưu token vào SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("token", token);
+                    editor.apply(); // lưu không đồng bộ
+
+                    // Chuyển sang màn hình FoodActivity
+                    Intent intent = new Intent(LoginActivity.this, FoodActivity.class);
+                    startActivity(intent);
+                    finish(); // đóng LoginActivity
+
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: Sai username hoặc password", Toast.LENGTH_SHORT).show();
                 }
