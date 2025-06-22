@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple">#8692f7</color>
+    <color name="facebook_blue">#3b5998</color>
+    <color name="dark_grayish_blue">#494950</color>
 </resources>
