@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.foodorder.R;
 import com.example.foodorder.network.LoginService;
 import com.example.foodorder.network.ApiClient;
-import com.example.foodorder.network.ResetPasswordService;
-import com.example.foodorder.requests.ResetPasswordRequest;
+//import com.example.foodorder.network.ResetPasswordService;
+//import com.example.foodorder.requests.ResetPasswordRequest;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +27,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private Button btnReset;
     private TextView backToLogin;
 
-    private ResetPasswordService resetPasswordService; // Retrofit service
+//    private ResetPasswordService resetPasswordService; // Retrofit service
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         backToLogin = findViewById(R.id.backToLogin);
 
         // Khởi tạo Retrofit service
-        resetPasswordService = ApiClient.getClient().create(ResetPasswordServicet.class);
+//        resetPasswordService = ApiClient.getClient().create(ResetPasswordServicet.class);
 
         // Xử lý nút reset
         btnReset.setOnClickListener(v -> {
@@ -68,24 +68,24 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void resetPassword(String email) {
-        ResetPasswordRequest resetRequest = new ResetPasswordRequest(email);
-        Call<Void> call = loginService.resetPassword(resetRequest);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(ForgotPasswordActivity.this, "Email đặt lại mật khẩu đã được gửi!", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(ForgotPasswordActivity.this, "Không thể gửi email. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(ForgotPasswordActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        ResetPasswordRequest resetRequest = new ResetPasswordRequest(email);
+//        Call<Void> call = loginService.resetPassword(resetRequest);
+//
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                if (response.isSuccessful()) {
+//                    Toast.makeText(ForgotPasswordActivity.this, "Email đặt lại mật khẩu đã được gửi!", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                } else {
+//                    Toast.makeText(ForgotPasswordActivity.this, "Không thể gửi email. Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Toast.makeText(ForgotPasswordActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }
