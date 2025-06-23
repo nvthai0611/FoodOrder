@@ -24,5 +24,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         });
+
+        // Xử lý nút chuyển sang màn Home
+        Button btnGoToHome = findViewById(R.id.btnGoToHome);
+        btnGoToHome.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        });
     }
 }
