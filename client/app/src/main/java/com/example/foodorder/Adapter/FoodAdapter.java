@@ -1,6 +1,7 @@
 package com.example.foodorder.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodorder.R;
+import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.activity.HomeActivity;
+import com.example.foodorder.activity.MainActivity;
 import com.example.foodorder.models.Food;
 
 import java.util.List;
@@ -62,6 +65,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         for (int i = 0; i < 5; i++) {
             holder.stars[i].setVisibility(i < food.getRating() ? View.VISIBLE : View.INVISIBLE);
         }
+       holder.itemView.setOnClickListener(v -> {
+           Context context = v.getContext();
+           Intent intent = new Intent(context, FoodActivity.class);
+
+           // Truyền dữ liệu nếu cần
+           intent.putExtra("name", food.getName());
+           intent.putExtra("description", food.getDescription());
+           intent.putExtra("imageResId", food.getImageResId());
+           intent.putExtra("price", food.getPrice());
+           intent.putExtra("rating", food.getRating());
+
+           context.startActivity(intent);
+        });
     }
 
     @Override
