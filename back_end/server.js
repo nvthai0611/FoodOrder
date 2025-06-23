@@ -14,7 +14,7 @@ app.use(
     extended: true,
   })
 );
-// app.use("/", router);
+app.use("/", router);
 
 app.get('/', (req, res) => {
   res.json({
@@ -32,7 +32,7 @@ const users = [
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   console.log(req.body);
-  
+
   // Kiểm tra dữ liệu đầu vào
   if (!username || !password) {
     return res.status(400).json({ message: 'Username và password không được để trống' });

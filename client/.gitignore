@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/java/com.example.foodorder/activity/network/ApiClient
