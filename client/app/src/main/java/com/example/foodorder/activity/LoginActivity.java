@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply(); // lưu không đồng bộ
 
                     // Chuyển sang màn hình FoodActivity
-                    Intent intent = new Intent(LoginActivity.this, FoodActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish(); // đóng LoginActivity
 

@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const router = require("./routers/api");
+const apiRoutes = require("./routers/api");
+
+
 app.use(
   cors({
     origin: "*",
@@ -14,7 +16,11 @@ app.use(
     extended: true,
   })
 );
-app.use("/", router);
+
+
+app.use("/", apiRoutes);
+
+// app.use("/", router);
 
 app.get('/', (req, res) => {
   res.json({

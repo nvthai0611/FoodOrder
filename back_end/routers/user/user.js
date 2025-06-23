@@ -4,8 +4,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 const Food = require("../../models/Food");
+const data = require('../../data'); // import danh sách users từ data.js
+
 
 const JWT_SECRET = "your_jwt_secret_key";
+
 router.get("/login/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -42,5 +45,41 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+router.get('/', async (req, res) => {
+  try {
+    res.send({ message: 'Chào user' });
+  } catch (error) {
+    res.send({ error: error.message });
+  }
+});
+
+// POST /reset-password
+router.post('/reset-password', (req, res) => {
+  console.log(data);
+
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email không được để trống' });
+  }
+
+  // Tìm user theo email
+  const user = data.users.find(u => u.email === email);
+
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'Email không tồn tại trong hệ thống' });
+  }
+
+  // Tạo mật khẩu mới (giả lập)
+  const newPassword = Math.random().toString(36).slice(-8);
+  user.password = newPassword; // cập nhật password mới trong RAM
+
+  // Trả về client (app Android) để hiển thị mật khẩu mới
+  return res.json({
+    success: true,
+    message: 'Đã đặt lại mật khẩu mới',
+    newPassword: newPassword
+  });
+});
 
 module.exports = router;

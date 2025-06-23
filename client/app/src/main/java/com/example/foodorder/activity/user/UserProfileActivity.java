@@ -45,7 +45,6 @@ public class UserProfileActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
 
         btn_changePass = findViewById(R.id.btn_changePass);
-        btn_change = findViewById(R.id.btn_profile);
 
         userService = ApiClient.getClient().create(UserService.class);
         getUserProfile("1");
