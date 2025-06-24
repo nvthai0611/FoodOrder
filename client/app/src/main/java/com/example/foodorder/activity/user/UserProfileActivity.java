@@ -3,6 +3,7 @@ package com.example.foodorder.activity.user;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,7 +46,13 @@ public class UserProfileActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
 
         btn_changePass = findViewById(R.id.btn_changePass);
-
+        btn_changePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserProfileActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
+            }
+        });
         userService = ApiClient.getClient().create(UserService.class);
         getUserProfile("1");
     }

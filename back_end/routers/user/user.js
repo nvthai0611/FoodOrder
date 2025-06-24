@@ -32,7 +32,7 @@ router.get("/login/:id", async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const users = [
-      { id: 1, username: 'admin', password: '123456', token: 'token_admin_abc123' },
+      { id: 1, username: 'admin', password: '123456', token: 'token_admin_abc123', name: "hahaha", email: "asdasdasd@gmail.com", phone: "123123123" },
       { id: 2, username: 'user1', password: 'password1', token: 'token_user1_xyz456' }
     ];
     const id = req.params.id;
