@@ -2,9 +2,10 @@
 <resources>
     <string name="register_tile"><b>Register</b></string>
     <string name="user_email">Email</string>
-    <string name="facebook_register">Continue with Facebook</string>
-    <string name="google_register">Continue with Google</string>
+    <string name="facebook_register">Sign up with Facebook</string>
+    <string name="google_register">Sign up with Google</string>
     <string name="already_register"><b>Already have an account?</b> <u>Sign in here</u></string>
     <string name="tos">By signing up you agree to ours Terms Conditions and Privacy Policy</string>
     <string name="confirm_register"><b>Register</b></string>
+    <string name="confirm_password">Confirm password</string>
 </resources>
