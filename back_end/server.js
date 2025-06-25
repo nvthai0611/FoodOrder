@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const router = require("./routers/api");
+const apiRoutes = require("./routers/api");
+
+
 app.use(
   cors({
     origin: "*",
@@ -14,6 +16,10 @@ app.use(
     extended: true,
   })
 );
+
+
+app.use("/", apiRoutes);
+
 // app.use("/", router);
 
 app.get('/', (req, res) => {
@@ -32,7 +38,7 @@ const users = [
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   console.log(req.body);
-  
+
   // Kiểm tra dữ liệu đầu vào
   if (!username || !password) {
     return res.status(400).json({ message: 'Username và password không được để trống' });
