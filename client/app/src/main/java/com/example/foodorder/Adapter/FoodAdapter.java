@@ -14,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.activity.HomeActivity;
-import com.example.foodorder.activity.MainActivity;
 import com.example.foodorder.models.Food;
 
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
-    private List<HomeActivity.FoodDemo> foodList;
+    private List<Food> foodList;
     private Context context;
 
-    public FoodAdapter(Context context, List<HomeActivity.FoodDemo> foodList) {
+    public FoodAdapter(Context context, List<Food> foodList) {
         this.context = context;
         this.foodList = foodList;
     }
@@ -56,27 +55,27 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        HomeActivity.FoodDemo food = foodList.get(position);
-        holder.ivFood.setImageResource(food.getImageResId());
+        Food food = foodList.get(position);
+        holder.ivFood.setImageResource(R.drawable.sample_food);
         holder.tvName.setText(food.getName());
         holder.tvDesc.setText(food.getDescription());
         holder.tvPrice.setText("$" + food.getPrice());
 
         for (int i = 0; i < 5; i++) {
-            holder.stars[i].setVisibility(i < food.getRating() ? View.VISIBLE : View.INVISIBLE);
+            holder.stars[i].setVisibility(View.VISIBLE);
         }
-       holder.itemView.setOnClickListener(v -> {
-           Context context = v.getContext();
-           Intent intent = new Intent(context, FoodActivity.class);
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, FoodActivity.class);
 
-           // Truyền dữ liệu nếu cần
-           intent.putExtra("name", food.getName());
-           intent.putExtra("description", food.getDescription());
-           intent.putExtra("imageResId", food.getImageResId());
-           intent.putExtra("price", food.getPrice());
-           intent.putExtra("rating", food.getRating());
+            // Truyền dữ liệu nếu cần
+            intent.putExtra("name", food.getName());
+            intent.putExtra("description", food.getDescription());
+//            intent.putExtra("imageResId", food.getImageResId());
+//            intent.putExtra("price", food.getPrice());
+//            intent.putExtra("rating", food.getRating());
 
-           context.startActivity(intent);
+            context.startActivity(intent);
         });
     }
 
