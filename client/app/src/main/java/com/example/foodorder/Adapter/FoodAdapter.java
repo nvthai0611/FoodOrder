@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.activity.HomeActivity;
@@ -56,7 +57,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         Food food = foodList.get(position);
-        holder.ivFood.setImageResource(R.drawable.sample_food);
+        Glide.with(holder.itemView.getContext())
+                .load(food.getImageUrl()) // URL ảnh từ model
+                .placeholder(R.drawable.sample_food) // ảnh tạm thời
+                .error(R.drawable.sample_food)       // nếu lỗi
+                .into(holder.ivFood);
         holder.tvName.setText(food.getName());
         holder.tvDesc.setText(food.getDescription());
         holder.tvPrice.setText("$" + food.getPrice());
