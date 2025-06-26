@@ -1,6 +1,7 @@
 package com.example.foodorder.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -18,6 +19,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+
+        // Kiểm tra SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String uId = sharedPreferences.getString("uId", null);
+        String uName = sharedPreferences.getString("uName", null);
+
+        if (uId != null && uName != null) {
+            // Nếu đã đăng nhập trước đó thì vào Home luôn
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish(); // đóng MainActivity
+            return;
+        }
+
         // Xử lý nút chuyển sang màn Login
         Button btnGoToLogin = findViewById(R.id.btnGoToLogin);
         btnGoToLogin.setOnClickListener(v -> {

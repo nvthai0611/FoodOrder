@@ -64,7 +64,7 @@ router.post('/reset-password', (req, res) => {
   }
 
   // Tìm user theo email
-  const user = data.users.find(u => u.email === email);
+  const user = User.find({email: email});
 
   if (!user) {
     return res.status(404).json({ success: false, message: 'Email không tồn tại trong hệ thống' });

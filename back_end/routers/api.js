@@ -3,6 +3,9 @@ const router = express.Router();
 
 // routers
 
+// auth
+router.use("/auth", require("./auth/auth.router"));
+
 // user
 router.use("/user", require("./user/user"));
 

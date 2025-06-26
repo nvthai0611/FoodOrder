@@ -9,6 +9,6 @@ import retrofit2.http.POST;
 
 public interface LoginService {
     // API login POST, gửi username/password dạng JSON
-    @POST("login")
+    @POST("/auth/login")
     Call<User> loginUser(@Body LoginRequest loginRequest);
 }
