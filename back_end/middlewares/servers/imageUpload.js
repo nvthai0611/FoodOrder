@@ -12,7 +12,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: ["jpg", "png"],
   params: {
-    folder: "PRM_FoodOrder",
+    folder: "Food",
   },
 });
 const uploadCloud = multer({ storage });

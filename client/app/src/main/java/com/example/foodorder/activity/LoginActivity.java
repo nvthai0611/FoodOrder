@@ -59,13 +59,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
-                    String token = user.getToken();
-
+                    String uId = String.valueOf(user.getId());
+                    String uName = user.getName();
                     // Lưu token vào SharedPreferences
                     SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("token", token);
-                    editor.apply(); // lưu không đồng bộ
+                    editor.putString("uId", uId);
+                    editor.putString("uName", uName);
+                    editor.apply();  // lưu không đồng bộ
 
                     // Chuyển sang màn hình FoodActivity
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
