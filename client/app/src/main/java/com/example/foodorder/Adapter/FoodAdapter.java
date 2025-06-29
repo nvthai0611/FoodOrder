@@ -57,28 +57,35 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         Food food = foodList.get(position);
+
+        // Load image bằng Glide
         Glide.with(holder.itemView.getContext())
-                .load(food.getImageUrl()) // URL ảnh từ model
-                .placeholder(R.drawable.sample_food) // ảnh tạm thời
-                .error(R.drawable.sample_food)       // nếu lỗi
+                .load(food.getImageUrl())
+                .placeholder(R.drawable.sample_food)
+                .error(R.drawable.sample_food)
                 .into(holder.ivFood);
+
         holder.tvName.setText(food.getName());
         holder.tvDesc.setText(food.getDescription());
-        holder.tvPrice.setText("$" + food.getPrice());
+        holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
 
+        // Hiển thị số sao (tối đa 5)
+        int rating = food.getRating();
         for (int i = 0; i < 5; i++) {
-            holder.stars[i].setVisibility(View.VISIBLE);
+            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.VISIBLE);
         }
+
+        // Gán sự kiện click để chuyển sang FoodActivity
         holder.itemView.setOnClickListener(v -> {
             Context context = v.getContext();
             Intent intent = new Intent(context, FoodActivity.class);
 
-            // Truyền dữ liệu nếu cần
+            // Truyền dữ liệu qua intent
             intent.putExtra("name", food.getName());
             intent.putExtra("description", food.getDescription());
-//            intent.putExtra("imageResId", food.getImageResId());
-//            intent.putExtra("price", food.getPrice());
-//            intent.putExtra("rating", food.getRating());
+            intent.putExtra("imageUrl", food.getImageUrl());
+            intent.putExtra("price", (float) food.getPrice());
+            intent.putExtra("rating", food.getRating());
 
             context.startActivity(intent);
         });
