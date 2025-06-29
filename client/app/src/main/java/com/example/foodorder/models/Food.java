@@ -11,9 +11,10 @@ public class Food {
     private boolean isAvailable;
     private String createdAt;
 
+    private int Rating; // Thêm trường Rating
     public Food() {}
 
-    public Food(int id, String name, String description, String imageUrl, String category, double price, boolean isAvailable, String createdAt) {
+    public Food(int id, String name, String description, String imageUrl, String category, double price, boolean isAvailable, String createdAt, int Rating) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,6 +23,7 @@ public class Food {
         this.price = price;
         this.isAvailable = isAvailable;
         this.createdAt = createdAt;
+        this.Rating = 0; // Khởi tạo Rating mặc định là 0
     }
 
     // Getters và Setters
@@ -89,6 +91,10 @@ public class Food {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getRating() {
+        return Rating;
     }
 }
 

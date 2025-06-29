@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String uId = sharedPreferences.getString("uId", null);
         String uName = sharedPreferences.getString("uName", null);
-
-        if (uId != null && uName != null) {
+        String uEmail = sharedPreferences.getString("uEmail", null);
+        if (uId != null && uName != null && uEmail != null) {
             // Nếu đã đăng nhập trước đó thì vào Home luôn
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);

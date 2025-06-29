@@ -2,7 +2,7 @@ package com.example.foodorder.models;
 
 
 public class User {
-    private int id;
+    private String id;
     private String name;
     private String token;
     private String email;
@@ -14,7 +14,7 @@ public class User {
 
     public User() {}
 
-    public User(int id, String name, String token, String username, String password, String email, String phone, String role, boolean isDeleted, String createdAt) {
+    public User(String id, String name, String token, String username, String password, String email, String phone, String role, boolean isDeleted, String createdAt) {
         this.id = id;
         this.name = name;
         this.token = token;
@@ -26,11 +26,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
