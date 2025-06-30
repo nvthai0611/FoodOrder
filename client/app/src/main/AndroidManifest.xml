@@ -24,17 +24,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.OrderDetailActivity"
+            android:exported="true"/>
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"/>
         <activity
             android:name=".activity.user.UserProfileActivity"
             android:exported="false"/>
         <activity
             android:name=".activity.ForgotPasswordActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".activity.FoodActivity"
             android:exported="false"/>
