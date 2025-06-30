@@ -51,16 +51,16 @@ public class HomeActivity extends BaseActivity {
     }
 
     private List<Food> getFakeFoodList() {
-        List<Food> list = new ArrayList<>();
-        list.add(new Food(1, "Double Decker", "Beef Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg","Demo", 35.0, true, "", 3));
-        list.add(new Food(2, "Smoke House", "Chicken Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "DEMO", 30.0, true, "", 1));
-        list.add(new Food(3, "Vegetable Salad", "Lettuce and Tomatoes","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 15.0, true, "", 2));
-        list.add(new Food(4, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 4));
-        list.add(new Food(5, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 5));
-        list.add(new Food(6, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 3));
-        list.add(new Food(7, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 1));
-        list.add(new Food(8, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 2));
-        return list;
+//        List<Food> list = new ArrayList<>();
+//        list.add(new Food(1, "Double Decker", "Beef Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg","Demo", 35.0, true, "", 3));
+//        list.add(new Food(2, "Smoke House", "Chicken Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "DEMO", 30.0, true, "", 1));
+//        list.add(new Food(3, "Vegetable Salad", "Lettuce and Tomatoes","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 15.0, true, "", 2));
+//        list.add(new Food(4, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 4));
+//        list.add(new Food(5, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 5));
+//        list.add(new Food(6, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 3));
+//        list.add(new Food(7, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 1));
+//        list.add(new Food(8, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 2));
+        return null;
     }
 
 }
