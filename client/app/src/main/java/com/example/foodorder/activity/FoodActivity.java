@@ -33,7 +33,7 @@ public class FoodActivity extends AppCompatActivity {
         String description = intent.getStringExtra("description");
         String imageUrl = intent.getStringExtra("imageUrl");
         float price = intent.getFloatExtra("price", 0);
-        int rating = intent.getIntExtra("rating", 0);
+//        int rating = intent.getIntExtra("rating", 0);
 
         // 2. Ánh xạ UI
         TextView tvName = findViewById(R.id.tvFoodName);
@@ -64,9 +64,9 @@ public class FoodActivity extends AppCompatActivity {
                 findViewById(R.id.star5),
         };
 
-        for (int i = 0; i < stars.length; i++) {
-            stars[i].setVisibility(i < rating ? View.VISIBLE : View.INVISIBLE);
-        }
+//        for (int i = 0; i < stars.length; i++) {
+//            stars[i].setVisibility(i < rating ? View.VISIBLE : View.INVISIBLE);
+//        }
 
         // 5. Tăng/giảm số lượng
         tvQuantity.setText(String.valueOf(quantity));
