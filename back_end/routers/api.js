@@ -13,6 +13,6 @@ router.use("/user", require("./user/user"));
 router.use("/food", require("./food/food"));
 
 // order
-router.use("/order", require("./order/order"));
+router.use("/orders", require("./order/order"));
 
 module.exports = router;
