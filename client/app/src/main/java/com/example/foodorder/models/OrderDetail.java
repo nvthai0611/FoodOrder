@@ -3,30 +3,34 @@ package com.example.foodorder.models;
 import java.util.List;
 
 public class OrderDetail {
-    private Order order;
+    private String userName;
+    private String address;
+    private String status;
     private List<OrderItem> items;
 
-    public OrderDetail() {
+    public String getUserName() {
+        return userName;
     }
 
-    public OrderDetail(Order order, List<OrderItem> items) {
-        this.order = order;
-        this.items = items;
+    public String getAddress() {
+        return address;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
+    public String getStatus() {
+        return status;
     }
 
     public List<OrderItem> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    public OrderDetail() {
+    }
+
+    public OrderDetail(String userName, String address, String status, List<OrderItem> items) {
+        this.userName = userName;
+        this.address = address;
+        this.status = status;
         this.items = items;
     }
 }
