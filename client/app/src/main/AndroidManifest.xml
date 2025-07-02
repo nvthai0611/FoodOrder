@@ -26,6 +26,9 @@
         </activity>
 
         <activity
+            android:name=".activity.OrderHistoryActivity"
+            android:exported="true"/>
+        <activity
             android:name=".activity.OrderDetailActivity"
             android:exported="true"/>
         <activity

@@ -38,8 +38,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         orderItemsContainer = findViewById(R.id.orderItemsContainer);
 
         Order order = new Order(
-                1,         
-                101,   
+                "1",
+                "101",
                 135000,     
                 "pending",
                 "Không hành", 
@@ -56,14 +56,14 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         List<OrderItem> items = new ArrayList<>();
 
-        items.add(new OrderItem(1, order.getId(), 1, 2, 70_000,
-                new Food(1, "Double Decker", "Beef Burger", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 35.0, true, "", 3)));
-
-        items.add(new OrderItem(2, order.getId(), 2, 1, 30_000,
-                new Food(2, "Smoke House", "Chicken Burger", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 30.0, true, "", 1)));
-
-        items.add(new OrderItem(3, order.getId(), 3, 3, 45_000,
-                new Food(3, "Vegetable Salad", "Lettuce and Tomatoes", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 15.0, true, "", 2)));
+//        items.add(new OrderItem(1, order.getId(), 1, 2, 70_000,
+//                new Food(1, "Double Decker", "Beef Burger", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 35.0, true, "", 3)));
+//
+//        items.add(new OrderItem(2, order.getId(), 2, 1, 30_000,
+//                new Food(2, "Smoke House", "Chicken Burger", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 30.0, true, "", 1)));
+//
+//        items.add(new OrderItem(3, order.getId(), 3, 3, 45_000,
+//                new Food(3, "Vegetable Salad", "Lettuce and Tomatoes", "https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Demo", 15.0, true, "", 2)));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (OrderItem item : items) {

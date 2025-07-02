@@ -4,25 +4,18 @@ import java.io.Serializable;
 
 public class OrderItem implements Serializable {
 
-    private int id;
-    private int orderId;
-    private int foodId;
+    private String id;
+    private String orderId;
+    private String foodId;
     private int quantity;
     private double price;
 
     private Food food; // Thêm đối tượng Food
 
-    public OrderItem() {}
-
-    public OrderItem(int id, int orderId, int foodId, int quantity, double price) {
-        this.id = id;
-        this.orderId = orderId;
-        this.foodId = foodId;
-        this.quantity = quantity;
-        this.price = price;
+    public OrderItem() {
     }
 
-    public OrderItem(int id, int orderId, int foodId, int quantity, double price, Food food) {
+    public OrderItem(String id, String orderId, String foodId, int quantity, double price, Food food) {
         this.id = id;
         this.orderId = orderId;
         this.foodId = foodId;
@@ -31,28 +24,27 @@ public class OrderItem implements Serializable {
         this.food = food;
     }
 
-    // Getters và Setters
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
-    public int getFoodId() {
+    public String getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(int foodId) {
+    public void setFoodId(String foodId) {
         this.foodId = foodId;
     }
 
