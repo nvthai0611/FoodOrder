@@ -15,6 +15,8 @@ import com.example.foodorder.models.OrderPreview;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.OrderService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,7 +26,10 @@ import retrofit2.Response;
 public class OrderHistoryActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
+    private RecyclerView recyclerOrderHistory;
     private OrderHistoryAdapter adapter;
+    private List<OrderPreview> orderList;
+
     private static final String TAG = "OrderHistoryActivity";
 
     @Override
@@ -32,10 +37,15 @@ public class OrderHistoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
 
-        recyclerView = findViewById(R.id.recyclerOrderHistory);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerOrderHistory = findViewById(R.id.recyclerOrderHistory);
+        recyclerOrderHistory.setLayoutManager(new LinearLayoutManager(this));
 
-        fetchOrdersByUser("user_123"); // 🔁 Thay bằng userId thật nếu có
+//        fetchOrdersByUser("user_123");
+
+        orderList = getMockOrders();
+
+        adapter = new OrderHistoryAdapter(this, orderList);
+        recyclerOrderHistory.setAdapter(adapter);
     }
 
     private void fetchOrdersByUser(String userId) {
@@ -62,5 +72,51 @@ public class OrderHistoryActivity extends BaseActivity {
                 Log.e(TAG, "Lỗi API", t);
             }
         });
+    }
+
+    private List<OrderPreview> getMockOrders() {
+        List<OrderPreview> list = new ArrayList<>();
+
+        list.add(new OrderPreview(
+                "10001",
+                "02/07/2025 - 10:15",
+                "Đã giao",
+                235000,
+                Arrays.asList("sample_food", "sample_drink", "sample_dessert")
+        ));
+
+        list.add(new OrderPreview(
+                "10002",
+                "01/07/2025 - 19:50",
+                "Đang giao",
+                187000,
+                Arrays.asList("sample_food", "sample_drink")
+        ));
+
+        list.add(new OrderPreview(
+                "10002",
+                "01/07/2025 - 19:50",
+                "Đang giao",
+                187000,
+                Arrays.asList("sample_food", "sample_drink")
+        ));
+
+        list.add(new OrderPreview(
+                "10002",
+                "01/07/2025 - 19:50",
+                "Đang giao",
+                187000,
+                Arrays.asList("sample_food", "sample_drink")
+        ));
+
+        list.add(new OrderPreview(
+                "10002",
+                "01/07/2025 - 19:50",
+                "Đang giao",
+                187000,
+                Arrays.asList("sample_food", "sample_drink")
+        ));
+
+        return list;
     }
 }
