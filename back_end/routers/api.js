@@ -12,6 +12,9 @@ router.use("/user", require("./user/user"));
 // food
 router.use("/food", require("./food/food"));
 
+// Category
+router.use("/category", require("./category/category"));
+
 // order
 router.use("/orders", require("./order/order"));
 
