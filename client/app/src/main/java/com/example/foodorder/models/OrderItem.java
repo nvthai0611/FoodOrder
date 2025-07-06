@@ -3,57 +3,27 @@ package com.example.foodorder.models;
 import java.io.Serializable;
 
 public class OrderItem implements Serializable {
-
-    private int id;
-    private int orderId;
-    private int foodId;
+    private String name;
     private int quantity;
     private double price;
+    private String imageUrl;
 
-    private Food food; // Thêm đối tượng Food
+    public OrderItem() {
+    }
 
-    public OrderItem() {}
-
-    public OrderItem(int id, int orderId, int foodId, int quantity, double price) {
-        this.id = id;
-        this.orderId = orderId;
-        this.foodId = foodId;
+    public OrderItem(String name, int quantity, double price, String imageUrl) {
+        this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
-    public OrderItem(int id, int orderId, int foodId, int quantity, double price, Food food) {
-        this.id = id;
-        this.orderId = orderId;
-        this.foodId = foodId;
-        this.quantity = quantity;
-        this.price = price;
-        this.food = food;
+    public String getName() {
+        return name;
     }
 
-    // Getters và Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getFoodId() {
-        return foodId;
-    }
-
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getQuantity() {
@@ -72,11 +42,11 @@ public class OrderItem implements Serializable {
         this.price = price;
     }
 
-    public Food getFood() {
-        return food;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setFood(Food food) {
-        this.food = food;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

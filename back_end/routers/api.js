@@ -16,6 +16,6 @@ router.use("/food", require("./food/food"));
 router.use("/category", require("./category/category"));
 
 // order
-router.use("/order", require("./order/order"));
+router.use("/orders", require("./order/order"));
 
 module.exports = router;

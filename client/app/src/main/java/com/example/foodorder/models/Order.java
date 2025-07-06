@@ -2,19 +2,20 @@ package com.example.foodorder.models;
 
 public class Order {
 
-    private int id;
-    private int userId;
+    private String id;
+    private String userId;
     private double totalPrice;
     private String status;         // pending / preparing / done / canceled
     private String note;
     private String scheduledTime;
     private String createdAt;
 
-    public Order() {}
+    public Order() {
+    }
 
-    public Order(int id, int userId, double totalPrice, String status, String note, String scheduledTime, String createdAt) {
-        this.id = id;
+    public Order(String userId, String id, double totalPrice, String status, String note, String scheduledTime, String createdAt) {
         this.userId = userId;
+        this.id = id;
         this.totalPrice = totalPrice;
         this.status = status;
         this.note = note;
@@ -22,22 +23,19 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    // Getters và Setters
-
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
