@@ -165,6 +165,41 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    private void fetchFoodsByCategoryId(String id) {
+        HomeService homeService = ApiClient.getClient().create(HomeService.class);
+        Call<List<Food>> call = homeService.getFoodsByCategory(id);
+
+        call.enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    filteredFoods.clear();
+                    filteredFoods.addAll(response.body());
+                    adapter.notifyDataSetChanged();
+
+                    Log.e(TAG, "Response success:");
+                    for (Food food : allFoods) {
+                        Log.e(TAG, "Food item: " +
+                                "\n - Name: " + food.getName() +
+                                "\n - Description: " + food.getDescription() +
+                                "\n - Price: " + food.getPrice() +
+                                "\n - Image URL: " + food.getImageUrl() +
+                                "\n - Category: " + (food.getCategory() != null ? food.getCategory().getName() : "null"));
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to get data", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Response error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "API call failed", t);
+            }
+        });
+    }
+
     private void fetchCategories() {
         HomeService homeService = ApiClient.getClient().create(HomeService.class);
         Call<List<Category>> call = homeService.getAllCategories();
@@ -210,14 +245,6 @@ public class HomeFragment extends Fragment {
         rvFoods.setAdapter(adapter);
     }
     private void filterFoodByCategory(String categoryId) {
-        filteredFoods.clear();
-        fetchFoods();
-        for (Food food : allFoods) {
-            if (food.getCategory().getId().equals(categoryId)) {
-                filteredFoods.add(food);
-            }
-        }
-
-        adapter.notifyDataSetChanged();
+        fetchFoodsByCategoryId(categoryId);
     }
 }
