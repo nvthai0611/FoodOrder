@@ -1,69 +1,28 @@
 const express = require('express');
 const router = express.Router();
-
-// Fake category data
-const categories = [
-    {
-        _id: "cat1",
-        name: "Fast Food",
-        is_available: true,
-        created_at: new Date()
-    },
-    {
-        _id: "cat2",
-        name: "Healthy",
-        is_available: true,
-        created_at: new Date()
-    }
-];
-
-// Fake food data
-const foods = [
-    {
-        _id: "1",
-        name: "Double Decker",
-        description: "Beef Burger",
-        image_url: "https://res.cloudinary.com/demo/image/upload/burger.jpg",
-        category: categories[0],
-        price: 35.0,
-        isBestSeller: true,
-        rating: 4.5,
-        is_available: true,
-        created_at: new Date()
-    },
-    {
-        _id: "2",
-        name: "Vegetable Salad",
-        description: "Fresh lettuce and tomatoes",
-        image_url: "https://res.cloudinary.com/demo/image/upload/salad.jpg",
-        category: categories[1],
-        price: 15.0,
-        isBestSeller: false,
-        rating: 4.0,
-        is_available: true,
-        created_at: new Date()
-    },
-     {
-        _id: "3",
-        name: "Vegetable Salad",
-        description: "Fresh lettuce and tomatoes",
-        image_url: "https://res.cloudinary.com/demo/image/upload/salad.jpg",
-        category: categories[1],
-        price: 15.0,
-        isBestSeller: false,
-        rating: 4.0,
-        is_available: true,
-        created_at: new Date()
-    }
-];
+const Food = require("../../models/Food");
+const Category = require("../../models/Category");
+router.get('/all-foods-best-sellers', async (req, res) => {
+  try {
+    console.log("Fetching best sellers...");
+    const bestSellers = await Food.find({ isBestSeller: true }).populate('category'); 
+    console.log(bestSellers);
+    res.json(bestSellers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // GET /api/food/all-food
-router.get('/all-food', async (req, res) => {
+router.get('/all-foods', async (req, res) => {
     try {
-        res.json(foods);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    console.log("Fetching all...");
+    const allFoods = await Food.find({ is_available: true }).populate('category'); 
+    console.log(allFoods);
+    res.json(allFoods);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // POST /api/food/create (optional: for adding new food)

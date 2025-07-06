@@ -70,10 +70,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
 
         // Hiển thị số sao (tối đa 5)
-//        int rating = food.getRating();
-//        for (int i = 0; i < 5; i++) {
-//            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.VISIBLE);
-//        }
+        double rating = 3;
+        for (int i = 0; i < 5; i++) {
+            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.INVISIBLE);
+        }
 
         // Gán sự kiện click để chuyển sang FoodActivity
         holder.itemView.setOnClickListener(v -> {
