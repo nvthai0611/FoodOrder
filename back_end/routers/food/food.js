@@ -34,4 +34,20 @@ router.post('/create', (req, res) => {
     res.json({ message: 'Food created', food: newFood });
 });
 
+
+router.get('/by-category/:categoryId', async (req, res) => {
+  const categoryId = req.params.categoryId;
+
+  try {
+    console.log(`Fetching foods in category ${categoryId}...`);
+    const foodsByCategory = await Food.find({
+      category: categoryId,
+      is_available: true // optional: lọc theo is_available nếu cần
+    }).populate('category');
+
+    res.json(foodsByCategory);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
