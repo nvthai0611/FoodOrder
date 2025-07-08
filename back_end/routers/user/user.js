@@ -77,4 +77,43 @@ router.post('/reset-password', (req, res) => {
   });
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, email, phone, password } = req.body;
+    console.log(`Cập nhật thông tin người dùng với ID: ${id}`);
+
+    // Cập nhật thông tin người dùng
+    if (!name || !email) {
+      console.log("Tên hoặc email không hợp lệ:", { name, email });
+
+      return res.status(400).json({ message: "Tên và email là bắt buộc" });
+    }
+    if (password && password.length < 6) {
+      console.log("Mật khẩu không hợp lệ:", password);
+
+      return res.status(400).json({ message: "Mật khẩu phải có ít nhất 6 ký tự" });
+    }
+    // if (password) {
+    //   const salt = await bcrypt.genSalt(10);
+    //   req.body.password = await bcrypt.hash(password, salt);
+    // }
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, phone, password },
+      { new: true }
+    );
+    console.log("New user data:", updatedUser);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Người dùng không tìm thấy" });
+    }
+
+    return res.json({
+      message: "Cập nhật thông tin người dùng thành công"
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;

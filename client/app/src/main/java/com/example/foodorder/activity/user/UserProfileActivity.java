@@ -9,16 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodorder.R;
-import com.example.foodorder.activity.FoodActivity;
-import com.example.foodorder.activity.HomeActivity;
-import com.example.foodorder.activity.LoginActivity;
 import com.example.foodorder.models.User;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.UserService;
@@ -57,8 +50,7 @@ public class UserProfileActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserProfileActivity.this, HomeActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -69,6 +61,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btn_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserProfile(userId);
+            }
+        });
+
         userService = ApiClient.getClient().create(UserService.class);
         getUserProfile(userId);
     }
@@ -101,4 +100,32 @@ public class UserProfileActivity extends AppCompatActivity {
     });
     }
 
+    private void updateUserProfile(String userId) {
+        String name = text_fullName.getText().toString();
+        String email = text_email.getText().toString();
+        String phone = text_phoneNumber.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if(name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        User updatedUser = new User(userId, name, email, phone, password);
+
+        Call<User> call = userService.updateUser(userId, updatedUser);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(UserProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UserProfileActivity.this, "Update failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(UserProfileActivity.this, "Network error!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
