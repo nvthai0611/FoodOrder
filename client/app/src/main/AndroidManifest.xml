@@ -15,11 +15,9 @@
         android:theme="@style/Theme.FoodOrder"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
-            android:name=".activity.user.ChangePasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,11 +26,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.OrderDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="true" />
+        <activity
             android:name=".activity.user.UserProfileActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activity.ForgotPasswordActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".activity.FoodActivity"
             android:exported="false" />
@@ -40,7 +44,7 @@
             android:name=".activity.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.user.ChangePasswordActivity"
             android:exported="false" />
     </application>
 

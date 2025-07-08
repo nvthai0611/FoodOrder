@@ -31,14 +31,9 @@ router.get("/login/:id", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const users = [
-      { id: 1, username: 'admin', password: '123456', token: 'token_admin_abc123', name: "hahaha", email: "asdasdasd@gmail.com", phone: "123123123" },
-      { id: 2, username: 'user1', password: 'password1', token: 'token_user1_xyz456' }
-    ];
-    const id = req.params.id;
-    const user = users.find(user => user.id == id);
-    console.log(user);
 
+    const id = req.params.id;
+    const user = await User.findOne({ _id: id });
     return res.json(user);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -64,7 +59,7 @@ router.post('/reset-password', (req, res) => {
   }
 
   // Tìm user theo email
-  const user = data.users.find(u => u.email === email);
+  const user = User.find({ email: email });
 
   if (!user) {
     return res.status(404).json({ success: false, message: 'Email không tồn tại trong hệ thống' });

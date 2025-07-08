@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF"
-    android:paddingBottom="20dp"
-    android:paddingEnd="20dp"
-    android:paddingStart="20dp"
-    android:paddingTop="50dp"
-    >
+    android:background="@color/white"
+    android:padding="@dimen/padding_large">
+
+    <!-- Nút back -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_revert"
+        android:contentDescription="Back" />
 
     <!-- Ảnh -->
     <ImageView
         android:id="@+id/imgFood"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="@dimen/image_height_ratio"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background" />
 
@@ -24,60 +29,87 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="@dimen/content_weight"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp"
-            android:background="#FFFFFF">
+            android:padding="@dimen/padding_large">
 
-            <!-- Tên & giá -->
+            <!-- Tên món ăn -->
             <TextView
                 android:id="@+id/tvFoodName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pizza Hải Sản"
-                android:textSize="24sp"
+                android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
-                android:textColor="#212121" />
+                android:textColor="@color/colorTextPrimary" />
 
+            <!-- Giá món ăn -->
             <TextView
                 android:id="@+id/tvPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="99.000đ"
-                android:textSize="20sp"
+                android:textSize="@dimen/price_text_size"
                 android:textStyle="bold"
-                android:textColor="#8692F7"
-                android:layout_marginTop="6dp" />
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/padding_medium" />
 
+            <!-- Rating sao -->
+            <LinearLayout
+                android:id="@+id/ratingStars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView android:id="@+id/star1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/star" />
+
+                <ImageView android:id="@+id/star2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/star" />
+
+                <ImageView android:id="@+id/star3"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/star" />
+
+                <ImageView android:id="@+id/star4"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/star" />
+
+                <ImageView android:id="@+id/star5"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/star" />
+            </LinearLayout>
+
+            <!-- Đường kẻ ngang -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp" />
+                android:background="@color/colorDivider"
+                android:layout_marginTop="@dimen/padding_small"
+                android:layout_marginBottom="@dimen/padding_medium" />
 
-            <TextView
-                android:id="@+id/tvToken"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pizza hải sản đế mỏng, topping tôm - mực - phô mai béo ngậy."
-                android:textSize="16sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="#666666" />
+            <!-- Mô tả -->
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pizza hải sản đế mỏng, topping tôm - mực - phô mai béo ngậy."
-                android:textSize="16sp"
+                android:textSize="@dimen/desc_text_size"
                 android:lineSpacingExtra="4dp"
-                android:textColor="#666666" />
-            <!-- Nút tăng giảm số lượng -->
+                android:textColor="@color/colorTextSecondary" />
+
+            <!-- Số lượng -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,8 +123,8 @@
                     android:layout_height="50dp"
                     android:text="−"
                     android:textSize="20sp"
-                    android:backgroundTint="#8692F7"
-                    android:textColor="#FFFFFF" />
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/tvQuantity"
@@ -101,7 +133,7 @@
                     android:gravity="center"
                     android:text="1"
                     android:textSize="18sp"
-                    android:textColor="#212121"
+                    android:textColor="@color/colorTextPrimary"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp" />
 
@@ -111,8 +143,8 @@
                     android:layout_height="50dp"
                     android:text="+"
                     android:textSize="20sp"
-                    android:backgroundTint="#8692F7"
-                    android:textColor="#FFFFFF" />
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -121,10 +153,10 @@
     <Button
         android:id="@+id/btnAddToCart"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="🛒 Thêm vào giỏ hàng"
+        android:layout_height="@dimen/button_height"
+        android:text="@string/addtocart"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="18sp"
-        android:backgroundTint="#8692F7" />
+        android:backgroundTint="@color/primary" />
 </LinearLayout>

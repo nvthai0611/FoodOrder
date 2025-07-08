@@ -31,7 +31,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DeliFood"
+                    android:text="Hael Food"
                     android:textColor="@color/primary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -56,6 +56,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="150dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -155,7 +156,7 @@
                     android:text="Featured foods"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/primary" />
 
                 <TextView
                     android:id="@+id/tvSeeAll"
@@ -169,6 +170,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPopularFood"
                 android:layout_width="match_parent"
+                android:nestedScrollingEnabled="false"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -177,16 +179,17 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Navigation -->
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottomNavigation"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom"-->
-<!--        app:menu="@menu/bottom_nav_menu"-->
-<!--        app:itemIconTint="@color/bottom_nav_color"-->
-<!--        app:itemTextColor="@color/"-->
-<!--        android:background="@color/white"-->
-<!--        app:elevation="16dp" />-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_nav_background"
+        app:menu="@menu/bottom_nav_menu"
+        android:layout_margin="15dp"
+        app:itemIconTint="@color/accent"
+        app:itemTextColor="@color/primary"
+        android:paddingTop="20dp"
+        app:elevation="8dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

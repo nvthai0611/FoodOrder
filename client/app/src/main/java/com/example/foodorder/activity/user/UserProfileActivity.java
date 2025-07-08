@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.foodorder.R;
 import com.example.foodorder.activity.FoodActivity;
+import com.example.foodorder.activity.HomeActivity;
 import com.example.foodorder.activity.LoginActivity;
 import com.example.foodorder.models.User;
 import com.example.foodorder.network.ApiClient;
@@ -31,21 +33,35 @@ public class UserProfileActivity extends AppCompatActivity {
     private EditText text_phoneNumber;
     private EditText passwordEditText;
 
-    private Button btn_changePass, btn_change;
+    private Button btn_changePass, btn_change ;
 
+    private ImageButton btn_back;
     private UserService userService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
-        // Lấy token từ SharedPreferences
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+
+        // Retrieve user information from SharedPreferences
+        String userId = prefs.getString("uId", null); // Get the user ID
+        // Lấy token từ SharedPreferences
         text_fullName = findViewById(R.id.text_fullName);
         text_email = findViewById(R.id.text_email);
         text_phoneNumber = findViewById(R.id.text_phoneNumber);
         passwordEditText = findViewById(R.id.passwordEditText);
 
         btn_changePass = findViewById(R.id.btn_changePass);
+        btn_back = findViewById(R.id.backButton);
+        btn_change = findViewById(R.id.btn_changeProfile);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserProfileActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
         btn_changePass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +70,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
         userService = ApiClient.getClient().create(UserService.class);
-        getUserProfile("1");
+        getUserProfile(userId);
     }
 
     public void getUserProfile (String userId) {
@@ -64,7 +80,6 @@ public class UserProfileActivity extends AppCompatActivity {
     call.enqueue(new Callback<User>() {
         @Override
         public void onResponse(Call<User> call, Response<User> response) {
-            System.out.println(response);
             // co data tra ve thi nem vao edittext
             if (response.isSuccessful() && response.body() != null) {
                 User user = response.body();
@@ -73,9 +88,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 text_phoneNumber.setText(user.getPhone());
                 passwordEditText.setText(user.getPassword());
 
-                Toast.makeText(UserProfileActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(UserProfileActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(UserProfileActivity.this, "Đăng nhập thất bại: Sai username hoặc password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserProfileActivity.this, "Lỗi khi lấy user detail", Toast.LENGTH_SHORT).show();
             }
         }
 

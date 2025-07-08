@@ -4,9 +4,6 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -14,18 +11,19 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.foodorder.Adapter.BannerAdapter;
 import com.example.foodorder.Adapter.FoodAdapter;
 import com.example.foodorder.R;
+import com.example.foodorder.base.BaseActivity;
+import com.example.foodorder.models.Food;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     RecyclerView recyclerView;
     FoodAdapter adapter;
-    List<FoodDemo> foodList;
+    List<Food> foodList;
     ViewPager2 viewPager;
     TabLayout tabLayout;
     @Override
@@ -35,7 +33,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         viewPager = findViewById(R.id.bannerViewPager);
-        //tabLayout = findViewById(R.id.bannerIndicator);
         recyclerView = findViewById(R.id.rvPopularFood);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
@@ -50,43 +47,20 @@ public class HomeActivity extends AppCompatActivity {
         BannerAdapter adapter = new BannerAdapter(images);
         viewPager.setAdapter(adapter);
 
-//        // Gắn TabLayout indicator
-//        new TabLayoutMediator(tabLayout, viewPager,
-//                (tab, position) -> {
-//                    // Không cần làm gì ở đây nếu chỉ là dot indicator
-//                }).attach();
+        setupBottomNavigation();
     }
 
-    private List<FoodDemo> getFakeFoodList() {
-        List<FoodDemo> list = new ArrayList<>();
-        list.add(new FoodDemo("Double Decker", "Beef Burger", 35.0, R.drawable.sample_food, 5));
-        list.add(new FoodDemo("Smoke House", "Chicken Burger", 30.0, R.drawable.sample_food, 4));
-        list.add(new FoodDemo("Vegetable Salad", "Lettuce and Tomatoes", 15.0, R.drawable.sample_food, 5));
-        list.add(new FoodDemo("Chocobar", "Vanilla and Nuts", 5.0, R.drawable.sample_food, 3));
+    private List<Food> getFakeFoodList() {
+        List<Food> list = new ArrayList<>();
+        list.add(new Food(1, "Double Decker", "Beef Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg","Demo", 35.0, true, "", 3));
+        list.add(new Food(2, "Smoke House", "Chicken Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "DEMO", 30.0, true, "", 1));
+        list.add(new Food(3, "Vegetable Salad", "Lettuce and Tomatoes","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 15.0, true, "", 2));
+        list.add(new Food(4, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 4));
+        list.add(new Food(5, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 5));
+        list.add(new Food(6, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 3));
+        list.add(new Food(7, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 1));
+        list.add(new Food(8, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 2));
         return list;
-    }
-
-    public class FoodDemo {
-        private String name;
-        private String description;
-        private double price;
-        private int imageResId;
-        private int rating;
-
-        public FoodDemo(String name, String description, double price, int imageResId, int rating) {
-            this.name = name;
-            this.description = description;
-            this.price = price;
-            this.imageResId = imageResId;
-            this.rating = rating;
-        }
-
-        // Getters
-        public String getName() { return name; }
-        public String getDescription() { return description; }
-        public double getPrice() { return price; }
-        public int getImageResId() { return imageResId; }
-        public int getRating() { return rating; }
     }
 
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">FoodOrder</string>
     <string name="login">login</string>
@@ -6,4 +7,7 @@
     <string name="password">Password</string>
     <string name="email">Enter email address</string>
     <string name="reset">Reset Password</string>
+    <string name="title_activity_order_detail">OrderDetailActivity</string>
+    <string name="addtocart">Thêm vào giỏ hàng</string>
+    <string name="back">Quay lại</string>
 </resources>
