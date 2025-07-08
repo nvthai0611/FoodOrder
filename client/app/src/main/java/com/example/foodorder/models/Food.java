@@ -2,100 +2,46 @@ package com.example.foodorder.models;
 
 
 public class Food {
-    private int id;
+    private String _id;
     private String name;
     private String description;
-    private String imageUrl;
-    private String category;
+    private String image_url;
+    private Category category;
     private double price;
-    private boolean isAvailable;
-    private String createdAt;
+    private boolean isBestSeller;
+    private double rating;
+    private boolean is_available;
+    private String created_at;
 
-    private int Rating; // Thêm trường Rating
-    public Food() {}
+    // Getters & Setters
+    public String getId() { return _id; }
+    public void setId(String _id) { this._id = _id; }
 
-    public Food(int id, String name, String description, String imageUrl, String category, double price, boolean isAvailable, String createdAt, int Rating) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.category = category;
-        this.price = price;
-        this.isAvailable = isAvailable;
-        this.createdAt = createdAt;
-        this.Rating = 0; // Khởi tạo Rating mặc định là 0
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    // Getters và Setters
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
+    public String getImageUrl() { return image_url; }
+    public void setImageUrl(String image_url) { this.image_url = image_url; }
 
-    public int getId() {
-        return id;
-    }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
-    public String getName() {
-        return name;
-    }
+    public boolean isBestSeller() { return isBestSeller; }
+    public void setBestSeller(boolean bestSeller) { isBestSeller = bestSeller; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public double getRating() { return rating; }
+    public void setRating(double rating) { this.rating = rating; }
 
-    public String getDescription() {
-        return description;
-    }
+    public boolean isAvailable() { return is_available; }
+    public void setAvailable(boolean is_available) { this.is_available = is_available; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public int getRating() {
-        return Rating;
-    }
+    public String getCreatedAt() { return created_at; }
+    public void setCreatedAt(String created_at) { this.created_at = created_at; }
 }
-
 

@@ -1,67 +1,69 @@
 package com.example.foodorder.activity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodorder.Adapter.BannerAdapter;
 import com.example.foodorder.Adapter.FoodAdapter;
+import com.example.foodorder.Fragment.DemoFragment;
+import com.example.foodorder.Fragment.HomeFragment;
 import com.example.foodorder.R;
 import com.example.foodorder.base.BaseActivity;
 import com.example.foodorder.models.Food;
+import com.example.foodorder.network.ApiClient;
+import com.example.foodorder.network.HomeService;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeActivity extends BaseActivity {
 
-    RecyclerView recyclerView;
-    FoodAdapter adapter;
-    List<Food> foodList;
-    ViewPager2 viewPager;
-    TabLayout tabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        viewPager = findViewById(R.id.bannerViewPager);
-        recyclerView = findViewById(R.id.rvPopularFood);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
 
-        foodList = getFakeFoodList();
-        adapter = new FoodAdapter(this, foodList);
-        recyclerView.setAdapter(adapter);
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                selectedFragment = new HomeFragment();
+            } else if (itemId == R.id.nav_orders) {
+                selectedFragment = new DemoFragment();
+            } else if (itemId == R.id.nav_profile) {
+                selectedFragment = new HomeFragment();
+            }
 
-        // banner
-        List<Integer> images = Arrays.asList(
-                R.drawable.banner_home
-        );
-        BannerAdapter adapter = new BannerAdapter(images);
-        viewPager.setAdapter(adapter);
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
 
-        setupBottomNavigation();
+            return true;
+        });
+        // Set mặc định là Home
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
     }
 
-    private List<Food> getFakeFoodList() {
-        List<Food> list = new ArrayList<>();
-        list.add(new Food(1, "Double Decker", "Beef Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg","Demo", 35.0, true, "", 3));
-        list.add(new Food(2, "Smoke House", "Chicken Burger","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "DEMO", 30.0, true, "", 1));
-        list.add(new Food(3, "Vegetable Salad", "Lettuce and Tomatoes","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 15.0, true, "", 2));
-        list.add(new Food(4, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 4));
-        list.add(new Food(5, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 5));
-        list.add(new Food(6, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 3));
-        list.add(new Food(7, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 1));
-        list.add(new Food(8, "Chocobar", "Vanilla and Nuts","https://res.cloudinary.com/dickb1q09/image/upload/v1750522475/HoaLacRent/aezn55ktqcj3qa3zebjl.jpg", "Category", 5.0, true, "", 2));
-        return list;
-    }
 
 }
-

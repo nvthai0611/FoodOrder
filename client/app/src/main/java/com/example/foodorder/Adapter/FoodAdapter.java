@@ -70,9 +70,9 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
 
         // Hiển thị số sao (tối đa 5)
-        int rating = food.getRating();
+        double rating = 3;
         for (int i = 0; i < 5; i++) {
-            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.VISIBLE);
+            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.INVISIBLE);
         }
 
         // Gán sự kiện click để chuyển sang FoodActivity
@@ -85,7 +85,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             intent.putExtra("description", food.getDescription());
             intent.putExtra("imageUrl", food.getImageUrl());
             intent.putExtra("price", (float) food.getPrice());
-            intent.putExtra("rating", food.getRating());
+//            intent.putExtra("rating", food.getRating());
 
             context.startActivity(intent);
         });
