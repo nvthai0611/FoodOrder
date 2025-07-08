@@ -1,5 +1,6 @@
 package com.example.foodorder.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.example.foodorder.Adapter.FoodAdapter;
 import com.example.foodorder.Fragment.DemoFragment;
 import com.example.foodorder.Fragment.HomeFragment;
 import com.example.foodorder.R;
+import com.example.foodorder.activity.user.UserProfileActivity;
 import com.example.foodorder.base.BaseActivity;
 import com.example.foodorder.models.Food;
 import com.example.foodorder.network.ApiClient;
@@ -48,8 +50,12 @@ public class HomeActivity extends BaseActivity {
             } else if (itemId == R.id.nav_orders) {
                 selectedFragment = new DemoFragment();
             } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new HomeFragment();
+//                selectedFragment = new HomeFragment();
+                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
+
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()

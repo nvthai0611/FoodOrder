@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.HomeActivity;
 import com.example.foodorder.activity.LoginActivity;
+import com.example.foodorder.activity.user.UserProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -18,19 +19,19 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-//            if (itemId == R.id.nav_home && !(this instanceof HomeActivity)) {
-//                startActivity(new Intent(this, HomeActivity.class));
+            if (itemId == R.id.nav_home && !(this instanceof HomeActivity)) {
+                startActivity(new Intent(this, HomeActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }else if (itemId == R.id.nav_orders ) {
+//                startActivity(new Intent(this, OrdersActivity.class));
 //                overridePendingTransition(0, 0);
-//                return true;
-//            }else if (itemId == R.id.nav_orders ) {
-////                startActivity(new Intent(this, OrdersActivity.class));
-////                overridePendingTransition(0, 0);
-//                return true;
-//            } else if (itemId == R.id.nav_profile && !(this instanceof LoginActivity)) {
-//                startActivity(new Intent(this, ProfileActivity.class));
-//                overridePendingTransition(0, 0);
-//                return true;
-//            }
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(this, UserProfileActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
             return false;
         });
     }

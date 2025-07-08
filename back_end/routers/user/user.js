@@ -31,14 +31,9 @@ router.get("/login/:id", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const users = [
-      { id: 1, username: 'admin', password: '123456', token: 'token_admin_abc123' },
-      { id: 2, username: 'user1', password: 'password1', token: 'token_user1_xyz456' }
-    ];
-    const id = req.params.id;
-    const user = users.find(user => user.id == id);
-    console.log(user);
 
+    const id = req.params.id;
+    const user = await User.findOne({ _id: id });
     return res.json(user);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -64,7 +59,7 @@ router.post('/reset-password', (req, res) => {
   }
 
   // Tìm user theo email
-  const user = User.find({email: email});
+  const user = User.find({ email: email });
 
   if (!user) {
     return res.status(404).json({ success: false, message: 'Email không tồn tại trong hệ thống' });
@@ -82,4 +77,43 @@ router.post('/reset-password', (req, res) => {
   });
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, email, phone, password } = req.body;
+    console.log(`Cập nhật thông tin người dùng với ID: ${id}`);
+
+    // Cập nhật thông tin người dùng
+    if (!name || !email) {
+      console.log("Tên hoặc email không hợp lệ:", { name, email });
+
+      return res.status(400).json({ message: "Tên và email là bắt buộc" });
+    }
+    if (password && password.length < 6) {
+      console.log("Mật khẩu không hợp lệ:", password);
+
+      return res.status(400).json({ message: "Mật khẩu phải có ít nhất 6 ký tự" });
+    }
+    // if (password) {
+    //   const salt = await bcrypt.genSalt(10);
+    //   req.body.password = await bcrypt.hash(password, salt);
+    // }
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, phone, password },
+      { new: true }
+    );
+    console.log("New user data:", updatedUser);
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Người dùng không tìm thấy" });
+    }
+
+    return res.json({
+      message: "Cập nhật thông tin người dùng thành công"
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;
