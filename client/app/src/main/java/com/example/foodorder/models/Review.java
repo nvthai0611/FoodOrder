@@ -1,48 +1,46 @@
 package com.example.foodorder.models;
 
 public class Review {
-    private int id;
-    private int userId;
-    private int foodId;
+    private String _id;
+    private String user_id;
+    private String food_id;
     private int rating;      // từ 1 đến 5
     private String comment;
-    private String createdAt;
+    private String created_at;
 
     public Review() {}
 
-    public Review(int id, int userId, int foodId, int rating, String comment, String createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.foodId = foodId;
+    public Review(String _id, String user_id, String food_id, int rating, String comment, String created_at) {
+        this._id = _id;
+        this.user_id = user_id;
+        this.food_id = food_id;
         this.rating = rating;
         this.comment = comment;
-        this.createdAt = createdAt;
+        this.created_at = created_at;
     }
 
-    // Getters và Setters
-
-    public int getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public int getFoodId() {
-        return foodId;
+    public String getFood_id() {
+        return food_id;
     }
 
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setFood_id(String food_id) {
+        this.food_id = food_id;
     }
 
     public int getRating() {
@@ -61,11 +59,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }
