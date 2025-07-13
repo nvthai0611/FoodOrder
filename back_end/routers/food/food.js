@@ -50,4 +50,22 @@ router.get('/by-category/:categoryId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get('/by-id/:foodId', async (req, res) => {
+  const { foodId } = req.params;
+
+  try {
+    console.log(`Fetching food with id ${foodId}...`);
+    const food = await Food.findById(foodId).populate('category');
+
+    if (!food) {
+      return res.status(404).json({ error: 'Food not found' });
+    }
+
+    res.json(food);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
