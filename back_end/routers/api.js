@@ -15,6 +15,9 @@ router.use("/food", require("./food/food"));
 // Category
 router.use("/category", require("./category/category"));
 
+// Review
+router.use("/review", require("./review_router/review"));
+
 // order
 router.use("/orders", require("./order/order"));
 
