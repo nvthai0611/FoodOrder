@@ -48,7 +48,9 @@ public class HomeActivity extends BaseActivity {
             if (itemId == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
             } else if (itemId == R.id.nav_orders) {
-                selectedFragment = new DemoFragment();
+                Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             } else if (itemId == R.id.nav_profile) {
 //                selectedFragment = new HomeFragment();
                 Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);

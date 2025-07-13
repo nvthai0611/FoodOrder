@@ -3,19 +3,29 @@ package com.example.foodorder.models;
 import java.io.Serializable;
 
 public class OrderItem implements Serializable {
-    private String name;
-    private int quantity;
-    private double price;
-    private String imageUrl;
+    public String food_id;
+    public String name;
+    public int quantity;
+    public int price;
+
+    private String image_url;
 
     public OrderItem() {
     }
 
-    public OrderItem(String name, int quantity, double price, String imageUrl) {
+    public OrderItem(String food_id, String name, int quantity, int price) {
+        this.food_id = food_id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
-        this.imageUrl = imageUrl;
+    }
+
+    public String getFood_id() {
+        return food_id;
+    }
+
+    public void setFood_id(String food_id) {
+        this.food_id = food_id;
     }
 
     public String getName() {
@@ -34,19 +44,19 @@ public class OrderItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImage_url() {
+        return image_url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }

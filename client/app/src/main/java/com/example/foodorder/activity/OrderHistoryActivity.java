@@ -2,6 +2,7 @@ package com.example.foodorder.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,8 +16,6 @@ import com.example.foodorder.models.OrderPreview;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.OrderService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -25,12 +24,12 @@ import retrofit2.Response;
 
 public class OrderHistoryActivity extends BaseActivity {
 
-    private RecyclerView recyclerView;
     private RecyclerView recyclerOrderHistory;
     private OrderHistoryAdapter adapter;
-    private List<OrderPreview> orderList;
+    private List<OrderPreview> originalOrderList;
 
     private static final String TAG = "OrderHistoryActivity";
+    private static final String USER_ID = "user_123";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,12 +39,18 @@ public class OrderHistoryActivity extends BaseActivity {
         recyclerOrderHistory = findViewById(R.id.recyclerOrderHistory);
         recyclerOrderHistory.setLayoutManager(new LinearLayoutManager(this));
 
-//        fetchOrdersByUser("user_123");
+        EditText etSearch = findViewById(R.id.etSearch);
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            String keyword = etSearch.getText().toString().trim();
+            if (!keyword.isEmpty()) {
+                adapter.filterByOrderId(keyword);
+            } else {
+                adapter.filterByOrderId(""); // reset về danh sách gốc
+            }
+            return true;
+        });
 
-        orderList = getMockOrders();
-
-        adapter = new OrderHistoryAdapter(this, orderList);
-        recyclerOrderHistory.setAdapter(adapter);
+        fetchOrdersByUser(USER_ID);
     }
 
     private void fetchOrdersByUser(String userId) {
@@ -56,10 +61,10 @@ public class OrderHistoryActivity extends BaseActivity {
             @Override
             public void onResponse(Call<List<OrderPreview>> call, Response<List<OrderPreview>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<OrderPreview> orders = response.body();
-                    adapter = new OrderHistoryAdapter(OrderHistoryActivity.this, orders);
-                    recyclerView.setAdapter(adapter);
-                    Log.d(TAG, "Đã load " + orders.size() + " đơn hàng");
+                    originalOrderList = response.body();
+                    adapter = new OrderHistoryAdapter(OrderHistoryActivity.this, originalOrderList);
+                    recyclerOrderHistory.setAdapter(adapter);
+                    Log.d(TAG, "Đã load " + originalOrderList.size() + " đơn hàng của user " + userId);
                 } else {
                     Toast.makeText(OrderHistoryActivity.this, "Không thể lấy đơn hàng", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Lỗi phản hồi: " + response.message());
@@ -72,51 +77,5 @@ public class OrderHistoryActivity extends BaseActivity {
                 Log.e(TAG, "Lỗi API", t);
             }
         });
-    }
-
-    private List<OrderPreview> getMockOrders() {
-        List<OrderPreview> list = new ArrayList<>();
-
-        list.add(new OrderPreview(
-                "10001",
-                "02/07/2025 - 10:15",
-                "Đã giao",
-                235000,
-                Arrays.asList("sample_food", "sample_drink", "sample_dessert")
-        ));
-
-        list.add(new OrderPreview(
-                "10002",
-                "01/07/2025 - 19:50",
-                "Đang giao",
-                187000,
-                Arrays.asList("sample_food", "sample_drink")
-        ));
-
-        list.add(new OrderPreview(
-                "10002",
-                "01/07/2025 - 19:50",
-                "Đang giao",
-                187000,
-                Arrays.asList("sample_food", "sample_drink")
-        ));
-
-        list.add(new OrderPreview(
-                "10002",
-                "01/07/2025 - 19:50",
-                "Đang giao",
-                187000,
-                Arrays.asList("sample_food", "sample_drink")
-        ));
-
-        list.add(new OrderPreview(
-                "10002",
-                "01/07/2025 - 19:50",
-                "Đang giao",
-                187000,
-                Arrays.asList("sample_food", "sample_drink")
-        ));
-
-        return list;
     }
 }

@@ -53,7 +53,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         holder.tvQuantity.setText("Số lượng: " + item.getQuantity());
 
         Glide.with(context)
-                .load(item.getImageUrl())
+                .load(item.getImage_url())
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imgFoodItem);
     }

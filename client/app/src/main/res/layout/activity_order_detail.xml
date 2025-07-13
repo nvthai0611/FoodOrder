@@ -15,6 +15,7 @@
         android:src="@android:drawable/ic_menu_revert"
         android:contentDescription="@string/back" />
 
+    <!-- Thông tin đơn hàng -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +35,25 @@
             android:id="@+id/tvOrderLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Địa chỉ:"
+            android:text="Thời gian tạo:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorTextSecondary" />
+
+        <TextView
+            android:id="@+id/tvScheduledTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thời gian giao:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorTextSecondary" />
+
+        <TextView
+            android:id="@+id/tvNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ghi chú:"
             android:textSize="14sp"
             android:layout_marginTop="4dp"
             android:textColor="@color/colorTextSecondary" />
@@ -48,6 +67,16 @@
             android:textStyle="bold"
             android:layout_marginTop="4dp"
             android:textColor="@color/primary" />
+
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tổng tiền:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorTextPrimary" />
     </LinearLayout>
 
     <View
@@ -56,6 +85,7 @@
         android:background="@color/colorDivider"
         android:layout_marginBottom="8dp" />
 
+    <!-- Danh sách món -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -69,6 +99,7 @@
             android:orientation="vertical"/>
     </ScrollView>
 
+    <!-- Nút hủy -->
     <Button
         android:id="@+id/btnCancelOrder"
         android:layout_width="match_parent"
