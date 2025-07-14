@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">FoodOrder</string>
-    <string name="login">login</string>
-    <string name="register">Register</string>
-    <string name="user_name">Username</string>
-    <string name="password">Password</string>
-    <string name="email">Enter email address</string>
-    <string name="reset">Reset Password</string>
-    <string name="title_activity_order_detail">OrderDetailActivity</string>
-    <string name="addtocart">Thêm vào giỏ hàng</string>
+
+    <!-- Auth -->
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="email_login">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="email">Nhập địa chỉ email</string>
+    <string name="reset">Khôi phục mật khẩu</string>
+
+    <!-- Order Detail -->
+    <string name="title_activity_order_detail">Chi tiết đơn hàng</string>
     <string name="back">Quay lại</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="btn_increase">Tăng số lượng</string>
+    <string name="btn_decrease">Giảm số lượng</string>
+    <string name="add_to_cart">Thêm vào giỏ hàng</string>
+
+    <!-- Food Detail -->
+    <string name="food_detail">Chi tiết món ăn</string>
+    <string name="category_banh_mi">Bánh mì</string>
+    <string name="preparation_time">10-15 phút</string>
+    <string name="reviews">Đánh giá</string>
+    <string name="related_items">Món ăn liên quan</string>
+    <string name="description">Mô tả</string>
+    <string name="ingredients">Thành phần</string>
+    <string name="quantity">Số lượng</string>
+    <string name="calories_format">kcal</string>
+    <string name="review_count_format">(đánh giá)</string>
 </resources>

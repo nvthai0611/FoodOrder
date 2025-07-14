@@ -9,9 +9,8 @@ const data = require('../../data'); // import danh sách users từ data.js
 
 const JWT_SECRET = "your_jwt_secret_key";
 
-router.get("/login/:id", async (req, res) => {
+router.get("/login", async (req, res) => {
   try {
-    const id = req.params.id;
     const query = req.query;
     const keyword = 'cơm'; // ví dụ từ khóa
     const users = await User.find({

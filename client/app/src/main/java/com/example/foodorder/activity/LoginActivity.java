@@ -53,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-    private void loginUser(String username, String password) {
-        LoginRequest loginRequest = new LoginRequest(username, password);
+    private void loginUser(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
         Call<LoginResponse> call = loginService.loginUser(loginRequest); // sửa kiểu trả về
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("uId", String.valueOf(user.getId()));
                         editor.putString("uName", user.getName());
                         editor.putString("uEmail", user.getEmail());
+                        editor.putString("phone",  user.getPhone());
                         editor.apply();
 
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();

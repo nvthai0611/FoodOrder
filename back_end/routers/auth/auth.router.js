@@ -3,10 +3,10 @@ const User = require("../../models/User");
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   console.log(req.body);
   // Kiểm tra dữ liệu đầu vào
-  if (!username || !password) {
+  if (!email || !password) {
     return res
       .status(400)
       .json({ message: "Username và password không được để trống" });
@@ -14,7 +14,7 @@ router.post("/login", async (req, res) => {
   try {
     // Tìm user trong database giả lập
     const user = await User.findOne({
-      name: username,
+      email: email,
     });
     // Kiểm tra nếu không tìm thấy user
     if (!user) {

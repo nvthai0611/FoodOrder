@@ -10,4 +10,12 @@
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#666666</color>
     <color name="colorDivider">#DDDDDD</color>
+    <color name="color_background">#F9FAFB</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_text_primary">#000000</color>
+    <color name="color_text_secondary">#6B7280</color>
+    <color name="color_text_disabled">#9CA3AF</color>
+    <color name="color_text_body">#4B5563</color>
+    <color name="color_price">#DC2626</color>
+    <color name="color_divider">#E5E7EB</color>
 </resources>
