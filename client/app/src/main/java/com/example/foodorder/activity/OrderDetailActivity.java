@@ -2,9 +2,11 @@ package com.example.foodorder.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,12 +104,31 @@ public class OrderDetailActivity extends BaseActivity {
         tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.total_price));
 
         orderItemsContainer.removeAllViews();
-        for (OrderItem item : order.items) {
-            TextView itemView = new TextView(this);
-            itemView.setText("- " + item.name + " x" + item.quantity + " • " + formatMoney(item.price * item.quantity));
-            itemView.setTextSize(15);
-            itemView.setTextColor(getResources().getColor(R.color.colorTextPrimary));
-            itemView.setPadding(0, 8, 0, 8);
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (int i = 0; i < order.items.size(); i++) {
+            OrderItem item = order.items.get(i);
+            View itemView = inflater.inflate(R.layout.item_order_detail, orderItemsContainer, false);
+
+            TextView tvFoodName = itemView.findViewById(R.id.tvFoodName);
+            TextView tvQuantityPrice = itemView.findViewById(R.id.tvQuantityPrice);
+            ImageView imgFood = itemView.findViewById(R.id.imgFood);
+
+            tvFoodName.setText(item.name);
+            tvQuantityPrice.setText("x" + item.quantity + " • " + formatMoney(item.price * item.quantity));
+
+            // Hiển thị ảnh theo thứ tự trong food_images (nếu có)
+            if (order.food_images != null && i < order.food_images.size()) {
+                int resId = getResources().getIdentifier(order.food_images.get(i), "drawable", getPackageName());
+                if (resId != 0) {
+                    imgFood.setImageResource(resId);
+                } else {
+                    imgFood.setImageResource(R.drawable.sample_food);
+                }
+            } else {
+                imgFood.setImageResource(R.drawable.sample_food);
+            }
+
             orderItemsContainer.addView(itemView);
         }
     }
