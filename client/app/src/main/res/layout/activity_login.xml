@@ -45,7 +45,7 @@
                 android:id="@+id/username"
                 android:background="@drawable/custom_edittext"
                 android:drawablePadding="8dp"
-                android:hint="@string/user_name"
+                android:hint="@string/email_login"
                 android:padding="8dp"
                 android:textColor="@color/black"
                 android:textColorHighlight="@color/cardview_dark_background"

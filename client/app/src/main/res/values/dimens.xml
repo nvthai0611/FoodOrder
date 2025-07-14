@@ -9,5 +9,24 @@
     <dimen name="title_text_size">24sp</dimen>
     <dimen name="price_text_size">20sp</dimen>
     <dimen name="desc_text_size">16sp</dimen>
+    <dimen name="padding_screen">12dp</dimen>
+<!--    <dimen name="padding_medium">12dp</dimen>-->
+<!--    <dimen name="padding_large">16dp</dimen>-->
+<!--    <dimen name="padding_small">8dp</dimen>-->
+
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">10dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_top_large">40dp</dimen>
+
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_section_title">16sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+
+    <dimen name="button_icon_size">48dp</dimen>
+    <dimen name="icon_small">16dp</dimen>
+    <dimen name="food_image_height">200dp</dimen>
 </resources>
 
