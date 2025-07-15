@@ -46,7 +46,7 @@ public class FavoriteFoodsFragment extends Fragment {
         if (favoriteFoods != null && !favoriteFoods.isEmpty()) {
             for (Food food : favoriteFoods) {
                 Toast.makeText(requireContext(),
-                        "ID: " + food.getId() + "\nName: " + food.getName() + "\nPrice: " + food.getPrice(),
+                        "ID: " + food.getId() + "\nPrice: " + food.getPrice(),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
