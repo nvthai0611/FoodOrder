@@ -10,6 +10,10 @@
         android:icon="@drawable/ic_orders"
         android:title="Orders" />
     <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/baseline_favorite_24"
+        android:title="Favorite" />
+    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/user"
         android:title="Profile" />
