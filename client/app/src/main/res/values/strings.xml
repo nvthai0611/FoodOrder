@@ -40,4 +40,19 @@
     <string name="empty_favorites_message">You haven\'t added any favorite foods yet. Start exploring!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="feedback">FeedBack</string>
+
+
+    <!-- Home -->
+    <string name="Featured_foods">Featured foods</string>
+    <string name="Foods">Foods</string>
+    <string name="Categories">Categories</string>
+
+    <!-- Feedback -->
+    <string name="Your_Feedback">Your Feedback</string>
+    <string name="Your_Comment">Your Comment</string>
+    <string name="Submit_feedback">Submit feedback</string>
+    <string name="content_feedback">Let us share your feedback about this food...</string>
 </resources>
