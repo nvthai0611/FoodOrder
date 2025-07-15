@@ -19,7 +19,7 @@ import com.example.foodorder.models.Food;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteFoodsFragment extends Fragment {
+public class    FavoriteFoodsFragment extends Fragment {
 
     private RecyclerView recyclerFavoriteFoods;
     private TextView tvEmptyState;
