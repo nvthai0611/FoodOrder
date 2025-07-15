@@ -8,8 +8,6 @@ public class Review {
     private String comment;
     private String created_at;
 
-    public Review() {}
-
     public Review(String _id, String user_id, String food_id, int rating, String comment, String created_at) {
         this._id = _id;
         this.user_id = user_id;
