@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 //import com.example.foodorder.Fragment.DemoFragment;
 import com.example.foodorder.Fragment.FavoriteFoodsFragment;
 import com.example.foodorder.Fragment.HomeFragment;
+import com.example.foodorder.Fragment.UserProfileFragment;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.user.UserProfileActivity;
 import com.example.foodorder.base.BaseActivity;
@@ -56,9 +57,10 @@ public class HomeActivity extends BaseActivity {
                 startActivity(intent);
             } else if (itemId == R.id.nav_profile) {
 //                selectedFragment = new HomeFragment();
-                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+//                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                selectedFragment = new UserProfileFragment();
             }
 
 

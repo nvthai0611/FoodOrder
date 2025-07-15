@@ -19,7 +19,7 @@
             android:name=".activity.FavoriteFoodsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +29,10 @@
         </activity>
         <activity
             android:name=".activity.OrderHistoryActivity"
-            android:exported="true" /> <!-- <activity -->
-        <!-- android:name=".activity.OrderDetailActivity" -->
-        <!-- android:exported="true" /> -->
+            android:exported="true"/>
+        <activity
+            android:name=".activity.OrderDetailActivity"
+            android:exported="true" />
         <activity
             android:name=".activity.LoginActivity"
             android:exported="true" />
@@ -45,10 +46,13 @@
             android:name=".activity.FoodActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.HomeActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
             android:name=".activity.user.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ReviewFoodActivity"
             android:exported="false" />
     </application>
 
