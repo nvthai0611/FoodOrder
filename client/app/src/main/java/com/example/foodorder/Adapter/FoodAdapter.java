@@ -82,7 +82,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
             // Truyền dữ liệu qua intent
             intent.putExtra("id", food.getId());
-            intent.putExtra("categoryId", food.getCategory().getId());
+            intent.putExtra("category", food.getCategory()); // gửi cả object
             intent.putExtra("name", food.getName());
             intent.putExtra("description", food.getDescription());
             intent.putExtra("imageUrl", food.getImageUrl());
