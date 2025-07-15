@@ -101,35 +101,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    public interface OnFoodsLoadedListener {
-        void onLoaded(List<Food> foods);
-    }
-//    public interface OnCategoriesLoadedListener {
-//        void onLoaded(List<Category> categories);
-//    }
-//    private void fetchFoods(OnFoodsLoadedListener listener) {
-//        HomeService homeService = ApiClient.getClient().create(HomeService.class);
-//        Call<List<Food>> call = homeService.getAllFoods();
-//
-//        call.enqueue(new Callback<List<Food>>() {
-//            @Override
-//            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    allFoods.clear();
-//                    allFoods.addAll(response.body());
-//                    if (listener != null) {
-//                        listener.onLoaded(allFoods);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Food>> call, Throwable t) {
-//                Toast.makeText(requireContext(), "Load foods failed", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
     private void fetchFoods() {
         HomeService homeService = ApiClient.getClient().create(HomeService.class);
         Call<List<Food>> call = homeService.getAllFoods();
@@ -209,6 +180,10 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     categoryList.clear();
+                    var c= new Category();
+                    c.setId("");
+                    c.setName("All");
+                    categoryList.add(c);
                     categoryList.addAll(response.body());
 
                     Log.e(TAG, "Response success:");
@@ -245,6 +220,10 @@ public class HomeFragment extends Fragment {
         rvFoods.setAdapter(adapter);
     }
     private void filterFoodByCategory(String categoryId) {
+        if(categoryId.isBlank()){
+            fetchFoods();
+            return;
+        }
         fetchFoodsByCategoryId(categoryId);
     }
 }

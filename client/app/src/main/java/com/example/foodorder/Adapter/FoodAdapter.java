@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFood;
         TextView tvName, tvDesc, tvPrice;
-        ImageView[] stars = new ImageView[5];
+        RatingBar stars;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -39,11 +40,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             tvName = itemView.findViewById(R.id.tvFoodName);
             tvDesc = itemView.findViewById(R.id.tvFoodDesc);
             tvPrice = itemView.findViewById(R.id.tvPrice);
-            stars[0] = itemView.findViewById(R.id.star1);
-            stars[1] = itemView.findViewById(R.id.star2);
-            stars[2] = itemView.findViewById(R.id.star3);
-            stars[3] = itemView.findViewById(R.id.star4);
-            stars[4] = itemView.findViewById(R.id.star5);
+            stars = itemView.findViewById(R.id.ratingBar);
         }
     }
 
@@ -69,11 +66,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         holder.tvDesc.setText(food.getDescription());
         holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
 
-        // Hiển thị số sao (tối đa 5)
-        double rating = 3;
-        for (int i = 0; i < 5; i++) {
-            holder.stars[i].setVisibility(i < rating ? View.VISIBLE : View.INVISIBLE);
-        }
+        holder.stars.setRating((float) food.getRating());
 
         // Gán sự kiện click để chuyển sang FoodActivity
         holder.itemView.setOnClickListener(v -> {
