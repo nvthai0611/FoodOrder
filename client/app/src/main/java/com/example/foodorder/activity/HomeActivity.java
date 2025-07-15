@@ -7,14 +7,16 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.example.foodorder.Adapter.BannerAdapter;
-import com.example.foodorder.Adapter.FoodAdapter;
-import com.example.foodorder.Fragment.DemoFragment;
+//import androidx.recyclerview.widget.GridLayoutManager;
+//import androidx.recyclerview.widget.RecyclerView;
+//import androidx.viewpager2.widget.ViewPager2;
+//
+//import com.example.foodorder.Adapter.BannerAdapter;
+//import com.example.foodorder.Adapter.FoodAdapter;
+//import com.example.foodorder.Fragment.DemoFragment;
+import com.example.foodorder.Fragment.FavoriteFoodsFragment;
 import com.example.foodorder.Fragment.HomeFragment;
+import com.example.foodorder.Fragment.UserProfileFragment;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.user.UserProfileActivity;
 import com.example.foodorder.base.BaseActivity;
@@ -47,15 +49,18 @@ public class HomeActivity extends BaseActivity {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
+            }else if(itemId == R.id.nav_favorite){
+                selectedFragment = new FavoriteFoodsFragment();
             } else if (itemId == R.id.nav_orders) {
                 Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else if (itemId == R.id.nav_profile) {
 //                selectedFragment = new HomeFragment();
-                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+//                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                selectedFragment = new UserProfileFragment();
             }
 
 

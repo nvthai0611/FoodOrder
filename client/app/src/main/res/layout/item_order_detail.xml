@@ -29,6 +29,8 @@
             android:textStyle="bold"
             android:textColor="@color/colorTextPrimary" />
 
+
+
         <TextView
             android:id="@+id/tvQuantityPrice"
             android:layout_width="wrap_content"
@@ -37,4 +39,9 @@
             android:textSize="14sp"
             android:textColor="@color/colorTextSecondary" />
     </LinearLayout>
+    <Button
+        android:id="@+id/feedback"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:text="Feedback" />
 </LinearLayout>

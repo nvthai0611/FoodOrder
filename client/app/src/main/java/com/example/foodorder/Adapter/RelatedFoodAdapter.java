@@ -65,6 +65,8 @@ public class RelatedFoodAdapter extends RecyclerView.Adapter<RelatedFoodAdapter.
         // 👉 Khi click vào item sẽ mở lại FoodActivity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, FoodActivity.class);
+            intent.putExtra("id", item.getId());
+            intent.putExtra("categoryId", item.getCategory().getId());
             intent.putExtra("name", item.getName());
             intent.putExtra("description", item.getDescription());
             intent.putExtra("imageUrl", item.getImageUrl());

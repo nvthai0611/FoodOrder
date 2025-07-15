@@ -73,20 +73,16 @@ public class ReviewFoodActivity extends AppCompatActivity {
         
         // Get data from intent
         if (getIntent().hasExtra("food_id")) {
-//            String foodId = getIntent().getStringExtra("food_id");
-//            foodQuantity = getIntent().getIntExtra("food_quantity", 1);
+            String foodId = getIntent().getStringExtra("food_id");
+            foodQuantity = getIntent().getIntExtra("food_quantity", 1);
 
+            fetchFoodById(foodId);
+        }else{
             String foodId = "665f7a1a9fc4a6b7b78b1e01";
             foodQuantity = 1;
-            // Normally you would fetch the food details from your database or API
-            // For this example, let's assume we're getting the food object directly
             fetchFoodById(foodId);
         }
-        String foodId = "665f7a1a9fc4a6b7b78b1e01";
-        foodQuantity = 1;
-        // Normally you would fetch the food details from your database or API
-        // For this example, let's assume we're getting the food object directly
-        fetchFoodById(foodId);
+
         // Setup star rating
         setupRatingStars();
         

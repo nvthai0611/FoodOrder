@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_background"
-    android:padding="@dimen/padding_screen"
-    android:layout_marginTop="@dimen/margin_top_large">
+    android:layout_marginTop="@dimen/margin_top_large"
+    tools:context=".activity.FoodActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:elevation="4dp">
 
-        <!-- Header -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_white"
-            android:padding="@dimen/padding_medium"
-            android:elevation="4dp">
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStartWithNavigation="0dp">
 
             <ImageButton
                 android:id="@+id/btnBack"
@@ -27,14 +26,14 @@
                 android:layout_height="@dimen/button_icon_size"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/back" />
+                android:contentDescription="@string/back"
+                app:tint="@color/color_text_primary" />
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="center"
                 android:text="@string/food_detail"
-                android:textAlignment="center"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
                 android:textColor="@color/color_text_primary" />
@@ -43,258 +42,355 @@
                 android:id="@+id/btnFavorite"
                 android:layout_width="@dimen/button_icon_size"
                 android:layout_height="@dimen/button_icon_size"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/padding_medium"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/baseline_favorite_border_24"
-                android:contentDescription="@string/favorite" />
-        </LinearLayout>
+                android:contentDescription="@string/favorite"
+                app:tint="@color/color_text_primary" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Food Image -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/food_image_height">
-            <ImageView
-                android:id="@+id/imgFood"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background" />
-        </FrameLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Content -->
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_large"
-            android:background="@color/color_white">
+            android:layout_height="wrap_content">
 
-            <!-- Category & Time -->
-            <LinearLayout
-                android:orientation="horizontal"
+            <!-- Food Image -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/tvCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/padding_small"
-                    android:paddingVertical="4dp"
-                    android:text="@string/category_banh_mi"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/color_text_secondary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:text="@string/preparation_time"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/color_text_secondary" />
-            </LinearLayout>
-
-            <!-- Title -->
-            <TextView
-                android:id="@+id/tvFoodName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bánh Mì Thịt Nướng"
-                android:textSize="@dimen/text_size_title"
-                android:textStyle="bold"
-                android:textColor="@color/color_text_primary"
-                android:layout_marginTop="@dimen/margin_small" />
-
-            <!-- Rating -->
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:gravity="center_vertical">
-
+                android:layout_height="@dimen/food_image_height">
                 <ImageView
-                    android:layout_width="@dimen/icon_small"
-                    android:layout_height="@dimen/icon_small"
-                    android:src="@drawable/star" />
+                    android:id="@+id/imgFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher_background"
+                    android:transitionName="food_image_transition"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </FrameLayout>
 
-                <TextView
-                    android:id="@+id/tvRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:text="4.8"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/color_text_primary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:text="(124 đánh giá) • 320 kcal"
-                    android:textSize="@dimen/text_size_small"
-                    android:textColor="@color/color_text_secondary" />
-            </LinearLayout>
-
-            <!-- Prices -->
+            <!-- Content -->
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium">
+                android:padding="@dimen/padding_large"
+                android:background="@color/color_white">
 
-                <TextView
-                    android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
+                <!-- Category & Time -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="35.000đ"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tvCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_small"
+                        android:paddingEnd="@dimen/padding_small"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/category_banh_mi"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary"
+                        android:background="@drawable/rounded_tag_background" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/preparation_time"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary" />
+                </LinearLayout>
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvFoodName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bánh Mì Thịt Nướng"
                     android:textSize="@dimen/text_size_title"
-                    android:textColor="@color/color_price"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvOriginalPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:text="45.000đ"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/color_text_disabled" />
-            </LinearLayout>
-
-            <!-- Description -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/description"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_section_title"
-                android:layout_marginTop="@dimen/margin_large" />
-
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:textColor="@color/color_text_body"
-                android:textSize="@dimen/text_size_body"
-                android:lineSpacingExtra="4dp"
-                android:text="Mô tả món ăn..." />
-
-            <!-- Ingredients -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ingredients"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_section_title"
-                android:layout_marginTop="@dimen/margin_large" />
-
-            <LinearLayout
-                android:id="@+id/ingredientContainer"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small" />
-
-            <!-- Quantity -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_large"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:text="@string/quantity"
-                    android:textSize="@dimen/text_size_section_title"
                     android:textStyle="bold"
                     android:textColor="@color/color_text_primary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_marginTop="@dimen/margin_small" />
 
+                <!-- Rating -->
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="@dimen/icon_small"
+                        android:layout_height="@dimen/icon_small"
+                        android:src="@drawable/star"
+                        android:contentDescription="@string/star_rating"
+                        app:tint="@color/color_star_rating" />
+                    <TextView
+                        android:id="@+id/tvRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="4.8"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textColor="@color/color_text_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="(124 đánh giá) • 320 kcal"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary" />
+                </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/btnDecrease"
-                        android:layout_width="@dimen/button_icon_size"
-                        android:layout_height="@dimen/button_icon_size"
-                        android:background="@drawable/decrease"
-                        android:src="@drawable/decrease"
-                        android:contentDescription="@string/btn_decrease" />
+                <!-- Prices -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:gravity="bottom">
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="35.000đ"
+                        android:textSize="@dimen/text_size_price_large"
+                        android:textColor="@color/color_price"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Description -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textColor="@color/color_text_primary"
+                    android:layout_marginTop="@dimen/margin_large" />
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textColor="@color/color_text_body"
+                    android:textSize="@dimen/text_size_body"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/food_description_placeholder" />
+
+
+                <!-- Quantity -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:orientation="horizontal"
+                    android:background="@drawable/rounded_quantity_background"
+                    android:padding="@dimen/padding_small">
 
                     <TextView
-                        android:id="@+id/tvQuantity"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
-                        android:text="1"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
+                        android:text="@string/quantity"
+                        android:textSize="@dimen/text_size_section_title"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_text_primary"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
 
-                    <ImageButton
-                        android:id="@+id/btnIncrease"
-                        android:layout_width="@dimen/button_icon_size"
-                        android:layout_height="@dimen/button_icon_size"
-                        android:background="@drawable/increase"
-                        android:src="@drawable/increase"
-                        android:contentDescription="@string/btn_increase" />
+                        <ImageButton
+                            android:id="@+id/btnDecrease"
+                            android:layout_width="@dimen/button_icon_size_small"
+                            android:layout_height="@dimen/button_icon_size_small"
+                            android:background="@drawable/circle_button_background"
+                            android:contentDescription="@string/btn_decrease"
+                            android:src="@drawable/decrease"
+                            app:tint="@color/color_text_primary" />
+
+                        <TextView
+                            android:id="@+id/tvQuantity"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_text_primary" />
+                        <ImageButton
+                            android:id="@+id/btnIncrease"
+                            android:layout_width="@dimen/button_icon_size_small"
+                            android:layout_height="@dimen/button_icon_size_small"
+                            android:background="@drawable/circle_button_background"
+                            android:src="@drawable/increase"
+                            android:contentDescription="@string/btn_increase"
+                            app:tint="@color/color_text_primary" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <!-- Add to Cart -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddToCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_to_cart"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/color_price"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:paddingVertical="@dimen/padding_medium"
+                    app:cornerRadius="8dp"
+                    app:elevation="4dp"
+                    android:textSize="@dimen/text_size_button"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Add to Cart -->
-            <Button
-                android:id="@+id/btnAddToCart"
+            <!-- Divider & Reviews -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_divider"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_large" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <LinearLayout
+                android:id="@+id/reviewContainer"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_to_cart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:backgroundTint="@color/color_price"
-                android:layout_marginTop="@dimen/margin_large" />
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:paddingHorizontal="@dimen/padding_large">
+                <!-- Review items will be added programmatically or as separate includes -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_medium">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/ic_launcher_background"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/circle_avatar_background"
+                                android:contentDescription="@string/user_avatar" />
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="@dimen/margin_small">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alice Johnson"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/color_text_primary"
+                                    android:textSize="@dimen/text_size_medium" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+                                    <ImageView
+                                        android:layout_width="@dimen/icon_small"
+                                        android:layout_height="@dimen/icon_small"
+                                        android:src="@drawable/star"
+                                        app:tint="@color/color_star_rating"
+                                        android:contentDescription="@string/star_rating" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="5.0"
+                                        android:textSize="@dimen/text_size_small"
+                                        android:textColor="@color/color_text_secondary"
+                                        android:layout_marginStart="2dp" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" • 2 days ago"
+                                        android:textSize="@dimen/text_size_small"
+                                        android:textColor="@color/color_text_secondary"
+                                        android:layout_marginStart="@dimen/margin_small" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="Absolutely delicious! The best Bánh Mì I've ever had. Highly recommend!"
+                            android:textColor="@color/color_text_body"
+                            android:textSize="@dimen/text_size_body" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_divider"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_large" />
+
+            <!-- Related -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/related_items"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerRelatedItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/padding_large"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_related_food" />
+
         </LinearLayout>
-
-        <!-- Divider & Reviews -->
-        <View style="@style/DividerLine" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reviews"
-            android:textSize="@dimen/text_size_section_title"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_primary"
-            android:layout_marginBottom="@dimen/margin_small" />
-
-        <LinearLayout
-            android:id="@+id/reviewContainer"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium" />
-
-        <View style="@style/DividerLine" />
-
-        <!-- Related -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/related_items"
-            android:textSize="@dimen/text_size_section_title"
-            android:textStyle="bold"
-            android:textColor="@color/color_text_primary"
-            android:layout_marginBottom="@dimen/margin_small" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerRelatedItems"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:nestedScrollingEnabled="false"
-            android:orientation="horizontal"
-            android:overScrollMode="never" />
-    </LinearLayout>
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

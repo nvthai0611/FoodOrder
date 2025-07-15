@@ -31,17 +31,17 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
-                <ImageButton
-                    android:id="@+id/backButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/circular_button_background"
-                    android:contentDescription="Back"
-                    android:src="@drawable/ic_arrow_back"
-                    android:elevation="4dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/backButton"-->
+<!--                    android:layout_width="48dp"-->
+<!--                    android:layout_height="48dp"-->
+<!--                    android:background="@drawable/circular_button_background"-->
+<!--                    android:contentDescription="Back"-->
+<!--                    android:src="@drawable/ic_arrow_back"-->
+<!--                    android:elevation="4dp"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent" />-->
 
                 <TextView
                     android:id="@+id/textView7"

@@ -37,4 +37,15 @@ router.post('/create', async (req, res) => {
   }
 });
 
+router.get('/getByFoodId/:foodId', async (req, res) => {
+  const { foodId } = req.params;
+  console.log("Get reviews for foodId:", foodId);
+  try {
+    const reviews = await Review.find({ food_id: foodId }).sort({ created_at: -1 });
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
