@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
-import com.example.foodorder.adapter.RelatedFoodAdapter;
+import com.example.foodorder.Adapter.RelatedFoodAdapter;
 import com.example.foodorder.models.Food;
 
 import java.text.NumberFormat;

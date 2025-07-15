@@ -7,4 +7,12 @@
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:layout_marginBottom">@dimen/margin_medium</item>
     </style>
+
+<!--    User profile-->
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="hintTextColor">@color/primary</item>
+        <item name="android:textColorHint">@color/text_secondary</item>
+    </style>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.foodorder.adapter;
+package com.example.foodorder.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
