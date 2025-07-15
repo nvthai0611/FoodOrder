@@ -34,7 +34,7 @@ public class FoodActivity extends AppCompatActivity {
 
     private int quantity = 1;
     private TextView tvQuantity, tvPrice;
-    private float foodPrice = 0;
+    private double foodPrice = 0;
     private RecyclerView recyclerRelated;
     private Button btnAddToCart;
     private String categoryId;
@@ -64,7 +64,7 @@ public class FoodActivity extends AppCompatActivity {
         String name = intent.getStringExtra("name");
         String description = intent.getStringExtra("description");
         String imageUrl = intent.getStringExtra("imageUrl");
-        foodPrice = intent.getFloatExtra("price", 0);
+        foodPrice = intent.getDoubleExtra("price", 0);
 
         // Tạo đối tượng Food hiện tại
         currentFood = new Food();
@@ -154,12 +154,12 @@ public class FoodActivity extends AppCompatActivity {
 
     // Cập nhật tổng tiền
     private void updateTotalPrice() {
-        float totalPrice = foodPrice * quantity;
+        double totalPrice = foodPrice * quantity;
         btnAddToCart.setText(getString(R.string.add_to_cart) + " - " + formatCurrency(totalPrice));
     }
 
     // Format tiền
-    private String formatCurrency(float price) {
+    private String formatCurrency(double price) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         return formatter.format(price);
     }
