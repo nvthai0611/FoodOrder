@@ -1,11 +1,15 @@
 package com.example.foodorder.activity;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,14 +17,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.foodorder.Adapter.FeedbackAdapter;
+import com.example.foodorder.Adapter.RelatedFoodAdapter;
 import com.example.foodorder.R;
-import com.example.foodorder.adapter.RelatedFoodAdapter;
 import com.example.foodorder.models.Food;
+import com.example.foodorder.models.Review;
+import com.example.foodorder.network.ApiClient;
+import com.example.foodorder.network.FeedBackService;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FoodActivity extends AppCompatActivity {
 
@@ -36,6 +48,7 @@ public class FoodActivity extends AppCompatActivity {
 
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
+        String foodId = intent.getStringExtra("food_id");
         String name = intent.getStringExtra("name");
         String description = intent.getStringExtra("description");
         String imageUrl = intent.getStringExtra("imageUrl");
@@ -103,6 +116,37 @@ public class FoodActivity extends AppCompatActivity {
         RelatedFoodAdapter relatedAdapter = new RelatedFoodAdapter(this, relatedFoods);
         recyclerRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerRelated.setAdapter(relatedAdapter);
+
+        fetchFeedBack(foodId);
+    }
+
+    private void fetchFeedBack(String foodId) {
+        FeedBackService feedBackService = ApiClient.getClient().create(FeedBackService.class);
+        Call<List<Review>> call = feedBackService.getReviewsByFoodId(foodId);
+
+        call.enqueue(new Callback<List<Review>>() {
+            @Override
+            public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // lấy ra danh sách feedback của món ăn này
+                    RecyclerView recyclerFeedback = findViewById(R.id.recyclerFeedback);
+                    List<Review> reviews = response.body();
+                    FeedbackAdapter adapter = new FeedbackAdapter(reviews);
+
+                    recyclerFeedback.setLayoutManager(new LinearLayoutManager(FoodActivity.this));
+                    recyclerFeedback.setAdapter(adapter);
+                } else {
+                    Toast.makeText(FoodActivity.this, "Failed to get data", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Response error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Review>> call, Throwable t) {
+                Toast.makeText(FoodActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "API call failed", t);
+            }
+        });
     }
 
     // Cập nhật tổng tiền trên nút "Thêm vào giỏ"

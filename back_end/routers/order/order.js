@@ -14,7 +14,7 @@ const fakeOrders = [
     created_at: "2025-07-02T10:15:00.000Z",
     food_images: ["sample_food", "sample_drink", "sample_dessert"],
     items: [
-      { food_id: "f001", name: "Bún bò", quantity: 1, price: 65000 },
+      { food_id: "665f7a1a9fc4a6b7b78b1e01", name: "Bún bò", quantity: 1, price: 65000 },
       { food_id: "f002", name: "Trà đào", quantity: 2, price: 30000 },
       { food_id: "f003", name: "Bánh flan", quantity: 1, price: 20000 }
     ]

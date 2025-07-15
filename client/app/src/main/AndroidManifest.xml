@@ -50,6 +50,9 @@
         <activity
             android:name=".activity.user.ChangePasswordActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.ReviewFoodActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
