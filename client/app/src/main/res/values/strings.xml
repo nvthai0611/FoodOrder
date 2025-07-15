@@ -30,4 +30,5 @@
     <string name="quantity">Số lượng</string>
     <string name="calories_format">kcal</string>
     <string name="review_count_format">(đánh giá)</string>
+    <string name="feedback">FeedBack</string>
 </resources>

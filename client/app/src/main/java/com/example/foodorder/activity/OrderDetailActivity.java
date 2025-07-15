@@ -1,5 +1,6 @@
 package com.example.foodorder.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -113,7 +114,19 @@ public class OrderDetailActivity extends BaseActivity {
             TextView tvFoodName = itemView.findViewById(R.id.tvFoodName);
             TextView tvQuantityPrice = itemView.findViewById(R.id.tvQuantityPrice);
             ImageView imgFood = itemView.findViewById(R.id.imgFood);
+            Button feedback = itemView.findViewById(R.id.feedback);
+            feedback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(OrderDetailActivity.this, ReviewFoodActivity.class); // hoặc tên Activity bạn dùng để gửi đánh giá
 
+                    intent.putExtra("food_id", item.food_id);  // truyền ID món ăn
+                    intent.putExtra("food_quantity", item.quantity); // truyền số lượng đã đặt (nếu cần)
+                    intent.putExtra("food_name", item.name); // tuỳ ý truyền thêm
+
+                    startActivity(intent);
+                }
+            });
             tvFoodName.setText(item.name);
             tvQuantityPrice.setText("x" + item.quantity + " • " + formatMoney(item.price * item.quantity));
 

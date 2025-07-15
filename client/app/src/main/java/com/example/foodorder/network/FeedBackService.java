@@ -1,6 +1,7 @@
 package com.example.foodorder.network;
 
 import com.example.foodorder.models.Food;
+import com.example.foodorder.models.Review;
 import com.example.foodorder.requests.ReviewRequest;
 import com.example.foodorder.response.ReviewResponse;
 
@@ -18,4 +19,7 @@ public interface FeedBackService {
 
     @POST("/review/create")
     Call<ReviewResponse> createReview(@Body ReviewRequest review);
+
+    @GET("/review/getByFoodId/{foodId}")
+    Call<List<Review>> getReviewsByFoodId(@Path("foodId") String foodId);
 }

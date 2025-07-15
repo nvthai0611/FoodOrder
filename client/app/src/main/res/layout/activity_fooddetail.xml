@@ -296,5 +296,23 @@
             android:nestedScrollingEnabled="false"
             android:orientation="horizontal"
             android:overScrollMode="never" />
+        <!-- Feedback -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback"
+            android:textSize="@dimen/text_size_section_title"
+            android:textStyle="bold"
+            android:textColor="@color/color_text_primary"
+            android:layout_marginBottom="@dimen/margin_small" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
     </LinearLayout>
+
 </ScrollView>
