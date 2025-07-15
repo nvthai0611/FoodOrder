@@ -18,7 +18,8 @@ import com.example.foodorder.models.Food;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.widget.Toast;
+import com.example.foodorder.utils.FavoriteManager;
 public class FavoriteFoodsFragment extends Fragment {
 
     private RecyclerView recyclerFavoriteFoods;
@@ -37,8 +38,22 @@ public class FavoriteFoodsFragment extends Fragment {
 
         recyclerFavoriteFoods = view.findViewById(R.id.recyclerFavoriteFoods);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
+        // Dùng dữ liệu thật từ SharedPreferences
+        FavoriteManager favoriteManager = new FavoriteManager(requireContext());
+        favoriteFoods = favoriteManager.getFavorites();
 
-        favoriteFoods = getDummyFavoriteFoods(); // Hoặc load từ API, Room, SharedPref...
+        // ✅ Toast từng món ra để debug
+        if (favoriteFoods != null && !favoriteFoods.isEmpty()) {
+            for (Food food : favoriteFoods) {
+                Toast.makeText(requireContext(),
+                        "ID: " + food.getId() + "\nName: " + food.getName() + "\nPrice: " + food.getPrice(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(requireContext(), "Danh sách yêu thích trống", Toast.LENGTH_SHORT).show();
+        }
+
+//        favoriteFoods = getDummyFavoriteFoods(); // Hoặc load từ API, Room, SharedPref...
         adapter = new FavoriteFoodAdapter(favoriteFoods, getContext());
 
         recyclerFavoriteFoods.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -57,10 +72,10 @@ public class FavoriteFoodsFragment extends Fragment {
         }
     }
 
-    private List<Food> getDummyFavoriteFoods() {
-        // Dummy data nếu bạn chưa có backend
-        List<Food> list = new ArrayList<>();
-//         list.add(new Food("Pizza", "Delicious Italian pizza", "https://image.url", 100));
-        return list;
-    }
+//    private List<Food> getDummyFavoriteFoods() {
+//        // Dummy data nếu bạn chưa có backend
+//        List<Food> list = new ArrayList<>();
+////         list.add(new Food("Pizza", "Delicious Italian pizza", "https://image.url", 100));
+//        return list;
+//    }
 }

@@ -1,6 +1,9 @@
 package com.example.foodorder.network;
 
+import com.example.foodorder.models.Food;
 import com.example.foodorder.models.User;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,4 +17,7 @@ public interface UserService {
 
     @PUT("/user/{id}")
     Call<User> updateUser(@Path("id") String id, @Body User user);
+
+    @GET("/user/{id}/favorite-foods")
+    Call<List<Food>> getFavoriteFoodsByUserId(@Path("id") String userId);
 }

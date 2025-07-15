@@ -1,7 +1,9 @@
 package com.example.foodorder.models;
 
 
-public class Food {
+import java.io.Serializable;
+
+public class Food implements Serializable {
     private String _id;
     private String name;
     private String description;
@@ -12,6 +14,9 @@ public class Food {
     private double rating;
     private boolean is_available;
     private String created_at;
+
+    public Food() {
+    }
 
     public Food(String _id, String name, String description, String image_url, double price, double rating) {
         this._id = _id;
