@@ -28,5 +28,9 @@
     <dimen name="button_icon_size">48dp</dimen>
     <dimen name="icon_small">16dp</dimen>
     <dimen name="food_image_height">200dp</dimen>
+    <dimen name="text_size_price_large">32sp</dimen>
+    <dimen name="text_size_button">18sp</dimen>
+    <dimen name="button_icon_size_small">32dp</dimen>
+
 </resources>
 

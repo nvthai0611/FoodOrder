@@ -4,9 +4,9 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.foodorder.Fragment.FavoriteFoodsFragment;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.HomeActivity;
-import com.example.foodorder.activity.LoginActivity;
 import com.example.foodorder.activity.user.UserProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -31,6 +31,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(this, UserProfileActivity.class));
                 overridePendingTransition(0, 0);
                 return true;
+            } else if(itemId == R.id.nav_favorite){
+                startActivity(new Intent(this, FavoriteFoodsFragment.class));
+                overridePendingTransition(0, 0);
             }
             return false;
         });
