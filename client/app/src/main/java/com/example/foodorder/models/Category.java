@@ -1,7 +1,8 @@
 package com.example.foodorder.models;
 
+import java.io.Serializable;
 
-public class Category {
+public class Category implements Serializable {
     private String _id;
     private String name;
     private boolean is_available;
@@ -19,4 +20,3 @@ public class Category {
     public String getCreatedAt() { return created_at; }
     public void setCreatedAt(String created_at) { this.created_at = created_at; }
 }
-

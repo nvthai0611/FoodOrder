@@ -1,10 +1,7 @@
 package com.example.foodorder.activity;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,16 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.foodorder.Adapter.FeedbackAdapter;
-import com.example.foodorder.Adapter.RelatedFoodAdapter;
 import com.example.foodorder.R;
+import com.example.foodorder.Adapter.RelatedFoodAdapter;
+import com.example.foodorder.models.Category;
 import com.example.foodorder.models.Food;
-import com.example.foodorder.models.Review;
 import com.example.foodorder.network.ApiClient;
-import com.example.foodorder.network.FeedBackService;
+import com.example.foodorder.network.FoodService;
+import com.example.foodorder.utils.FavoriteManager;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,9 +32,17 @@ import retrofit2.Response;
 
 public class FoodActivity extends AppCompatActivity {
 
-    private int quantity = 1; // Mặc định số lượng là 1
+    private int quantity = 1;
     private TextView tvQuantity, tvPrice;
     private float foodPrice = 0;
+    private RecyclerView recyclerRelated;
+    private Button btnAddToCart;
+    private String categoryId;
+    private String foodId;
+
+    private FavoriteManager favoriteManager;
+
+    private Food currentFood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +50,31 @@ public class FoodActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_fooddetail);
 
+        // Khởi tạo FavoriteManager
+        favoriteManager = new FavoriteManager(this);
+
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
-        String foodId = intent.getStringExtra("food_id");
+        foodId = intent.getStringExtra("id");
+        Category category = (Category) getIntent().getSerializableExtra("category");
+        if (category != null) {
+            categoryId = category.getId();
+            // dùng thêm category.getName(), ...
+        }
         String name = intent.getStringExtra("name");
         String description = intent.getStringExtra("description");
         String imageUrl = intent.getStringExtra("imageUrl");
         foodPrice = intent.getFloatExtra("price", 0);
 
-        // Ánh xạ view
+        // Tạo đối tượng Food hiện tại
+        currentFood = new Food();
+        currentFood.setId(foodId);
+        currentFood.setName(name);
+        currentFood.setDescription(description);
+        currentFood.setImageUrl(imageUrl);
+        currentFood.setPrice(foodPrice);
+        currentFood.setCategory(category);
+        // Ánh xạ View
         TextView tvName = findViewById(R.id.tvFoodName);
         tvQuantity = findViewById(R.id.tvQuantity);
         tvPrice = findViewById(R.id.tvPrice);
@@ -63,24 +83,45 @@ public class FoodActivity extends AppCompatActivity {
         ImageButton btnBack = findViewById(R.id.btnBack);
         ImageButton btnIncrease = findViewById(R.id.btnIncrease);
         ImageButton btnDecrease = findViewById(R.id.btnDecrease);
-        Button btnAddToCart = findViewById(R.id.btnAddToCart);
+        ImageButton btnFavorite = findViewById(R.id.btnFavorite);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
+        recyclerRelated = findViewById(R.id.recyclerRelatedItems);
 
         // Gán dữ liệu
         tvName.setText(name);
         tvDesc.setText(description);
         tvQuantity.setText(String.valueOf(quantity));
-        tvPrice.setText(formatCurrency(foodPrice)); // Luôn hiển thị đơn giá ban đầu
+        tvPrice.setText(formatCurrency(foodPrice));
 
         Glide.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.sample_food)
                 .into(ivFood);
 
+        // Kiểm tra trạng thái yêu thích ban đầu
+        boolean isFavorite = favoriteManager.isFavorite(foodId);
+        updateFavoriteIcon(btnFavorite, isFavorite);
+
+        // Xử lý khi nhấn nút Favorite
+        btnFavorite.setOnClickListener(v -> {
+            boolean currentlyFavorite = favoriteManager.isFavorite(foodId);
+
+            if (currentlyFavorite) {
+                favoriteManager.removeFavorite(foodId);
+                Toast.makeText(FoodActivity.this, "Đã xóa khỏi yêu thích!", Toast.LENGTH_SHORT).show();
+            } else {
+                favoriteManager.addFavorite(currentFood);
+                Toast.makeText(FoodActivity.this, "Đã thêm vào yêu thích!", Toast.LENGTH_SHORT).show();
+            }
+
+            updateFavoriteIcon(btnFavorite, !currentlyFavorite);
+        });
+
         // Tăng số lượng
         btnIncrease.setOnClickListener(v -> {
             quantity++;
             tvQuantity.setText(String.valueOf(quantity));
-            updateTotalPrice(); // Cập nhật text nút
+            updateTotalPrice();
         });
 
         // Giảm số lượng
@@ -92,7 +133,13 @@ public class FoodActivity extends AppCompatActivity {
             }
         });
 
-        // Nút back → quay về Home
+        // Thêm vào giỏ hàng
+        btnAddToCart.setOnClickListener(v -> {
+            String message = quantity + " x " + name + " đã được thêm vào giỏ hàng!";
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        });
+
+        // Quay lại Home
         btnBack.setOnClickListener(v -> {
             Intent backIntent = new Intent(FoodActivity.this, HomeActivity.class);
             backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -100,69 +147,57 @@ public class FoodActivity extends AppCompatActivity {
             finish();
         });
 
-        // Nút "Thêm vào giỏ"
-        btnAddToCart.setOnClickListener(v -> {
-            String message = quantity + " x " + name + " đã được thêm vào giỏ hàng!";
-            android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show();
-        });
-
-        // Danh sách món liên quan
-        List<Food> relatedFoods = new ArrayList<>();
-        relatedFoods.add(new Food("1", "Bánh cuốn", "Mềm mịn, nóng hổi", "https://i.imgur.com/tYHQVmD.jpg", 30000, 4.5));
-        relatedFoods.add(new Food("2", "Bún bò", "Nước dùng đậm đà", "https://i.imgur.com/ncX4lcy.jpg", 45000, 4.6));
-        relatedFoods.add(new Food("3", "Phở", "Truyền thống Việt Nam", "https://i.imgur.com/jKbN4kz.jpg", 40000, 4.8));
-
-        RecyclerView recyclerRelated = findViewById(R.id.recyclerRelatedItems);
-        RelatedFoodAdapter relatedAdapter = new RelatedFoodAdapter(this, relatedFoods);
+        // Setup danh sách món liên quan
         recyclerRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerRelated.setAdapter(relatedAdapter);
-
-        fetchFeedBack(foodId);
+        fetchRelatedFoods(categoryId, foodId);
     }
 
-    private void fetchFeedBack(String foodId) {
-        FeedBackService feedBackService = ApiClient.getClient().create(FeedBackService.class);
-        Call<List<Review>> call = feedBackService.getReviewsByFoodId(foodId);
-
-        call.enqueue(new Callback<List<Review>>() {
-            @Override
-            public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // lấy ra danh sách feedback của món ăn này
-                    RecyclerView recyclerFeedback = findViewById(R.id.recyclerFeedback);
-                    List<Review> reviews = response.body();
-                    FeedbackAdapter adapter = new FeedbackAdapter(reviews);
-
-                    recyclerFeedback.setLayoutManager(new LinearLayoutManager(FoodActivity.this));
-                    recyclerFeedback.setAdapter(adapter);
-                } else {
-                    Toast.makeText(FoodActivity.this, "Failed to get data", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Response error: " + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Review>> call, Throwable t) {
-                Toast.makeText(FoodActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "API call failed", t);
-            }
-        });
-    }
-
-    // Cập nhật tổng tiền trên nút "Thêm vào giỏ"
+    // Cập nhật tổng tiền
     private void updateTotalPrice() {
         float totalPrice = foodPrice * quantity;
-        Button btnAddToCart = findViewById(R.id.btnAddToCart);
         btnAddToCart.setText(getString(R.string.add_to_cart) + " - " + formatCurrency(totalPrice));
     }
 
-    // Format tiền theo VNĐ
+    // Format tiền
     private String formatCurrency(float price) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         return formatter.format(price);
     }
 
-    // Nếu ấn nút Back vật lý → cũng về Home
+    // Gọi API lấy món liên quan
+    private void fetchRelatedFoods(String categoryId, String foodId) {
+        FoodService foodService = ApiClient.getClient().create(FoodService.class);
+        Call<List<Food>> call = foodService.getRelateFoodByCategoryId(categoryId, foodId);
+
+        call.enqueue(new Callback<List<Food>>() {
+            @Override
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
+                if (response.body() != null) {
+                    List<Food> relatedFoods = response.body();
+                    RelatedFoodAdapter adapter = new RelatedFoodAdapter(FoodActivity.this, relatedFoods);
+                    recyclerRelated.setAdapter(adapter);
+                } else {
+                    Toast.makeText(FoodActivity.this, "Không tìm thấy món liên quan", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Food>> call, Throwable t) {
+                Toast.makeText(FoodActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Cập nhật icon yêu thích
+    private void updateFavoriteIcon(ImageButton button, boolean isFavorite) {
+        if (isFavorite) {
+            button.setImageResource(R.drawable.baseline_favorite_24);
+        } else {
+            button.setImageResource(R.drawable.baseline_favorite_border_24);
+        }
+    }
+
+    // Xử lý Back vật lý
     @Override
     public void onBackPressed() {
         super.onBackPressed();

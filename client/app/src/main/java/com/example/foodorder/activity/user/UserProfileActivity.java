@@ -45,14 +45,14 @@ public class UserProfileActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
 
         btn_changePass = findViewById(R.id.btn_changePass);
-        btn_back = findViewById(R.id.backButton);
+//        btn_back = findViewById(R.id.backButton);
         btn_change = findViewById(R.id.btn_changeProfile);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        btn_back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
         btn_changePass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,8 +105,36 @@ public class UserProfileActivity extends AppCompatActivity {
         String email = text_email.getText().toString();
         String phone = text_phoneNumber.getText().toString();
         String password = passwordEditText.getText().toString();
-        if(name.isEmpty() || email.isEmpty() || phone.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        // Validate name
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập họ tên", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate email
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate phone number
+        if (phone.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!phone.matches("^[0-9]{10}$")) {
+            Toast.makeText(this, "Số điện thoại phải từ 10 chữ số", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate password
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập mật khẩu", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (password.length() < 6) {
+            Toast.makeText(this, "Mật khẩu phải có ít nhất 6 ký tự", Toast.LENGTH_SHORT).show();
             return;
         }
         User updatedUser = new User(userId, name, email, phone, password);
