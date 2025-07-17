@@ -7,6 +7,24 @@ const OrderSchema = new Schema({
         ref: 'User',
         required: true
     },
+    items: [
+        {
+            food_id: {
+                type: Schema.Types.ObjectId,
+                ref: 'Food',
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            },
+            price: {
+                type: Number,
+                required: true
+            }
+        }
+    ]
+    ,
     total_price: {
         type: Number,
         required: true
@@ -15,6 +33,11 @@ const OrderSchema = new Schema({
         type: String,
         default: 'pending',
         enum: ['pending', 'preparing', 'done', 'canceled']
+    },
+    status_payment: {
+        type: String,
+        default: 'pending',
+        enum: ['pending', 'paid', 'failed'] //pending la thanh toan khi nhan hang(hơi ngố tí nhưng k sao)
     },
     note: {
         type: String

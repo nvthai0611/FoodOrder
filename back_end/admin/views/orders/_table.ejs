@@ -1,0 +1,43 @@
+<%-- views/orders/_table.ejs --%>
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Khách hàng</th>
+      <th>Giá</th>
+      <th>Trạng thái</th>
+      <th>Ngày tạo</th>
+      <th>Chi tiết</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (typeof orders !== 'undefined' && orders.length > 0) { %>
+      <% orders.forEach(order => { %>
+        <tr>
+          <td><%= order.user_id?.name || 'Ẩn danh' %></td>
+          <td><%= formatCurrency(order.total_price) %></td>
+          <td><span class="status-label status-<%= order.status %>"><%= order.status %></span></td>
+          <td><%= new Date(order.created_at).toLocaleDateString('vi-VN') %></td>
+          <td>
+            <button class="btn btn-sm btn-info btn-detail" data-id="<%= order._id %>">Xem</button>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+        <tr>
+            <td colspan="5" class="text-center">Không tìm thấy đơn hàng nào.</td>
+        </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    <% if (typeof totalPages !== 'undefined' && totalPages > 0) { %>
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link page-link-ajax" href="?page=<%= i %><%= search ? '&search=' + search : '' %><%= status ? '&status=' + status : '' %>"><%= i %></a>
+        </li>
+      <% } %>
+    <% } %>
+  </ul>
+</nav>

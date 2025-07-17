@@ -1,0 +1,52 @@
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>Tên</th>
+      <th>Danh mục</th>
+      <th>Giá</th>
+      <th>Best Seller</th>
+      <th>Rating</th>
+      <th>Ảnh</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (foods.length === 0) { %>
+      <tr>
+        <td colspan="7" class="text-center text-muted">Không có sản phẩm nào</td>
+      </tr>
+    <% } %>
+    <% foods.forEach(food => { %>
+      <tr>
+        <td><%= food.name %></td>
+        <td><%= food.category?.name %></td>
+        <td><%= food.price %></td>
+        <td><%= food.isBestSeller ? '✅' : '❌' %></td>
+        <td><%= food.rating %></td>
+        <td>
+          <% if (food.image_url) { %>
+            <img src="<%= food.image_url %>" width="50">
+          <% } %>
+        </td>
+        <td>
+          <a href="/admin/product/<%= food._id %>/edit" class="btn btn-warning btn-sm">Sửa</a>
+          <form action="/admin/product/<%= food._id %>?_method=DELETE" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-danger btn-sm">Xoá</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<% if (totalPages > 1) { %>
+  <nav>
+    <ul class="pagination justify-content-center">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+<% } %>

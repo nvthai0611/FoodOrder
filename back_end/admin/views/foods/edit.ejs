@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chỉnh sửa Sản phẩm</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <%- include('../common/header') %>
+  <h1>Chỉnh sửa Sản phẩm</h1>
+ <% if (typeof message !== 'undefined') { %>
+    <div class="alert alert-success">
+      <%= message %>
+    </div>
+  <% } %>
+  <form action="/admin/product/<%= food._id %>/update" method="POST" class="row g-3">
+    <input type="hidden" name="_method" value="PUT">
+
+    <div class="col-md-6">
+      <label class="form-label">Tên</label>
+      <input name="name" class="form-control" value="<%= food.name %>" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Danh mục</label>
+      <select name="category" class="form-select" required>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat._id %>" <%= cat._id.equals(food.category) ? 'selected' : '' %>><%= cat.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Giá</label>
+      <input name="price" type="number" class="form-control" value="<%= food.price %>" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Ảnh (URL)</label>
+      <input name="image_url" class="form-control" value="<%= food.image_url %>">
+    </div>
+    <div class="col-md-12">
+      <label class="form-label">Mô tả</label>
+      <textarea name="description" class="form-control"><%= food.description %></textarea>
+    </div>
+    <div class="col-md-6 form-check ms-3">
+      <input class="form-check-input" type="checkbox" name="isBestSeller" value="true" <%= food.isBestSeller ? 'checked' : '' %>>
+      <label class="form-check-label">Best Seller</label>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+      <a href="/admin/product" class="btn btn-secondary">Quay lại</a>
+    </div>
+  </form>
+</body>
+</html>
