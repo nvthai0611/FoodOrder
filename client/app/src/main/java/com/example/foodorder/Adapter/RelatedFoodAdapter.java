@@ -66,11 +66,11 @@ public class RelatedFoodAdapter extends RecyclerView.Adapter<RelatedFoodAdapter.
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, FoodActivity.class);
             intent.putExtra("id", item.getId());
-            intent.putExtra("categoryId", item.getCategory().getId());
+            intent.putExtra("category", item.getCategory());
             intent.putExtra("name", item.getName());
             intent.putExtra("description", item.getDescription());
             intent.putExtra("imageUrl", item.getImageUrl());
-            intent.putExtra("price", (float) item.getPrice());
+            intent.putExtra("price",item.getPrice());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Đảm bảo hoạt động trong mọi context
             context.startActivity(intent);
         });

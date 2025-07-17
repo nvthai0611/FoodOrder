@@ -64,47 +64,17 @@
                 android:orientation="horizontal"
                 android:layout_marginStart="8dp">
 
-                <!-- 5 ngôi sao -->
-                <ImageView
-                    android:id="@+id/star1"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/star"
-                    app:tint="#4CAF50" />
-
-                <ImageView
-                    android:id="@+id/star2"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/star"
-                    app:tint="#4CAF50" />
-
-                <ImageView
-                    android:id="@+id/star3"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="2dp"
-                    android:src="@drawable/star"
-                    app:tint="#4CAF50" />
-
-                <ImageView
-                    android:id="@+id/star4"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginEnd="2dp"
-                    android:src="@drawable/star"
-                    app:tint="#4CAF50" />
-
-                <ImageView
-                    android:id="@+id/star5"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:src="@drawable/star"
-                    app:tint="#4CAF50" />
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="3"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:progressTint="#FFE400"
+                    android:stepSize="0.1" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
