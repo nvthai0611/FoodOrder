@@ -1,9 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">FoodOrder</string>
-    <string name="login">login</string>
-    <string name="register">Register</string>
-    <string name="user_name">Username</string>
-    <string name="password">Password</string>
-    <string name="email">Enter email address</string>
-    <string name="reset">Reset Password</string>
+
+    <!-- Auth -->
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="email_login">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="email">Nhập địa chỉ email</string>
+    <string name="reset">Khôi phục mật khẩu</string>
+
+    <!-- Order Detail -->
+    <string name="title_activity_order_detail">Chi tiết đơn hàng</string>
+    <string name="back">Quay lại</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="btn_increase">Tăng số lượng</string>
+    <string name="btn_decrease">Giảm số lượng</string>
+    <string name="add_to_cart">Thêm vào giỏ hàng</string>
+
+    <!-- Food Detail -->
+    <string name="food_detail">Chi tiết món ăn</string>
+    <string name="category_banh_mi">Bánh mì</string>
+    <string name="preparation_time">10-15 phút</string>
+    <string name="reviews">Đánh giá</string>
+    <string name="related_items">Món ăn liên quan</string>
+    <string name="description">Mô tả</string>
+    <string name="ingredients">Thành phần</string>
+    <string name="quantity">Số lượng</string>
+    <string name="calories_format">kcal</string>
+    <string name="review_count_format">(đánh giá)</string>
+
+    <string name="star_rating">Star rating</string>
+    <string name="food_description_placeholder">Introducing the authentic Bánh Mì Thịt Nướng, a Vietnamese classic featuring succulent grilled pork, crisp vegetables, and a rich, savory sauce, all nestled in a perfectly crusty baguette. Each bite offers a delightful blend of textures and flavors, from the tender marinated pork to the refreshing cucumber and cilantro, complemented by the tangy pickled carrots and daikon. A truly satisfying and flavorful experience.</string>
+    <string name="user_avatar">User avatar</string>
+    <!-- New strings for Favorite Foods page -->
+    <string name="favorite_foods_title">Favorite Foods</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="empty_favorites_message">You haven\'t added any favorite foods yet. Start exploring!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="feedback">FeedBack</string>
+
+
+    <!-- Home -->
+    <string name="Featured_foods">Featured foods</string>
+    <string name="Foods">Foods</string>
+    <string name="Categories">Categories</string>
+
+    <!-- Feedback -->
+    <string name="Your_Feedback">Your Feedback</string>
+    <string name="Your_Comment">Your Comment</string>
+    <string name="Submit_feedback">Submit feedback</string>
+    <string name="content_feedback">Let us share your feedback about this food...</string>
+
+    <!-- User-Profile vs Change password  -->
+    <string name="Full_Name">Full Name</string>
+    <string name="Setting_Profile">Setting Profile</string>
+    <string name="Email_Address">Email Address</string>
+    <string name="Phone_Number">Phone Number</string>
+    <string name="Password">Password</string>
+    <string name="Change_Password">Change Password</string>
+    <string name="Old_Password">Old Password</string>
+    <string name="New_Password">New Password</string>
+    <string name="Confirm_New_Password">Confirm New Password</string>
 </resources>

@@ -1,130 +1,396 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#FFFFFF"
-    android:paddingBottom="20dp"
-    android:paddingEnd="20dp"
-    android:paddingStart="20dp"
-    android:paddingTop="50dp"
-    >
+    android:background="@color/color_background"
+    android:layout_marginTop="@dimen/margin_top_large"
+    tools:context=".activity.FoodActivity">
 
-    <!-- Ảnh -->
-    <ImageView
-        android:id="@+id/imgFood"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_background" />
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:elevation="4dp">
 
-    <!-- Nội dung -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:fillViewport="true">
-
-        <LinearLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp"
-            android:background="#FFFFFF">
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStartWithNavigation="0dp">
 
-            <!-- Tên & giá -->
-            <TextView
-                android:id="@+id/tvFoodName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pizza Hải Sản"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#212121" />
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/button_icon_size"
+                android:layout_height="@dimen/button_icon_size"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/back"
+                app:tint="@color/color_text_primary" />
 
             <TextView
-                android:id="@+id/tvPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="99.000đ"
-                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:text="@string/food_detail"
+                android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
-                android:textColor="#8692F7"
-                android:layout_marginTop="6dp" />
+                android:textColor="@color/color_text_primary" />
+
+            <ImageButton
+                android:id="@+id/btnFavorite"
+                android:layout_width="@dimen/button_icon_size"
+                android:layout_height="@dimen/button_icon_size"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/padding_medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_favorite_border_24"
+                android:contentDescription="@string/favorite"
+                app:tint="@color/color_text_primary" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Food Image -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/food_image_height">
+                <ImageView
+                    android:id="@+id/imgFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher_background"
+                    android:transitionName="food_image_transition"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </FrameLayout>
+
+            <!-- Content -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_large"
+                android:background="@color/color_white">
+
+                <!-- Category & Time -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tvCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/padding_small"
+                        android:paddingEnd="@dimen/padding_small"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/category_banh_mi"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary"
+                        android:background="@drawable/rounded_tag_background" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="@string/preparation_time"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary" />
+                </LinearLayout>
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvFoodName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bánh Mì Thịt Nướng"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_text_primary"
+                    android:layout_marginTop="@dimen/margin_small" />
+
+                <!-- Rating -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="@dimen/icon_small"
+                        android:layout_height="@dimen/icon_small"
+                        android:src="@drawable/star"
+                        android:contentDescription="@string/star_rating"
+                        app:tint="@color/color_star_rating" />
+                    <TextView
+                        android:id="@+id/tvRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="4.8"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textColor="@color/color_text_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:text="(124 đánh giá) • 320 kcal"
+                        android:textSize="@dimen/text_size_small"
+                        android:textColor="@color/color_text_secondary" />
+                </LinearLayout>
+
+                <!-- Prices -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:gravity="bottom">
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="35.000đ"
+                        android:textSize="@dimen/text_size_price_large"
+                        android:textColor="@color/color_price"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Description -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_section_title"
+                    android:textColor="@color/color_text_primary"
+                    android:layout_marginTop="@dimen/margin_large" />
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:textColor="@color/color_text_body"
+                    android:textSize="@dimen/text_size_body"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/food_description_placeholder" />
+
+
+                <!-- Quantity -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:orientation="horizontal"
+                    android:background="@drawable/rounded_quantity_background"
+                    android:padding="@dimen/padding_small">
+
+                    <TextView
+                        android:text="@string/quantity"
+                        android:textSize="@dimen/text_size_section_title"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_text_primary"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <ImageButton
+                            android:id="@+id/btnDecrease"
+                            android:layout_width="@dimen/button_icon_size_small"
+                            android:layout_height="@dimen/button_icon_size_small"
+                            android:background="@drawable/circle_button_background"
+                            android:contentDescription="@string/btn_decrease"
+                            android:src="@drawable/decrease"
+                            app:tint="@color/color_text_primary" />
+
+                        <TextView
+                            android:id="@+id/tvQuantity"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textSize="@dimen/text_size_medium"
+                            android:textStyle="bold"
+                            android:textColor="@color/color_text_primary" />
+                        <ImageButton
+                            android:id="@+id/btnIncrease"
+                            android:layout_width="@dimen/button_icon_size_small"
+                            android:layout_height="@dimen/button_icon_size_small"
+                            android:background="@drawable/circle_button_background"
+                            android:src="@drawable/increase"
+                            android:contentDescription="@string/btn_increase"
+                            app:tint="@color/color_text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Add to Cart -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddToCart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_to_cart"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/color_price"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:paddingVertical="@dimen/padding_medium"
+                    app:cornerRadius="8dp"
+                    app:elevation="4dp"
+                    android:textSize="@dimen/text_size_button"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Divider & Reviews -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/color_divider"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_large" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reviews"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <LinearLayout
+                android:id="@+id/reviewContainer"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:paddingHorizontal="@dimen/padding_large">
+                <!-- Review items will be added programmatically or as separate includes -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_small"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_medium">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/ic_launcher_background"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/circle_avatar_background"
+                                android:contentDescription="@string/user_avatar" />
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginStart="@dimen/margin_small">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Alice Johnson"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/color_text_primary"
+                                    android:textSize="@dimen/text_size_medium" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical">
+                                    <ImageView
+                                        android:layout_width="@dimen/icon_small"
+                                        android:layout_height="@dimen/icon_small"
+                                        android:src="@drawable/star"
+                                        app:tint="@color/color_star_rating"
+                                        android:contentDescription="@string/star_rating" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="5.0"
+                                        android:textSize="@dimen/text_size_small"
+                                        android:textColor="@color/color_text_secondary"
+                                        android:layout_marginStart="2dp" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" • 2 days ago"
+                                        android:textSize="@dimen/text_size_small"
+                                        android:textColor="@color/color_text_secondary"
+                                        android:layout_marginStart="@dimen/margin_small" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:text="Absolutely delicious! The best Bánh Mì I've ever had. Highly recommend!"
+                            android:textColor="@color/color_text_body"
+                            android:textSize="@dimen/text_size_body" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#DDDDDD"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp" />
+                android:background="@color/color_divider"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_large" />
 
+            <!-- Related -->
             <TextView
-                android:id="@+id/tvToken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/related_items"
+                android:textSize="@dimen/text_size_section_title"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginStart="@dimen/padding_large"
+                android:layout_marginEnd="@dimen/padding_large"
+                android:layout_marginBottom="@dimen/margin_small" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerRelatedItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pizza hải sản đế mỏng, topping tôm - mực - phô mai béo ngậy."
-                android:textSize="16sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="#666666" />
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Pizza hải sản đế mỏng, topping tôm - mực - phô mai béo ngậy."
-                android:textSize="16sp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="#666666" />
-            <!-- Nút tăng giảm số lượng -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:nestedScrollingEnabled="false"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginTop="20dp">
+                android:paddingHorizontal="@dimen/padding_large"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_related_food" />
 
-                <Button
-                    android:id="@+id/btnDecrease"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:text="−"
-                    android:textSize="20sp"
-                    android:backgroundTint="#8692F7"
-                    android:textColor="#FFFFFF" />
-
-                <TextView
-                    android:id="@+id/tvQuantity"
-                    android:layout_width="60dp"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="1"
-                    android:textSize="18sp"
-                    android:textColor="#212121"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp" />
-
-                <Button
-                    android:id="@+id/btnIncrease"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:text="+"
-                    android:textSize="20sp"
-                    android:backgroundTint="#8692F7"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
-
-    <!-- Nút thêm vào giỏ -->
-    <Button
-        android:id="@+id/btnAddToCart"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="🛒 Thêm vào giỏ hàng"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:backgroundTint="#8692F7" />
-</LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

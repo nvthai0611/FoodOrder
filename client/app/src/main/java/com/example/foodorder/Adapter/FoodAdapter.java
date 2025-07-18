@@ -6,24 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.activity.HomeActivity;
-import com.example.foodorder.activity.MainActivity;
 import com.example.foodorder.models.Food;
 
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
-    private List<HomeActivity.FoodDemo> foodList;
+    private List<Food> foodList;
     private Context context;
 
-    public FoodAdapter(Context context, List<HomeActivity.FoodDemo> foodList) {
+    public FoodAdapter(Context context, List<Food> foodList) {
         this.context = context;
         this.foodList = foodList;
     }
@@ -31,7 +32,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFood;
         TextView tvName, tvDesc, tvPrice;
-        ImageView[] stars = new ImageView[5];
+        RatingBar stars;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -39,11 +40,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             tvName = itemView.findViewById(R.id.tvFoodName);
             tvDesc = itemView.findViewById(R.id.tvFoodDesc);
             tvPrice = itemView.findViewById(R.id.tvPrice);
-            stars[0] = itemView.findViewById(R.id.star1);
-            stars[1] = itemView.findViewById(R.id.star2);
-            stars[2] = itemView.findViewById(R.id.star3);
-            stars[3] = itemView.findViewById(R.id.star4);
-            stars[4] = itemView.findViewById(R.id.star5);
+            stars = itemView.findViewById(R.id.ratingBar);
         }
     }
 
@@ -56,27 +53,36 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        HomeActivity.FoodDemo food = foodList.get(position);
-        holder.ivFood.setImageResource(food.getImageResId());
+        Food food = foodList.get(position);
+
+        // Load image bằng Glide
+        Glide.with(holder.itemView.getContext())
+                .load(food.getImageUrl())
+                .placeholder(R.drawable.sample_food)
+                .error(R.drawable.sample_food)
+                .into(holder.ivFood);
+
         holder.tvName.setText(food.getName());
         holder.tvDesc.setText(food.getDescription());
-        holder.tvPrice.setText("$" + food.getPrice());
+        holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
 
-        for (int i = 0; i < 5; i++) {
-            holder.stars[i].setVisibility(i < food.getRating() ? View.VISIBLE : View.INVISIBLE);
-        }
-       holder.itemView.setOnClickListener(v -> {
-           Context context = v.getContext();
-           Intent intent = new Intent(context, FoodActivity.class);
+        holder.stars.setRating((float) food.getRating());
 
-           // Truyền dữ liệu nếu cần
-           intent.putExtra("name", food.getName());
-           intent.putExtra("description", food.getDescription());
-           intent.putExtra("imageResId", food.getImageResId());
-           intent.putExtra("price", food.getPrice());
-           intent.putExtra("rating", food.getRating());
+        // Gán sự kiện click để chuyển sang FoodActivity
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, FoodActivity.class);
 
-           context.startActivity(intent);
+            // Truyền dữ liệu qua intent
+            intent.putExtra("id", food.getId());
+            intent.putExtra("category", food.getCategory()); // gửi cả object
+            intent.putExtra("name", food.getName());
+            intent.putExtra("description", food.getDescription());
+            intent.putExtra("imageUrl", food.getImageUrl());
+            intent.putExtra("price",  food.getPrice());
+//            intent.putExtra("rating", food.getRating());
+
+            context.startActivity(intent);
         });
     }
 

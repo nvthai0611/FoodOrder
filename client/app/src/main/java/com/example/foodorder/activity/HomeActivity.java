@@ -1,93 +1,82 @@
 package com.example.foodorder.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.example.foodorder.Adapter.BannerAdapter;
-import com.example.foodorder.Adapter.FoodAdapter;
+import androidx.fragment.app.Fragment;
+//import androidx.recyclerview.widget.GridLayoutManager;
+//import androidx.recyclerview.widget.RecyclerView;
+//import androidx.viewpager2.widget.ViewPager2;
+//
+//import com.example.foodorder.Adapter.BannerAdapter;
+//import com.example.foodorder.Adapter.FoodAdapter;
+//import com.example.foodorder.Fragment.DemoFragment;
+import com.example.foodorder.Fragment.FavoriteFoodsFragment;
+import com.example.foodorder.Fragment.HomeFragment;
+import com.example.foodorder.Fragment.UserProfileFragment;
 import com.example.foodorder.R;
+import com.example.foodorder.activity.user.UserProfileActivity;
+import com.example.foodorder.base.BaseActivity;
+import com.example.foodorder.models.Food;
+import com.example.foodorder.network.ApiClient;
+import com.example.foodorder.network.HomeService;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    RecyclerView recyclerView;
-    FoodAdapter adapter;
-    List<FoodDemo> foodList;
-    ViewPager2 viewPager;
-    TabLayout tabLayout;
+public class HomeActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
-        viewPager = findViewById(R.id.bannerViewPager);
-        //tabLayout = findViewById(R.id.bannerIndicator);
-        recyclerView = findViewById(R.id.rvPopularFood);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
 
-        foodList = getFakeFoodList();
-        adapter = new FoodAdapter(this, foodList);
-        recyclerView.setAdapter(adapter);
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                selectedFragment = new HomeFragment();
+            }else if(itemId == R.id.nav_favorite){
+                selectedFragment = new FavoriteFoodsFragment();
+            } else if (itemId == R.id.nav_orders) {
+                Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else if (itemId == R.id.nav_profile) {
+//                selectedFragment = new HomeFragment();
+//                Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+                selectedFragment = new UserProfileFragment();
+            }
 
-        // banner
-        List<Integer> images = Arrays.asList(
-                R.drawable.banner_home
-        );
-        BannerAdapter adapter = new BannerAdapter(images);
-        viewPager.setAdapter(adapter);
 
-//        // Gắn TabLayout indicator
-//        new TabLayoutMediator(tabLayout, viewPager,
-//                (tab, position) -> {
-//                    // Không cần làm gì ở đây nếu chỉ là dot indicator
-//                }).attach();
+            if (selectedFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .commit();
+            }
+
+            return true;
+        });
+        // Set mặc định là Home
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
     }
 
-    private List<FoodDemo> getFakeFoodList() {
-        List<FoodDemo> list = new ArrayList<>();
-        list.add(new FoodDemo("Double Decker", "Beef Burger", 35.0, R.drawable.sample_food, 5));
-        list.add(new FoodDemo("Smoke House", "Chicken Burger", 30.0, R.drawable.sample_food, 4));
-        list.add(new FoodDemo("Vegetable Salad", "Lettuce and Tomatoes", 15.0, R.drawable.sample_food, 5));
-        list.add(new FoodDemo("Chocobar", "Vanilla and Nuts", 5.0, R.drawable.sample_food, 3));
-        return list;
-    }
-
-    public class FoodDemo {
-        private String name;
-        private String description;
-        private double price;
-        private int imageResId;
-        private int rating;
-
-        public FoodDemo(String name, String description, double price, int imageResId, int rating) {
-            this.name = name;
-            this.description = description;
-            this.price = price;
-            this.imageResId = imageResId;
-            this.rating = rating;
-        }
-
-        // Getters
-        public String getName() { return name; }
-        public String getDescription() { return description; }
-        public double getPrice() { return price; }
-        public int getImageResId() { return imageResId; }
-        public int getRating() { return rating; }
-    }
 
 }
-

@@ -1,48 +1,39 @@
 package com.example.foodorder.models;
 
-public class OrderItem {
+import java.io.Serializable;
 
-    private int id;
-    private int orderId;
-    private int foodId;
-    private int quantity;
-    private double price;
+public class OrderItem implements Serializable {
+    public String food_id;
+    public String name;
+    public int quantity;
+    public int price;
 
-    public OrderItem() {}
+    private String image_url;
 
-    public OrderItem(int id, int orderId, int foodId, int quantity, double price) {
-        this.id = id;
-        this.orderId = orderId;
-        this.foodId = foodId;
+    public OrderItem() {
+    }
+
+    public OrderItem(String food_id, String name, int quantity, int price) {
+        this.food_id = food_id;
+        this.name = name;
         this.quantity = quantity;
         this.price = price;
     }
 
-    // Getters và Setters
-
-
-    public int getId() {
-        return id;
+    public String getFood_id() {
+        return food_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setFood_id(String food_id) {
+        this.food_id = food_id;
     }
 
-    public int getOrderId() {
-        return orderId;
+    public String getName() {
+        return name;
     }
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getFoodId() {
-        return foodId;
-    }
-
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getQuantity() {
@@ -53,11 +44,19 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }

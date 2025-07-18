@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="8dp"
+    android:elevation="1dp">
+
+    <TextView
+        android:id="@+id/tvUserId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User: 12345"
+        android:textStyle="bold"
+        android:textColor="@color/color_text_primary"
+        android:textSize="14sp" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="3"
+        android:progressTint="#FFE400"
+        android:stepSize="1" />
+
+    <TextView
+        android:id="@+id/tvComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Món ăn rất ngon, sẽ quay lại!"
+        android:textSize="14sp"
+        android:textColor="@color/color_text_body"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13/07/2025"
+        android:textSize="12sp"
+        android:textColor="@color/color_text_secondary"
+        android:layout_marginTop="4dp" />
+</LinearLayout>

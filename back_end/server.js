@@ -2,8 +2,19 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const apiRoutes = require("./routers/api");
+const connectDB = require("./config/db");
+const path = require('path'); // Import the path module
+const methodOverride = require('method-override');
+const userRoutes = require('./admin/routes/userRoutes');
+const productRoutes = require('./admin/routes/foodRoutes')
+const session = require('express-session');
 
-
+// --- EJS Configuration ---
+app.set('view engine', 'ejs'); // Set EJS as the template engine
+app.set('views', path.join(__dirname, '/admin/views')); // Specify the directory for your EJS files
+// You might also want to serve static files (CSS, JS, images)
+app.use(express.static(path.join(__dirname, 'public')));
+// --- End EJS Configuration ---
 app.use(
   cors({
     origin: "*",
@@ -16,6 +27,12 @@ app.use(
     extended: true,
   })
 );
+app.use(session({
+  secret: 'your-secret-key', // thay bằng key bảo mật
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(methodOverride('_method'));
 
 
 app.use("/", apiRoutes);
@@ -28,41 +45,16 @@ app.get('/', (req, res) => {
   });
 });
 
-// Dữ liệu giả lập user, dùng thực database khi triển khai thật
-const users = [
-  { id: 1, username: 'admin', password: '123456', token: 'token_admin_abc123' },
-  { id: 2, username: 'user1', password: 'password1', token: 'token_user1_xyz456' }
-];
+// --- Example EJS Route ---
+app.use('/admin', userRoutes);
+app.use('/admin/product', productRoutes);
+app.use('/admin/orders', require('./admin/routes/order'));
+// --- End Example EJS Route ---
 
-// API POST /login
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  console.log(req.body);
-
-  // Kiểm tra dữ liệu đầu vào
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username và password không được để trống' });
-  }
-
-  // Tìm user trong database giả lập
-  const user = users.find(u => u.username === username);
-
-  if (!user) {
-    return res.status(401).json({ message: 'User không tồn tại' });
-  }
-
-  if (user.password !== password) {
-    return res.status(401).json({ message: 'Sai mật khẩu' });
-  }
-
-  // Trả về user info (không gửi password)
-  res.json({
-    id: user.id,
-    username: user.username,
-    token: user.token
-  });
-});
-
-
+// Connect to MongoDB
+connectDB()
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+// Start the server
 const PORT = process.env.PORT || 9999;
 app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));

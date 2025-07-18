@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Nút quay lại -->
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_revert"
+        android:contentDescription="@string/back" />
+
+    <!-- Thông tin đơn hàng -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvOrderBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Người đặt:"
+            android:textSize="16sp"
+            android:textColor="@color/colorTextPrimary" />
+
+        <TextView
+            android:id="@+id/tvOrderLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thời gian tạo:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorTextSecondary" />
+
+        <TextView
+            android:id="@+id/tvScheduledTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thời gian giao:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorTextSecondary" />
+
+        <TextView
+            android:id="@+id/tvNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ghi chú:"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/colorTextSecondary" />
+
+        <TextView
+            android:id="@+id/tvOrderStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trạng thái:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/primary" />
+
+        <TextView
+            android:id="@+id/tvTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tổng tiền:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/colorTextPrimary" />
+    </LinearLayout>
+
+    <!-- Ảnh preview sản phẩm -->
+    <LinearLayout
+        android:id="@+id/layoutPreviewProducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/imgProduct1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/sample_food" />
+
+        <ImageView
+            android:id="@+id/imgProduct2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:src="@drawable/sample_food" />
+
+        <TextView
+            android:id="@+id/tvMoreProducts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+3 món"
+            android:textColor="#999999"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Danh sách món ăn -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/orderItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+    </ScrollView>
+
+    <!-- Nút hủy và phản hồi -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="12dp">
+
+        <Button
+            android:id="@+id/btnCancelOrder"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Hủy đơn hàng"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="12dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/btnFeedback"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Phản hồi"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

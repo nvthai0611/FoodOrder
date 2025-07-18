@@ -1,95 +1,74 @@
 package com.example.foodorder.models;
 
 
-public class Food {
-    private int id;
+import java.io.Serializable;
+
+public class Food implements Serializable {
+    private String _id;
     private String name;
     private String description;
-    private String imageUrl;
-    private String category;
+    private String image_url;
+    private Category category;
     private double price;
-    private boolean isAvailable;
-    private String createdAt;
+    private boolean isBestSeller;
+    private double rating;
+    private boolean is_available;
+    private String created_at;
 
-    public Food() {}
+    public Food() {
+    }
 
-    public Food(int id, String name, String description, String imageUrl, String category, double price, boolean isAvailable, String createdAt) {
-        this.id = id;
+    public Food(String _id, String name, String description, String image_url, double price, double rating) {
+        this._id = _id;
         this.name = name;
         this.description = description;
-        this.imageUrl = imageUrl;
-        this.category = category;
+        this.image_url = image_url;
         this.price = price;
-        this.isAvailable = isAvailable;
-        this.createdAt = createdAt;
+        this.rating = rating;
     }
 
-    // Getters và Setters
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Food(String _id, String name, String description, String image_url, Category category, double price, boolean isBestSeller, double rating, boolean is_available, String created_at) {
+        this._id = _id;
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
+        this.image_url = image_url;
         this.category = category;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
         this.price = price;
+        this.isBestSeller = isBestSeller;
+        this.rating = rating;
+        this.is_available = is_available;
+        this.created_at = created_at;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
+    // Getters & Setters
+    public String getId() { return _id; }
+    public void setId(String _id) { this._id = _id; }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getImageUrl() { return image_url; }
+    public void setImageUrl(String image_url) { this.image_url = image_url; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+
+    public boolean isBestSeller() { return isBestSeller; }
+    public void setBestSeller(boolean bestSeller) { isBestSeller = bestSeller; }
+
+    public double getRating() { return rating; }
+    public void setRating(double rating) { this.rating = rating; }
+
+    public boolean isAvailable() { return is_available; }
+    public void setAvailable(boolean is_available) { this.is_available = is_available; }
+
+    public String getCreatedAt() { return created_at; }
+    public void setCreatedAt(String created_at) { this.created_at = created_at; }
 }
-
 
