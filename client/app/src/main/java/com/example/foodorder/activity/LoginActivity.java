@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,8 @@ import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.LoginService;
 import com.example.foodorder.requests.LoginRequest;
 import com.example.foodorder.response.LoginResponse;
+
+import com.example.foodorder.utils.Routing;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         edtUsername = findViewById(R.id.username);
         edtPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.loginButton);
+        TextView tvSignup = findViewById(R.id.signupText);
 
         loginService = ApiClient.getClient().create(LoginService.class);
 
@@ -51,6 +55,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 loginUser(username, password);
             }
+        });
+
+        tvSignup.setOnClickListener(v -> {
+            Routing.redirect(LoginActivity.this, RegisterActivity.class);
         });
     }
     private void loginUser(String email, String password) {
@@ -84,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
                         // Đọc message lỗi từ server trả về (ví dụ: sai mật khẩu)
@@ -102,6 +111,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

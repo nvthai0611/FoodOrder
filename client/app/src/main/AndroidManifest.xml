@@ -26,6 +26,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activity.OrderHistoryActivity"
@@ -38,6 +39,9 @@
             android:exported="true" />
         <activity
             android:name=".activity.user.UserProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ForgotPasswordActivity"

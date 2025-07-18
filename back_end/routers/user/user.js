@@ -4,31 +4,28 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 const Food = require("../../models/Food");
-const data = require('../../data'); // import danh sách users từ data.js
-
+const data = require("../../data"); // import danh sách users từ data.js
 
 const JWT_SECRET = "your_jwt_secret_key";
 
 router.get("/login", async (req, res) => {
   try {
     const query = req.query;
-    const keyword = 'cơm'; // ví dụ từ khóa
+    const keyword = "cơm"; // ví dụ từ khóa
     const users = await User.find({
-      name: { $regex: query, $options: 'i' } // 'i' = không phân biệt hoa thường
+      name: { $regex: query, $options: "i" }, // 'i' = không phân biệt hoa thường
     });
     // const body = req.body;
 
     return res.json({
       message: "Chao user",
       // body: body,
-      users
+      users,
     });
-  } catch (error) {
-
-  }
+  } catch (error) {}
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
 
     const id = req.params.id;
@@ -37,31 +34,35 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-})
+});
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    res.send({ message: 'Chào user' });
+    res.send({ message: "Chào user" });
   } catch (error) {
     res.send({ error: error.message });
   }
 });
 
 // POST /reset-password
-router.post('/reset-password', (req, res) => {
+router.post("/reset-password", (req, res) => {
   console.log(data);
 
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ success: false, message: 'Email không được để trống' });
+    return res
+      .status(400)
+      .json({ success: false, message: "Email không được để trống" });
   }
 
   // Tìm user theo email
   const user = User.find({ email: email });
 
   if (!user) {
-    return res.status(404).json({ success: false, message: 'Email không tồn tại trong hệ thống' });
+    return res
+      .status(404)
+      .json({ success: false, message: "Email không tồn tại trong hệ thống" });
   }
 
   // Tạo mật khẩu mới (giả lập)
@@ -71,8 +72,8 @@ router.post('/reset-password', (req, res) => {
   // Trả về client (app Android) để hiển thị mật khẩu mới
   return res.json({
     success: true,
-    message: 'Đã đặt lại mật khẩu mới',
-    newPassword: newPassword
+    message: "Đã đặt lại mật khẩu mới",
+    newPassword: newPassword,
   });
 });
 

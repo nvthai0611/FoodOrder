@@ -1,22 +1,25 @@
 package com.example.foodorder.models;
 
-public class Cart {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Cart implements Serializable {
     private int id;
     private int userId;
-    private int foodId;
-    private int quantity;
+    private List<CartItem> cartItems = new ArrayList<>();
 
     // Hoặc nếu API trả về nested object:
     // private User user;
     // private Food food;
 
-    public Cart() {}
+    public Cart() {
+    }
 
-    public Cart(int id, int userId, int foodId, int quantity) {
+    public Cart(int id, int userId, List<CartItem> cartItems) {
         this.id = id;
         this.userId = userId;
-        this.foodId = foodId;
-        this.quantity = quantity;
+        this.cartItems = cartItems;
     }
     // Getters và Setters
 
@@ -37,19 +40,22 @@ public class Cart {
         this.userId = userId;
     }
 
-    public int getFoodId() {
-        return foodId;
+    public List<CartItem> getCartItems() {
+        return this.cartItems;
     }
 
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setCartItems(List<CartItem> cartItems){
+        this.cartItems = cartItems;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
+    public CartItem getCartItemByItemId(int id){
+        if(this.cartItems.isEmpty()) return new CartItem();
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        final CartItem[] result = {new CartItem()};
+        this.cartItems.forEach(cart -> {
+            if(cart.id == id) result[0] = cart;
+        });
+
+        return result[0];
     }
 }
