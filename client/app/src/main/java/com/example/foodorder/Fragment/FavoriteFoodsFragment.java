@@ -42,16 +42,16 @@ public class FavoriteFoodsFragment extends Fragment {
         FavoriteManager favoriteManager = new FavoriteManager(requireContext());
         favoriteFoods = favoriteManager.getFavorites();
 
-        // ✅ Toast từng món ra để debug
-        if (favoriteFoods != null && !favoriteFoods.isEmpty()) {
-            for (Food food : favoriteFoods) {
-                Toast.makeText(requireContext(),
-                        "ID: " + food.getId() + "\nPrice: " + food.getPrice(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(requireContext(), "Danh sách yêu thích trống", Toast.LENGTH_SHORT).show();
-        }
+        // Toast từng món ra để debug
+//        if (favoriteFoods != null && !favoriteFoods.isEmpty()) {
+//            for (Food food : favoriteFoods) {
+////                Toast.makeText(requireContext(),
+////                        "ID: " + food.getId() + "\nPrice: " + food.getPrice(),
+////                        Toast.LENGTH_SHORT).show();
+//            }
+//        } else {
+//            Toast.makeText(requireContext(), "Danh sách yêu thích trống", Toast.LENGTH_SHORT).show();
+//        }
 
 //        favoriteFoods = getDummyFavoriteFoods(); // Hoặc load từ API, Room, SharedPref...
         adapter = new FavoriteFoodAdapter(favoriteFoods, getContext());

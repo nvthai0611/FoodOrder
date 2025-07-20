@@ -41,8 +41,20 @@ router.get('/getByFoodId/:foodId', async (req, res) => {
   const { foodId } = req.params;
   console.log("Get reviews for foodId:", foodId);
   try {
-    const reviews = await Review.find({ food_id: foodId }).sort({ created_at: -1 });
-    res.json(reviews);
+    const reviews = await Review.find({ food_id: foodId }).populate('user_id').sort({ created_at: -1 });
+     // Nếu bạn muốn gộp tên vào kết quả
+    const response = reviews.map((review) => ({
+      _id: review._id,
+      user_id: review.user_id._id, 
+      userName: review.user_id.name, 
+      food_id: review.food_id,
+      rating: review.rating,
+      comment: review.comment,
+      created_at: review.created_at
+    }));
+    console.log(response);
+    
+    res.json(response);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
