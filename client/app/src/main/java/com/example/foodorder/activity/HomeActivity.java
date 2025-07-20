@@ -3,6 +3,7 @@ package com.example.foodorder.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -43,6 +44,9 @@ public class HomeActivity extends BaseActivity {
         setContentView(R.layout.activity_home);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+
+
+
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 

@@ -21,4 +21,7 @@ router.use("/review", require("./review_router/review"));
 // order
 router.use("/orders", require("./order/order"));
 
+// cart
+router.use("/cart", require("./cart/cart"));
+
 module.exports = router;

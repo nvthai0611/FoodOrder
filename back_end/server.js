@@ -39,9 +39,9 @@ app.use("/", apiRoutes);
 
 // app.use("/", router);
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
-    message: 'Chao'
+    message: "Chao",
   });
 });
 
@@ -57,4 +57,6 @@ connectDB()
   .catch((err) => console.error("MongoDB connection error:", err));
 // Start the server
 const PORT = process.env.PORT || 9999;
-app.listen(PORT, () => console.log(`Server running on port http://localhost:${PORT}`));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`Server running on port http://localhost:${PORT}`)
+);

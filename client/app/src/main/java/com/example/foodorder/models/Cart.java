@@ -1,55 +1,44 @@
 package com.example.foodorder.models;
 
-public class Cart {
-    private int id;
-    private int userId;
-    private int foodId;
-    private int quantity;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Cart implements Serializable {
+    private String userId;
+    private List<CartItem> cartItems = new ArrayList<>();
 
     // Hoặc nếu API trả về nested object:
     // private User user;
     // private Food food;
 
-    public Cart() {}
+    public Cart() {
+    }
 
-    public Cart(int id, int userId, int foodId, int quantity) {
-        this.id = id;
+    public Cart(String userId, List<CartItem> cartItems) {
         this.userId = userId;
-        this.foodId = foodId;
-        this.quantity = quantity;
+        this.cartItems = cartItems;
     }
     // Getters và Setters
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public int getFoodId() {
-        return foodId;
+    public List<CartItem> getCartItems() {
+        return this.cartItems;
     }
 
-    public void setFoodId(int foodId) {
-        this.foodId = foodId;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setCartItems(CartItem item) {
+        this.cartItems.add(item);
     }
 }

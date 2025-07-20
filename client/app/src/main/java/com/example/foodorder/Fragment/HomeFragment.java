@@ -1,12 +1,15 @@
 package com.example.foodorder.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,14 +20,18 @@ import com.example.foodorder.Adapter.BannerAdapter;
 import com.example.foodorder.Adapter.CategoryAdapter;
 import com.example.foodorder.Adapter.FoodAdapter;
 import com.example.foodorder.R;
+import com.example.foodorder.activity.CartActivity;
 import com.example.foodorder.models.Category;
 import com.example.foodorder.models.Food;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.HomeService;
+import com.example.foodorder.utils.RoutingUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +49,7 @@ public class HomeFragment extends Fragment {
     private List<Category> categoryList = new ArrayList<>();
     private List<Food> allFoods = new ArrayList<>();
     private List<Food> filteredFoods = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +62,6 @@ public class HomeFragment extends Fragment {
         adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList);
         recyclerView.setAdapter(adapterBestSeller);
 
-
         // cho phần Foos
         fetchCategories();
         rvCategories = view.findViewById(R.id.rvCategories);
@@ -64,8 +71,21 @@ public class HomeFragment extends Fragment {
         List<Integer> images = Arrays.asList(R.drawable.banner_home);
         BannerAdapter bannerAdapter = new BannerAdapter(images);
         viewPager.setAdapter(bannerAdapter);
+
+
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FloatingActionButton btnCart = requireActivity().findViewById(R.id.btnCart);
+        btnCart.setOnClickListener(v -> {
+            RoutingUtils.redirect(HomeFragment.this.getActivity(), CartActivity.class, false);
+        });
+    }
+
     private void fetchFoodsBestSellerList() {
         HomeService homeService = ApiClient.getClient().create(HomeService.class);
         Call<List<Food>> call = homeService.getAllFoodsBestSeller();
@@ -180,7 +200,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     categoryList.clear();
-                    var c= new Category();
+                    var c = new Category();
                     c.setId("");
                     c.setName("All");
                     categoryList.add(c);
@@ -219,8 +239,9 @@ public class HomeFragment extends Fragment {
         adapter = new FoodAdapter(requireContext(), filteredFoods);
         rvFoods.setAdapter(adapter);
     }
+
     private void filterFoodByCategory(String categoryId) {
-        if(categoryId.isBlank()){
+        if (categoryId.isBlank()) {
             fetchFoods();
             return;
         }

@@ -7,9 +7,17 @@
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
     <string name="email_login">Email</string>
+    <string name="username">Tên người dùng</string>
     <string name="password">Mật khẩu</string>
+    <string name="confirm_password">Nhập lại mật khẩu</string>
     <string name="email">Nhập địa chỉ email</string>
     <string name="reset">Khôi phục mật khẩu</string>
+    <string name="already_register"><b>Đã có tài khoản?</b> <u>Đăng nhập</u></string>
+    <string name="facebook_register">Đăng kí bằng Facebook</string>
+    <string name="google_register">Đăng kí bằng Google</string>
+
+    <!-- TOS -->
+    <string name="tos">Bằng cách đăng kí, bạn đã đồng ý với điều khoản sử dụng của chúng tôi</string>
 
     <!-- Order Detail -->
     <string name="title_activity_order_detail">Chi tiết đơn hàng</string>
@@ -66,4 +74,16 @@
     <string name="Old_Password">Old Password</string>
     <string name="New_Password">New Password</string>
     <string name="Confirm_New_Password">Confirm New Password</string>
+
+    <!-- Checkout and Cart -->
+    <string name="checkout_title">Thanh toán</string>
+    <string name="cart_title">Giỏ hàng</string>
+    <string name="billing_info">Thông tin người nhận</string>
+    <string name="total">Tổng tiền: </string>
+    <string name="prepaid">Thanh toán trước</string>
+    <string name="cod">Thanh toán khi nhận hàng</string>
+    <string name="total_placeholder">$0.00</string>
+    <string name="phone_placeholder">00000000000</string>
+
+
 </resources>

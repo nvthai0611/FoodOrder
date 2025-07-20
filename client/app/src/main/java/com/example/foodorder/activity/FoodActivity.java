@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,14 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
 import com.example.foodorder.Adapter.RelatedFoodAdapter;
+import com.example.foodorder.models.Cart;
+import com.example.foodorder.models.CartItem;
 import com.example.foodorder.models.Category;
 import com.example.foodorder.models.Food;
 import com.example.foodorder.models.Review;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.FeedBackService;
+import com.example.foodorder.network.CartService;
 import com.example.foodorder.network.FoodService;
 import com.example.foodorder.utils.FavoriteManager;
+import com.example.foodorder.utils.RoutingUtils;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +59,8 @@ public class FoodActivity extends AppCompatActivity {
 
     private Food currentFood;
 
+    private CartService cartService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,9 @@ public class FoodActivity extends AppCompatActivity {
         String imageUrl = intent.getStringExtra("imageUrl");
         foodPrice = intent.getDoubleExtra("price", 0);
         rating = (float) intent.getDoubleExtra("rating", 0);
+
+        cartService = ApiClient.getClient().create(CartService.class);
+
         // Tạo đối tượng Food hiện tại
         currentFood = new Food();
         currentFood.setId(foodId);
@@ -146,8 +157,46 @@ public class FoodActivity extends AppCompatActivity {
 
         // Thêm vào giỏ hàng
         btnAddToCart.setOnClickListener(v -> {
-            String message = quantity + " x " + name + " đã được thêm vào giỏ hàng!";
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
+
+            if (userId == null) {
+                RoutingUtils.redirect(this, LoginActivity.class, true);
+            } else {
+                CartItem item = new CartItem(foodId, name, foodPrice, quantity, imageUrl);
+
+                Cart cart = new Cart();
+                cart.setUserId(userId);
+                cart.setCartItems(item);
+                Call<Cart> cartCall = cartService.createOrUpdateCart(cart);
+
+                cartCall.enqueue(new Callback<Cart>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
+                        if (response.isSuccessful()) {
+                            String message = quantity + " x " + name + " đã được thêm vào giỏ hàng!";
+                            Toast.makeText(FoodActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                String errorMsg = response.errorBody().string();
+                                Log.e("FOO_ACT", errorMsg);
+                                Toast.makeText(FoodActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                Toast.makeText(FoodActivity.this, "Không thể thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Cart> call, @NonNull Throwable t) {
+                        Toast.makeText(FoodActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                Intent backIntent = new Intent(FoodActivity.this, HomeActivity.class);
+                backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(backIntent);
+                finish();
+            }
         });
 
         // Quay lại Home
