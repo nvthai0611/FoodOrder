@@ -3,9 +3,12 @@ package com.example.foodorder.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +25,9 @@ import com.example.foodorder.models.Cart;
 import com.example.foodorder.models.CartItem;
 import com.example.foodorder.models.Category;
 import com.example.foodorder.models.Food;
+import com.example.foodorder.models.Review;
 import com.example.foodorder.network.ApiClient;
+import com.example.foodorder.network.FeedBackService;
 import com.example.foodorder.network.CartService;
 import com.example.foodorder.network.FoodService;
 import com.example.foodorder.utils.FavoriteManager;
@@ -40,8 +45,11 @@ import retrofit2.Response;
 public class FoodActivity extends AppCompatActivity {
 
     private int quantity = 1;
-    private TextView tvQuantity, tvPrice;
+    private TextView tvQuantity, tvPrice, tvRating;
     private double foodPrice = 0;
+
+    private float rating = 0;
+
     private RecyclerView recyclerRelated;
     private Button btnAddToCart;
     private String categoryId;
@@ -74,6 +82,7 @@ public class FoodActivity extends AppCompatActivity {
         String description = intent.getStringExtra("description");
         String imageUrl = intent.getStringExtra("imageUrl");
         foodPrice = intent.getDoubleExtra("price", 0);
+        rating = (float) intent.getDoubleExtra("rating", 0);
 
         cartService = ApiClient.getClient().create(CartService.class);
 
@@ -84,11 +93,13 @@ public class FoodActivity extends AppCompatActivity {
         currentFood.setDescription(description);
         currentFood.setImageUrl(imageUrl);
         currentFood.setPrice(foodPrice);
+        currentFood.setRating(rating);
         currentFood.setCategory(category);
         // Ánh xạ View
         TextView tvName = findViewById(R.id.tvFoodName);
         tvQuantity = findViewById(R.id.tvQuantity);
         tvPrice = findViewById(R.id.tvPrice);
+        tvRating = findViewById(R.id.tvRating);
         TextView tvDesc = findViewById(R.id.tvDescription);
         ImageView ivFood = findViewById(R.id.imgFood);
         ImageButton btnBack = findViewById(R.id.btnBack);
@@ -103,7 +114,7 @@ public class FoodActivity extends AppCompatActivity {
         tvDesc.setText(description);
         tvQuantity.setText(String.valueOf(quantity));
         tvPrice.setText(formatCurrency(foodPrice));
-
+        tvRating.setText(String.format(Locale.US, "%.1f", rating)); // hiển thị đúng số
         Glide.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.sample_food)
@@ -199,6 +210,7 @@ public class FoodActivity extends AppCompatActivity {
         // Setup danh sách món liên quan
         recyclerRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         fetchRelatedFoods(categoryId, foodId);
+        fetchReviews(foodId);
     }
 
     // Cập nhật tổng tiền
@@ -220,7 +232,7 @@ public class FoodActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<List<Food>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Food>> call, @NonNull Response<List<Food>> response) {
+            public void onResponse(Call<List<Food>> call, Response<List<Food>> response) {
                 if (response.body() != null) {
                     List<Food> relatedFoods = response.body();
                     RelatedFoodAdapter adapter = new RelatedFoodAdapter(FoodActivity.this, relatedFoods);
@@ -231,8 +243,64 @@ public class FoodActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Food>> call, @NonNull Throwable t) {
+            public void onFailure(Call<List<Food>> call, Throwable t) {
                 Toast.makeText(FoodActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void displayReviews(List<Review> reviews) {
+        LinearLayout reviewContainer = findViewById(R.id.reviewContainer);
+        reviewContainer.removeAllViews(); // clear cũ nếu có
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        for (Review review : reviews) {
+            View reviewView = inflater.inflate(R.layout.item_review, reviewContainer, false);
+
+            TextView tvReviewerName = reviewView.findViewById(R.id.tvReviewerName);
+            TextView tvRating = reviewView.findViewById(R.id.tvReviewRating);
+            TextView tvTimeAgo = reviewView.findViewById(R.id.tvReviewTime);
+            TextView tvContent = reviewView.findViewById(R.id.tvReviewDes);
+
+            tvReviewerName.setText(review.getUserName());
+            tvRating.setText(String.format(Locale.US, "%d", review.getRating()));
+            tvTimeAgo.setText(" • " + review.getCreated_at()); // ví dụ: "2 days ago"
+            tvContent.setText(review.getComment());
+
+            reviewContainer.addView(reviewView);
+        }
+    }
+
+    private void fetchReviews(String foodId) {
+        FeedBackService reviewService = ApiClient.getClient().create(FeedBackService.class);
+        Call<List<Review>> call = reviewService.getReviewsByFoodId(foodId);
+
+        call.enqueue(new Callback<List<Review>>() {
+            @Override
+            public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Review> reviews = response.body();
+                    // Log toàn bộ danh sách
+                    Log.d("API_RESPONSE", "Số review: " + reviews.size());
+                    for (Review review : reviews) {
+                        Log.d("API_RESPONSE", "User ID: " + review.getUser_id()
+                                + ", Rating: " + review.getRating()
+                                + ", Comment: " + review.getComment()
+                                + ", Time: " + review.getCreated_at()
+                                + ", name: " + review.getUserName()
+                        )
+
+                        ;
+                    }
+
+                    // Gọi method hiển thị ra layout
+                    displayReviews(reviews);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Review>> call, Throwable t) {
+                Toast.makeText(FoodActivity.this, "Không thể tải đánh giá", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -71,6 +71,8 @@ public class RelatedFoodAdapter extends RecyclerView.Adapter<RelatedFoodAdapter.
             intent.putExtra("description", item.getDescription());
             intent.putExtra("imageUrl", item.getImageUrl());
             intent.putExtra("price",item.getPrice());
+            intent.putExtra("rating",item.getRating());
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Đảm bảo hoạt động trong mọi context
             context.startActivity(intent);
         });
