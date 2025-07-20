@@ -47,7 +47,7 @@ public class FavoriteFoodAdapter extends RecyclerView.Adapter<FavoriteFoodAdapte
         Food food = favoriteFoods.get(position);
         holder.tvName.setText(food.getName());
         holder.tvPrice.setText(formatCurrency(food.getPrice()));
-
+        holder.tvRating.setText(String.format(Locale.US, "%.1f", food.getRating()));
         Glide.with(context)
                 .load(food.getImageUrl())
                 .placeholder(R.drawable.sample_food)
@@ -61,6 +61,7 @@ public class FavoriteFoodAdapter extends RecyclerView.Adapter<FavoriteFoodAdapte
             intent.putExtra("description", food.getDescription());
             intent.putExtra("imageUrl", food.getImageUrl());
             intent.putExtra("price", food.getPrice());
+            intent.putExtra("rating", food.getRating());
             intent.putExtra("category", food.getCategory()); // nếu có
             context.startActivity(intent);
         });
@@ -81,7 +82,7 @@ public class FavoriteFoodAdapter extends RecyclerView.Adapter<FavoriteFoodAdapte
 
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFood;
-        TextView tvName, tvPrice;
+        TextView tvName, tvPrice, tvRating;
         MaterialButton btnRemoveFavorite;
 
         public FoodViewHolder(@NonNull View itemView) {
@@ -89,6 +90,7 @@ public class FavoriteFoodAdapter extends RecyclerView.Adapter<FavoriteFoodAdapte
             ivFood = itemView.findViewById(R.id.imgFavoriteFood);
             tvName = itemView.findViewById(R.id.tvFavoriteFoodName);
             tvPrice = itemView.findViewById(R.id.tvFavoriteFoodPrice);
+            tvRating= itemView.findViewById(R.id.tvFavoriteFoodRating);
             btnRemoveFavorite = itemView.findViewById(R.id.btnRemoveFavorite);
         }
     }

@@ -3,10 +3,29 @@ package com.example.foodorder.models;
 public class Review {
     private String _id;
     private String user_id;
+    private String userName;
     private String food_id;
     private int rating;      // từ 1 đến 5
     private String comment;
     private String created_at;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Review(String _id, String user_id, String userName, String food_id, int rating, String comment, String created_at) {
+        this._id = _id;
+        this.user_id = user_id;
+        this.userName = userName;
+        this.food_id = food_id;
+        this.rating = rating;
+        this.comment = comment;
+        this.created_at = created_at;
+    }
 
     public Review(String _id, String user_id, String food_id, int rating, String comment, String created_at) {
         this._id = _id;
