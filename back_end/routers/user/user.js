@@ -116,4 +116,43 @@ router.put('/:id', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+router.post('/register', async (req, res) => {
+  try {
+    const { email, password, username } = req.body;
+    console.log(req.body)
+    if (!username || !email || !password) {
+      console.log("failed")
+      return res.status(400).json({ error: 'Vui lòng nhập đầy đủ thông tin.' });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email đã được sử dụng.' });
+    }
+
+    // const password = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      name: username,
+      email: email,
+      password: password
+    });
+
+    await user.save();
+
+    const userSafe = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+
+    res.status(201).json(userSafe);
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({ error: 'Lỗi máy chủ. Vui lòng thử lại sau.' });
+  }
+});
+
 module.exports = router;

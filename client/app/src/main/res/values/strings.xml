@@ -75,9 +75,15 @@
     <string name="New_Password">New Password</string>
     <string name="Confirm_New_Password">Confirm New Password</string>
 
-    <!-- Checkout  -->
+    <!-- Checkout and Cart -->
     <string name="checkout_title">Thanh toán</string>
+    <string name="cart_title">Giỏ hàng</string>
+    <string name="billing_info">Thông tin người nhận</string>
     <string name="total">Tổng tiền: </string>
     <string name="prepaid">Thanh toán trước</string>
     <string name="cod">Thanh toán khi nhận hàng</string>
+    <string name="total_placeholder">$0.00</string>
+    <string name="phone_placeholder">00000000000</string>
+
+
 </resources>

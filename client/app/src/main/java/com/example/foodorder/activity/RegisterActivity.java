@@ -16,7 +16,8 @@ import com.example.foodorder.models.User;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.RegisterService;
 import com.example.foodorder.requests.RegisterRequest;
-import com.example.foodorder.utils.Routing;
+import com.example.foodorder.utils.AuthUtils;
+import com.example.foodorder.utils.RoutingUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         tvToLogin.setOnClickListener(v -> {
-            Routing.redirect(this, LoginActivity.class);
+            RoutingUtils.redirect(this, LoginActivity.class, true);
         });
     }
 
@@ -72,6 +73,11 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if(!AuthUtils.isEmailValid(email)){
+            Toast.makeText(RegisterActivity.this, "Email sai cú pháp, vui lòng nhập lại", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (!password.equals(confirmPassword)) {
             Toast.makeText(RegisterActivity.this, "Mật khẩu không trùng khớp, vui lòng nhập lại", Toast.LENGTH_SHORT).show();
             return;
@@ -84,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Đăng kí thành công!", Toast.LENGTH_SHORT).show();
-                    Routing.redirect(RegisterActivity.this, LoginActivity.class);
+                    RoutingUtils.redirect(RegisterActivity.this, LoginActivity.class, true);
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thất bại! Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                 }
@@ -99,7 +105,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createAccountWithFacebook() {
         //TODO: Implement logic
-        Routing.redirect(this, HomeActivity.class);
     }
 
     private void createAccountWithGoogle() {

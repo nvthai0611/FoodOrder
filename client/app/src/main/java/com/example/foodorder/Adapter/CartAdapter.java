@@ -1,6 +1,5 @@
 package com.example.foodorder.Adapter;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
-import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.models.Cart;
 import com.example.foodorder.models.CartItem;
-import com.example.foodorder.utils.Routing;
 
 import java.util.List;
 import java.util.Locale;
@@ -52,12 +49,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartAdapter.CartViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
         Glide.with(holder.itemView.getContext())
-                .load(item.image)
+                .load(item.getImage())
                 .placeholder(R.drawable.gradient_avatar_background)
                 .into(holder.itemImage);
-        holder.itemName.setText(item.name);
-        holder.itemPrice.setText(String.format(Locale.US, "$%.2f", item.price));
-        holder.itemQty.setText(String.format(Locale.US, "Số lượng: %d", item.quantity));
+        holder.itemName.setText(item.getName());
+        holder.itemPrice.setText(String.format(Locale.US, "$%.2f", item.getPrice()));
+        holder.itemQty.setText(String.format(Locale.US, "Số lượng: %d", item.getQuantity()));
 
         //TODO: Create logic redirect to the food detail when click on item in cart
 //        holder.itemView.setOnClickListener(v -> {

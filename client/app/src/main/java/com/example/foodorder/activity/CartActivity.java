@@ -1,8 +1,7 @@
 package com.example.foodorder.activity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,9 +18,9 @@ import com.example.foodorder.base.BaseActivity;
 import com.example.foodorder.models.Cart;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.CartService;
-import com.example.foodorder.network.RegisterService;
-import com.example.foodorder.utils.Routing;
+import com.example.foodorder.utils.RoutingUtils;
 
+import java.io.IOException;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -40,42 +38,33 @@ public class CartActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        recyclerView = findViewById(R.id.cartRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new CartAdapter(cart);
-        recyclerView.setAdapter(adapter);
+        setContentView(R.layout.activity_cart);
 
         cartService = ApiClient.getClient().create(CartService.class);
-
         totalPriceText = findViewById(R.id.totalPrice);
-
-        String userId = getCurrentUserId();
-        if (userId != null) {
-            fetchCart(userId);
-        } else {
-            Routing.redirect(this, LoginActivity.class);
-        }
+        recyclerView = findViewById(R.id.cartRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Button btnCheckout = findViewById(R.id.btnCheckout);
         btnCheckout.setOnClickListener(v -> {
             checkout();
         });
+
+        String userId = getCurrentUserId();
+        if (userId != null) {
+            fetchCart(userId);
+        } else {
+            RoutingUtils.redirect(this, LoginActivity.class, true);
+        }
     }
 
     private void checkout() {
         Bundle extras = new Bundle();
         extras.putSerializable("cart", cart);
         extras.putString("total", totalPriceText.getText().toString());
-        Routing.redirect(this, CheckoutActivity.class, extras);
+        RoutingUtils.redirect(this, CheckoutActivity.class, extras, false);
     }
 
-    /**
-     * Not tested since unable to connect to server
-     *
-     * @param userId
-     */
     private void fetchCart(String userId) {
         Call<Cart> call = cartService.getCart(userId);
         call.enqueue(new Callback<Cart>() {
@@ -83,15 +72,25 @@ public class CartActivity extends BaseActivity {
             public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     cart = response.body();
+                    adapter = new CartAdapter(cart);
+                    recyclerView.setAdapter(adapter);
                     totalPriceText.setText(String.format(Locale.US, "$%.2f", calculateTotal(cart)));
                 } else {
-                    Toast.makeText(CartActivity.this, "Failed to load cart.", Toast.LENGTH_SHORT).show();
+                    try {
+                        String errorMsg = response.errorBody().string();
+                        Log.e("CAR_ACT", errorMsg);
+                        Toast.makeText(CartActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(CartActivity.this, "Không thể tải giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Cart> call, @NonNull Throwable t) {
                 Toast.makeText(CartActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("CAR_ACT", t.getMessage());
+                RoutingUtils.redirect(CartActivity.this, HomeActivity.class, true);
             }
         });
     }
@@ -99,7 +98,7 @@ public class CartActivity extends BaseActivity {
     private Double calculateTotal(Cart cart) {
         final Double[] totalAmount = new Double[]{-1d};
         cart.getCartItems().forEach(item -> {
-            totalAmount[0] += item.price * item.quantity;
+            totalAmount[0] += item.getPrice() * item.getQuantity();
         });
         return totalAmount[0];
     }

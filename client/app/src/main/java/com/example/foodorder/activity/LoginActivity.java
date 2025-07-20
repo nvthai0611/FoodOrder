@@ -20,7 +20,7 @@ import com.example.foodorder.network.LoginService;
 import com.example.foodorder.requests.LoginRequest;
 import com.example.foodorder.response.LoginResponse;
 
-import com.example.foodorder.utils.Routing;
+import com.example.foodorder.utils.RoutingUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tvSignup.setOnClickListener(v -> {
-            Routing.redirect(LoginActivity.this, RegisterActivity.class);
+            RoutingUtils.redirect(LoginActivity.this, RegisterActivity.class, true);
         });
     }
     private void loginUser(String email, String password) {
