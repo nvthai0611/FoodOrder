@@ -27,6 +27,8 @@ import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.HomeService;
 import com.example.foodorder.utils.RoutingUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +58,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ViewPager2 viewPager = view.findViewById(R.id.bannerViewPager);
         RecyclerView recyclerView = view.findViewById(R.id.rvPopularFood);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 1));
 
         fetchFoodsBestSellerList();
         adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList);
@@ -68,9 +70,16 @@ public class HomeFragment extends Fragment {
         rvFoods = view.findViewById(R.id.rvFoods);
         fetchFoods();
 
-        List<Integer> images = Arrays.asList(R.drawable.banner_home);
+        List<Integer> images = new ArrayList<Integer>();
+        images.add(R.drawable.banner_home);
+        images.add(R.drawable.banner2);
+        images.add(R.drawable.banner3);
         BannerAdapter bannerAdapter = new BannerAdapter(images);
         viewPager.setAdapter(bannerAdapter);
+        TabLayout tabLayout = view.findViewById(R.id.bannerIndicator);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            tab.setIcon(R.drawable.tab_selector); // bạn cần tạo drawable này
+        }).attach();
 
 
         return view;

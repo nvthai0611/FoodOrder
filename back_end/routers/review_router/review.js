@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Review = require('../../models/Review');
+const Food = require('../../models/Food');
 
+// POST /api/review/create
 // POST /api/review/create
 router.post('/create', async (req, res) => {
   try {
     const { user_id, food_id, rating, comment } = req.body;
 
     console.log("Create review...");
+
     // Kiểm tra dữ liệu đầu vào
     if (!user_id || !food_id || !rating) {
       return res.status(400).json({ error: 'user_id, food_id và rating là bắt buộc.' });
@@ -28,14 +31,27 @@ router.post('/create', async (req, res) => {
     // Lưu vào database
     const savedReview = await newReview.save();
 
+    // Lấy tất cả review của food_id
+    const reviews = await Review.find({ food_id });
+
+    // Tính rating trung bình
+    const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = (totalRating / reviews.length).toFixed(1); // giữ 1 chữ số thập phân
+
+    // Cập nhật rating cho food
+    await Food.findByIdAndUpdate(food_id, { rating: averageRating });
+
     res.status(201).json({
       message: 'Review đã được tạo thành công!',
-      review: savedReview
+      review: savedReview,
+      updatedRating: averageRating
     });
   } catch (error) {
+    console.error("Error creating review:", error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 router.get('/getByFoodId/:foodId', async (req, res) => {
   const { foodId } = req.params;
