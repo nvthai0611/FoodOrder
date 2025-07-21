@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodorder.R;
 import com.example.foodorder.activity.OrderDetailActivity;
-import com.example.foodorder.models.OrderPreview;
+import com.example.foodorder.models.Food;
+import com.example.foodorder.models.Order;
+import com.example.foodorder.models.OrderItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +24,19 @@ import java.util.List;
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderViewHolder> {
 
     private Context context;
-    private List<OrderPreview> orderList;
-    private List<OrderPreview> fullOrderList; // danh sách gốc không lọc
+    private List<Order> orderList;
+    private List<Order> fullOrderList;
+    private OnOrderClickListener onOrderClickListener;
 
-    public OrderHistoryAdapter(Context context, List<OrderPreview> orderList) {
+    public interface OnOrderClickListener {
+        void onOrderClick(Order order);
+    }
+
+    public OrderHistoryAdapter(Context context, List<Order> orderList, OnOrderClickListener listener) {
         this.context = context;
         this.orderList = new ArrayList<>(orderList);
         this.fullOrderList = new ArrayList<>(orderList);
+        this.onOrderClickListener = listener;
     }
 
     @NonNull
@@ -40,43 +48,61 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        OrderPreview order = orderList.get(position);
+        Order order = orderList.get(position);
 
-        holder.tvOrderCode.setText("Mã đơn: #" + order.getOrderId());
-        holder.tvOrderDate.setText(order.getCreatedAt());
+        holder.tvOrderCode.setText("Mã đơn: #" + order.get_id());
+        holder.tvOrderDate.setText(order.getCreated_at());
         holder.tvOrderStatus.setText(order.getStatus());
-        holder.tvTotalPrice.setText("Tổng tiền: " + order.getTotalPrice() + "đ");
+        holder.tvTotalPrice.setText("Tổng tiền: " + order.getTotal_price() + "đ");
 
-        List<String> images = order.getFoodImages();
+        // Lấy ảnh từ danh sách món
+        List<OrderItem> items = order.getItems();
+        List<String> imageNames = new ArrayList<>();
+        if (items != null) {
+            for (OrderItem item : items) {
+                Food food = item.getFood_id();
+                if (food != null && food.getImageUrl() != null) {
+                    imageNames.add(food.getImageUrl());
+                }
+            }
+        }
 
-        // Hiển thị ảnh 1
-        if (images != null && images.size() > 0 && images.get(0) != null) {
-            int resId1 = context.getResources().getIdentifier(images.get(0), "drawable", context.getPackageName());
+        // Ảnh 1
+        if (imageNames.size() > 0) {
+            int resId1 = context.getResources().getIdentifier(imageNames.get(0), "drawable", context.getPackageName());
             holder.imgProduct1.setImageResource(resId1 != 0 ? resId1 : R.drawable.sample_food);
         } else {
             holder.imgProduct1.setImageResource(R.drawable.sample_food);
         }
 
-        // Hiển thị ảnh 2
-        if (images != null && images.size() > 1 && images.get(1) != null) {
-            int resId2 = context.getResources().getIdentifier(images.get(1), "drawable", context.getPackageName());
+        // Ảnh 2
+        if (imageNames.size() > 1) {
+            int resId2 = context.getResources().getIdentifier(imageNames.get(1), "drawable", context.getPackageName());
             holder.imgProduct2.setImageResource(resId2 != 0 ? resId2 : R.drawable.sample_food);
         } else {
             holder.imgProduct2.setImageResource(R.drawable.sample_food);
         }
 
         // Hiển thị "+x món"
-        if (images != null && images.size() > 2) {
+        if (imageNames.size() > 2) {
             holder.tvMoreProducts.setVisibility(View.VISIBLE);
-            holder.tvMoreProducts.setText("+" + (images.size() - 2) + " món");
+            holder.tvMoreProducts.setText("+" + (imageNames.size() - 2) + " món");
         } else {
             holder.tvMoreProducts.setVisibility(View.GONE);
         }
 
+        // Bấm "Xem chi tiết"
         holder.btnViewDetail.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrderDetailActivity.class);
-            intent.putExtra("order_id", order.getOrderId());
+            intent.putExtra("order_id", order.get_id());
             context.startActivity(intent);
+        });
+
+        // Bấm cả item để callback
+        holder.itemView.setOnClickListener(v -> {
+            if (onOrderClickListener != null) {
+                onOrderClickListener.onOrderClick(order);
+            }
         });
     }
 
@@ -85,14 +111,13 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         return orderList.size();
     }
 
-    // ✅ Hàm lọc đơn hàng theo từ khóa (order_id)
     public void filterByOrderId(String keyword) {
         orderList.clear();
         if (keyword == null || keyword.trim().isEmpty()) {
             orderList.addAll(fullOrderList);
         } else {
-            for (OrderPreview order : fullOrderList) {
-                if (order.getOrderId().toLowerCase().contains(keyword.toLowerCase())) {
+            for (Order order : fullOrderList) {
+                if (order.get_id().toLowerCase().contains(keyword.toLowerCase())) {
                     orderList.add(order);
                 }
             }

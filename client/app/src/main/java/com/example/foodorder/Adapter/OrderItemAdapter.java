@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
+import com.example.foodorder.models.Food;
 import com.example.foodorder.models.OrderItem;
 
 import java.util.List;
@@ -48,14 +49,30 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     @Override
     public void onBindViewHolder(@NonNull OrderItemAdapter.ViewHolder holder, int position) {
         OrderItem item = itemList.get(position);
+        Food food = item.getFood_id();
 
-        holder.tvFoodName.setText(item.getName());
+        if (food != null) {
+            holder.tvFoodName.setText(food.getName());
+
+            // Dùng Glide với tên ảnh local drawable nếu chỉ là tên file ảnh
+            int resId = context.getResources().getIdentifier(
+                    food.getImageUrl(), "drawable", context.getPackageName()
+            );
+            if (resId != 0) {
+                Glide.with(context)
+                        .load(resId)
+                        .placeholder(R.drawable.sample_food)
+                        .into(holder.imgFoodItem);
+            } else {
+                // fallback nếu không tìm được ảnh resource
+                holder.imgFoodItem.setImageResource(R.drawable.sample_food);
+            }
+        } else {
+            holder.tvFoodName.setText("Món ăn không xác định");
+            holder.imgFoodItem.setImageResource(R.drawable.sample_food);
+        }
+
         holder.tvQuantity.setText("Số lượng: " + item.getQuantity());
-
-        Glide.with(context)
-                .load(item.getImage_url())
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(holder.imgFoodItem);
     }
 
     @Override

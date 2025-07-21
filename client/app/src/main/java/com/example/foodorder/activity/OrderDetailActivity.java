@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.example.foodorder.R;
 import com.example.foodorder.base.BaseActivity;
+import com.example.foodorder.models.Food;
 import com.example.foodorder.models.OrderDetail;
 import com.example.foodorder.models.OrderItem;
 import com.example.foodorder.network.ApiClient;
@@ -97,48 +98,51 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void populateOrderDetail(OrderDetail order) {
-        tvOrderBy.setText("Người đặt: " + order.user_id);
-        tvOrderLocation.setText("Thời gian tạo: " + formatDate(order.created_at));
-        tvOrderStatus.setText("Trạng thái: " + convertStatus(order.status));
-        tvScheduledTime.setText("Thời gian giao: " + formatDate(order.scheduled_time));
-        tvNote.setText("Ghi chú: " + (order.note.isEmpty() ? "Không có" : order.note));
-        tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.total_price));
+        tvOrderBy.setText("Người đặt: " + order.getUser_id());
+        tvOrderLocation.setText("Thời gian tạo: " + formatDate(order.getCreated_at()));
+        tvOrderStatus.setText("Trạng thái: " + convertStatus(order.getStatus()));
+        tvScheduledTime.setText("Thời gian giao: " + formatDate(order.getScheduled_time()));
+        tvNote.setText("Ghi chú: " + (order.getNote() == null || order.getNote().isEmpty() ? "Không có" : order.getNote()));
+        tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.getTotal_price()));
 
         orderItemsContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (int i = 0; i < order.items.size(); i++) {
-            OrderItem item = order.items.get(i);
+        List<OrderItem> items = order.getItems();
+        List<String> foodImages = order.getFood_images();
+
+        for (int i = 0; i < items.size(); i++) {
+            OrderItem item = items.get(i);
             View itemView = inflater.inflate(R.layout.item_order_detail, orderItemsContainer, false);
 
             TextView tvFoodName = itemView.findViewById(R.id.tvFoodName);
             TextView tvQuantityPrice = itemView.findViewById(R.id.tvQuantityPrice);
             ImageView imgFood = itemView.findViewById(R.id.imgFood);
             Button feedback = itemView.findViewById(R.id.feedback);
-            feedback.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(OrderDetailActivity.this, ReviewFoodActivity.class); // hoặc tên Activity bạn dùng để gửi đánh giá
 
-                    intent.putExtra("food_id", item.food_id);  // truyền ID món ăn
-                    intent.putExtra("food_quantity", item.quantity); // truyền số lượng đã đặt (nếu cần)
-                    intent.putExtra("food_name", item.name); // tuỳ ý truyền thêm
+            Food food = item.getFood_id();
+            if (food != null) {
+                tvFoodName.setText(food.getName());
+                tvQuantityPrice.setText("x" + item.getQuantity() + " • " + formatMoney(item.getPrice() * item.getQuantity()));
 
+                feedback.setOnClickListener(v -> {
+                    Intent intent = new Intent(OrderDetailActivity.this, ReviewFoodActivity.class);
+                    intent.putExtra("food_id", food.getId());
+                    intent.putExtra("food_quantity", item.getQuantity());
+                    intent.putExtra("food_name", food.getName());
                     startActivity(intent);
-                }
-            });
-            tvFoodName.setText(item.name);
-            tvQuantityPrice.setText("x" + item.quantity + " • " + formatMoney(item.price * item.quantity));
+                });
 
-            // Hiển thị ảnh theo thứ tự trong food_images (nếu có)
-            if (order.food_images != null && i < order.food_images.size()) {
-                int resId = getResources().getIdentifier(order.food_images.get(i), "drawable", getPackageName());
-                if (resId != 0) {
-                    imgFood.setImageResource(resId);
+                // Load ảnh theo tên trong foodImages
+                if (foodImages != null && i < foodImages.size()) {
+                    int resId = getResources().getIdentifier(foodImages.get(i), "drawable", getPackageName());
+                    imgFood.setImageResource(resId != 0 ? resId : R.drawable.sample_food);
                 } else {
                     imgFood.setImageResource(R.drawable.sample_food);
                 }
             } else {
+                tvFoodName.setText("Không xác định");
+                tvQuantityPrice.setText("x" + item.getQuantity());
                 imgFood.setImageResource(R.drawable.sample_food);
             }
 
