@@ -12,21 +12,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
 import com.example.foodorder.activity.OrderDetailActivity;
 import com.example.foodorder.models.Food;
 import com.example.foodorder.models.Order;
 import com.example.foodorder.models.OrderItem;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderViewHolder> {
 
-    private Context context;
+    private final Context context;
+    private final List<Order> fullOrderList;
+    private final OnOrderClickListener onOrderClickListener;
     private List<Order> orderList;
-    private List<Order> fullOrderList;
-    private OnOrderClickListener onOrderClickListener;
+
+    // Nếu ảnh là tên file, bạn có thể đặt base URL tại đây
+    private static final String BASE_IMAGE_URL = "https://yourdomain.com/images/"; // Cập nhật đúng domain của bạn
 
     public interface OnOrderClickListener {
         void onOrderClick(Order order);
@@ -52,53 +58,64 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
         holder.tvOrderCode.setText("Mã đơn: #" + order.get_id());
         holder.tvOrderDate.setText(order.getCreated_at());
-        holder.tvOrderStatus.setText(order.getStatus());
-        holder.tvTotalPrice.setText("Tổng tiền: " + order.getTotal_price() + "đ");
+        holder.tvOrderStatus.setText(convertStatus(order.getStatus()));
+        holder.tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.getTotal_price()));
 
-        // Lấy ảnh từ danh sách món
         List<OrderItem> items = order.getItems();
-        List<String> imageNames = new ArrayList<>();
+        List<String> imageUrls = new ArrayList<>();
         if (items != null) {
             for (OrderItem item : items) {
                 Food food = item.getFood_id();
                 if (food != null && food.getImageUrl() != null) {
-                    imageNames.add(food.getImageUrl());
+                    String imageUrl = food.getImageUrl();
+
+                    // Nếu image chỉ là tên file, thêm BASE_IMAGE_URL
+                    if (!imageUrl.startsWith("http")) {
+                        imageUrl = BASE_IMAGE_URL + imageUrl;
+                    }
+
+                    imageUrls.add(imageUrl);
                 }
             }
         }
 
-        // Ảnh 1
-        if (imageNames.size() > 0) {
-            int resId1 = context.getResources().getIdentifier(imageNames.get(0), "drawable", context.getPackageName());
-            holder.imgProduct1.setImageResource(resId1 != 0 ? resId1 : R.drawable.sample_food);
+        // Load ảnh 1 bằng Glide
+        if (imageUrls.size() > 0) {
+            Glide.with(context)
+                    .load(imageUrls.get(0))
+                    .placeholder(R.drawable.sample_food)
+                    .error(R.drawable.sample_food)
+                    .into(holder.imgProduct1);
         } else {
             holder.imgProduct1.setImageResource(R.drawable.sample_food);
         }
 
-        // Ảnh 2
-        if (imageNames.size() > 1) {
-            int resId2 = context.getResources().getIdentifier(imageNames.get(1), "drawable", context.getPackageName());
-            holder.imgProduct2.setImageResource(resId2 != 0 ? resId2 : R.drawable.sample_food);
+        // Load ảnh 2 bằng Glide
+        if (imageUrls.size() > 1) {
+            Glide.with(context)
+                    .load(imageUrls.get(1))
+                    .placeholder(R.drawable.sample_food)
+                    .error(R.drawable.sample_food)
+                    .into(holder.imgProduct2);
         } else {
             holder.imgProduct2.setImageResource(R.drawable.sample_food);
         }
 
-        // Hiển thị "+x món"
-        if (imageNames.size() > 2) {
+        // Hiển thị "+x món" nếu > 2
+        if (imageUrls.size() > 2) {
             holder.tvMoreProducts.setVisibility(View.VISIBLE);
-            holder.tvMoreProducts.setText("+" + (imageNames.size() - 2) + " món");
+            holder.tvMoreProducts.setText("+" + (imageUrls.size() - 2) + " món");
         } else {
             holder.tvMoreProducts.setVisibility(View.GONE);
         }
 
-        // Bấm "Xem chi tiết"
+        // Mở chi tiết đơn
         holder.btnViewDetail.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrderDetailActivity.class);
             intent.putExtra("order_id", order.get_id());
             context.startActivity(intent);
         });
 
-        // Bấm cả item để callback
         holder.itemView.setOnClickListener(v -> {
             if (onOrderClickListener != null) {
                 onOrderClickListener.onOrderClick(order);
@@ -123,6 +140,20 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             }
         }
         notifyDataSetChanged();
+    }
+
+    private String convertStatus(String status) {
+        switch (status) {
+            case "pending": return "Chờ xác nhận";
+            case "preparing": return "Đang chuẩn bị";
+            case "done": return "Đã giao";
+            case "canceled": return "Đã huỷ";
+            default: return status;
+        }
+    }
+
+    private String formatMoney(int money) {
+        return NumberFormat.getNumberInstance(Locale.getDefault()).format(money) + "đ";
     }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {

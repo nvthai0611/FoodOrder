@@ -63,4 +63,55 @@ router.get("/detail/:orderId", async (req, res) => {
   }
 });
 
+// 🔹 PUT /api/orders/status/:orderId → Cập nhật trạng thái đơn hàng
+router.put("/status/:orderId", async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status, status_payment } = req.body;
+
+    // Kiểm tra giá trị hợp lệ
+    const validStatus = ['pending', 'preparing', 'done', 'canceled'];
+    const validPaymentStatus = ['pending', 'paid', 'failed'];
+
+    const updateData = {};
+
+    if (status) {
+      if (!validStatus.includes(status)) {
+        return res.status(400).json({ message: "Trạng thái đơn hàng không hợp lệ" });
+      }
+      updateData.status = status;
+    }
+
+    if (status_payment) {
+      if (!validPaymentStatus.includes(status_payment)) {
+        return res.status(400).json({ message: "Trạng thái thanh toán không hợp lệ" });
+      }
+      updateData.status_payment = status_payment;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "Không có trường nào để cập nhật" });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { $set: updateData },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    res.json({
+      message: "Cập nhật trạng thái thành công",
+      order: updatedOrder
+    });
+  } catch (err) {
+    console.error("Lỗi khi cập nhật trạng thái đơn hàng:", err);
+    res.status(500).json({ message: "Lỗi server", error: err.message });
+  }
+});
+
+
 module.exports = router;

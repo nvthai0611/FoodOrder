@@ -134,35 +134,20 @@
             android:paddingBottom="4dp" />
     </ScrollView>
 
-    <!-- Nút hủy và phản hồi -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
+        android:gravity="center"
         android:layout_marginTop="12dp">
 
         <Button
             android:id="@+id/btnCancelOrder"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:backgroundTint="@color/primary"
             android:text="Hủy đơn hàng"
-            android:backgroundTint="@color/primary"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="12dp"
-            android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/btnFeedback"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Phản hồi"
-            android:backgroundTint="@color/primary"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
