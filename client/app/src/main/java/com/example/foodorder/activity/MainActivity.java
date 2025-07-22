@@ -3,12 +3,14 @@ package com.example.foodorder.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.foodorder.R;
+
 
 public class MainActivity extends AppCompatActivity {
 
