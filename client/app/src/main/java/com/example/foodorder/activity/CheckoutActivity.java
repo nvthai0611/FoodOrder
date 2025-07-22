@@ -5,6 +5,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,11 +35,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CheckoutActivity extends AppCompatActivity {
+    private Socket mSocket;
 
     private Cart cart;
     private String userId;
@@ -52,7 +57,6 @@ public class CheckoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_checkout);
-
         userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                 .getString("uId", null);
         String fullName = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
@@ -124,13 +128,15 @@ public class CheckoutActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Thanh toán");
 
+        // Inflate layout của dialog
         View view = getLayoutInflater().inflate(R.layout.dialog_qr_payment, null);
-        builder.setView(view);
+        builder.setView(view); // Gán layout vào dialog
 
         TextView txtBankInfo = view.findViewById(R.id.txtBankInfo);
         TextView txtNote = view.findViewById(R.id.txtNote);
         ImageView imgQr = view.findViewById(R.id.imgQr);
 
+        // Hiển thị thông tin chuyển khoản
         txtBankInfo.setText(
                 "Ngân hàng: " + info.getBankName() +
                         "\nSố tài khoản: " + info.getAccountNumber() +
@@ -140,10 +146,24 @@ public class CheckoutActivity extends AppCompatActivity {
 
         txtNote.setText("Nội dung: " + info.getNote());
 
+        // Load ảnh QR bằng Glide
         Glide.with(this).load(info.getQrUrl()).into(imgQr);
 
-        builder.setNegativeButton("Huỷ", null);
-        builder.create().show();
+        // ĐẶT NÚT HUỶ TRƯỚC KHI .create()
+        builder.setNegativeButton("Huỷ", (dialogInterface, i) -> {
+            // Hủy handler khi nhấn "Huỷ"
+            handler.removeCallbacks(paymentCheckRunnable);
+        });
+
+        // TẠO dialog SAU khi đã cấu hình đầy đủ nút
+        AlertDialog dialog = builder.create();
+
+        // Nếu người dùng bấm ra ngoài dialog hoặc bấm back → cũng hủy handler
+        dialog.setOnDismissListener(d -> {
+            handler.removeCallbacks(paymentCheckRunnable);
+        });
+
+        dialog.show(); // Hiển thị dialog lên
 
         // Tự động kiểm tra trạng thái thanh toán mỗi 3 giây
         paymentCheckRunnable = new Runnable() {
@@ -151,11 +171,11 @@ public class CheckoutActivity extends AppCompatActivity {
             public void run() {
                 if (!isPaymentSuccess) {
                     checkPaymentStatus(info.getNote(), String.format(Locale.US, "%.0f", info.getAmount()));
-                    handler.postDelayed(this, 3000);
+                    handler.postDelayed(this, 3000); // Lặp lại sau 3 giây
                 }
             }
         };
-        handler.post(paymentCheckRunnable);
+        handler.post(paymentCheckRunnable); // Bắt đầu lặp kiểm tra
     }
 
     private void checkPaymentStatus(String orderCode, String amount) {
@@ -185,4 +205,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private void codCheckout() {
         Toast.makeText(this, "🚛 Thanh toán khi nhận hàng chưa hỗ trợ", LENGTH_SHORT).show();
     }
+
+
 }
