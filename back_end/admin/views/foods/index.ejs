@@ -7,7 +7,11 @@
 </head>
 <body class="container py-4">
   <%- include('../common/header') %>
-
+<% if (typeof message !== 'undefined') { %>
+    <div class="alert alert-success">
+      <%= message %>
+    </div>
+  <% } %>
   <h1 class="mb-3">Danh sách Sản phẩm</h1>
 
   <form id="filterForm" class="row g-2 mb-3">

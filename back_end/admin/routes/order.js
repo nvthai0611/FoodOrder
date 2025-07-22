@@ -81,6 +81,7 @@ router.get('/', async (req, res) => {
                 { path: 'items.food_id', select: 'name' }
             ]);
 
+        console.log(orders);
 
         res.render('orders/index', {
             orders: orders,
