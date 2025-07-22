@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http"); // Thêm để tạo server HTTP
+const socketIo = require("socket.io"); // socket.io v2.4.1
 const app = express();
 const cors = require("cors");
 const apiRoutes = require("./routers/api");
@@ -12,6 +14,15 @@ const User = require("./models/User");
 const Order = require("./models/Order");
 const Cart = require("./models/Cart");
 const axios = require('axios');
+// --- Socket Configuration ---
+const server = http.createServer(app); // tạo server HTTP
+// Khởi tạo socket.io v2
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 // --- EJS Configuration ---
 app.set('view engine', 'ejs'); // Set EJS as the template engine
 app.set('views', path.join(__dirname, '/admin/views')); // Specify the directory for your EJS files
@@ -45,7 +56,7 @@ app.use("/", apiRoutes);
 app.post("/create-payment-info", async (req, res) => {
   const { userId, totalPrice } = req.body;
   console.log("Create payment info:", { userId, totalPrice });
-  
+
   if (!userId || !totalPrice) {
     return res.status(400).json({ error: "Thiếu userId hoặc totalPrice" });
   }
@@ -59,7 +70,7 @@ app.post("/create-payment-info", async (req, res) => {
     amount: totalPrice,
     note: orderCode
   };
- const qrUrl = `https://qr.sepay.vn/img?acc=${paymentInfo.accountNumber}&bank=${paymentInfo.bankName}&amount=${paymentInfo.amount}&des=${paymentInfo.note}&template=simple&download=true`;
+  const qrUrl = `https://qr.sepay.vn/img?acc=${paymentInfo.accountNumber}&bank=${paymentInfo.bankName}&amount=${paymentInfo.amount}&des=${paymentInfo.note}&template=simple&download=true`;
   return res.json({
     ...paymentInfo,
     qrUrl
@@ -93,7 +104,7 @@ app.post("/check-payment-status", async (req, res) => {
 
     const existing = await Order.findOne({ note: orderCode });
     console.log("Existing order:", existing);
-    
+
     if (existing) return res.json({ success: true, message: "Đã ghi nhận trước đó", transaction: found });
 
     const cart = await Cart.findOne({ userId });
@@ -134,6 +145,22 @@ app.use('/admin/orders', require('./admin/routes/order'));
 connectDB()
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+// --- SOCKET.IO ---
+io.on("connection", (socket) => {
+  console.log("🟢 Client kết nối:", socket.id);
+
+  // Nhận đơn hàng từ Android hoặc web
+  socket.on("new_order", (data) => {
+    console.log("📦 Đơn hàng mới:", data);
+    // Gửi broadcast đến tất cả admin
+    io.emit("admin_new_order", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("🔴 Client ngắt kết nối:", socket.id);
+  });
+});
 // Start the server
 const PORT = process.env.PORT || 9999;
 app.listen(PORT, "0.0.0.0", () =>
