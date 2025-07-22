@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Food = require('../../models/Food');
 const Category = require('../../models/Category');
+const uploadCloud = require('../../middlewares/servers/imageUpload');
 
 // Danh sách sản phẩm với filter + phân trang
 router.get('/', async (req, res) => {
@@ -53,7 +54,7 @@ router.get('/new', async (req, res) => {
 });
 
 // Xử lý tạo sản phẩm
-router.post('/create', async (req, res) => {
+router.post('/create', uploadCloud.single('image'), async (req, res) => {
     await Food.create(req.body);
     req.session.message = 'Thêm sản phẩm thành công!';
     res.redirect('/admin/product');
@@ -67,7 +68,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // Xử lý cập nhật sản phẩm
-router.post('/:id/update', async (req, res) => {
+router.post('/:id/update', uploadCloud.single('image'), async (req, res) => {
     await Food.findByIdAndUpdate(req.params.id, req.body);
 
     const food = await Food.findById(req.params.id); // Lấy lại bản ghi mới

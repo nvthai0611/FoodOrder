@@ -68,7 +68,6 @@ router.get('/', async (req, res) => {
 
         // Đếm tổng số đơn hàng phù hợp với query để tính tổng số trang
         const totalOrders = await Order.countDocuments(query);
-        console.log(`Tổng số đơn hàng tìm thấy: ${totalOrders}`);
 
         const totalPages = Math.ceil(totalOrders / limit);
 
@@ -81,7 +80,6 @@ router.get('/', async (req, res) => {
                 { path: 'user_id', select: 'name email' },
                 { path: 'items.food_id', select: 'name' }
             ]);
-        console.log(`Đơn hàng trên trang hiện tại (${orders.length} bản ghi):`, orders);
 
 
         res.render('orders/index', {
