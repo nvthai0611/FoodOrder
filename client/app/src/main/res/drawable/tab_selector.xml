@@ -3,13 +3,13 @@
     <item android:state_selected="true">
         <shape android:shape="oval">
             <size android:width="8dp" android:height="8dp"/>
-            <solid android:color="#3F51B5"/> <!-- Màu khi được chọn -->
+            <solid android:color="#000000"/> <!-- Màu khi được chọn -->
         </shape>
     </item>
     <item>
         <shape android:shape="oval">
             <size android:width="8dp" android:height="8dp"/>
-            <solid android:color="#D3D3D3"/> <!-- Màu mặc định -->
+            <solid android:color="#FFFFFF"/> <!-- Màu mặc định -->
         </shape>
     </item>
 </selector>

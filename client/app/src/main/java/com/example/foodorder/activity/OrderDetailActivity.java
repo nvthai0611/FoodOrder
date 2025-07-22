@@ -14,8 +14,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.foodorder.R;
 import com.example.foodorder.base.BaseActivity;
+import com.example.foodorder.models.Food;
 import com.example.foodorder.models.OrderDetail;
 import com.example.foodorder.models.OrderItem;
 import com.example.foodorder.network.ApiClient;
@@ -24,8 +26,10 @@ import com.example.foodorder.network.OrderService;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,12 +38,15 @@ import retrofit2.Response;
 public class OrderDetailActivity extends BaseActivity {
 
     private static final String TAG = "OrderDetailActivity";
+    private static final String BASE_IMAGE_URL = "https://yourdomain.com/images/"; // cập nhật đúng domain ảnh của bạn
 
     private TextView tvOrderBy, tvOrderLocation, tvOrderStatus;
     private TextView tvScheduledTime, tvNote, tvTotalPrice;
     private LinearLayout orderItemsContainer;
     private Button btnCancelOrder;
     private ImageButton btnBack;
+
+    private OrderDetail currentOrder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,8 +77,40 @@ public class OrderDetailActivity extends BaseActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        btnCancelOrder.setOnClickListener(v ->
-                Toast.makeText(this, "Tính năng hủy đơn đang phát triển", Toast.LENGTH_SHORT).show());
+        btnCancelOrder.setOnClickListener(v -> {
+            if (currentOrder != null && "pending".equalsIgnoreCase(currentOrder.getStatus())) {
+                cancelOrder(currentOrder.get_id());
+            }
+        });
+
+    }
+
+    private void cancelOrder(String orderId) {
+        OrderService service = ApiClient.getClient().create(OrderService.class);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("status", "canceled");
+
+        Call<OrderDetail> call = service.updateOrderStatus(orderId, body);
+
+        call.enqueue(new Callback<OrderDetail>() {
+            @Override
+            public void onResponse(Call<OrderDetail> call, Response<OrderDetail> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(OrderDetailActivity.this, "Đã hủy đơn hàng", Toast.LENGTH_SHORT).show();
+                    currentOrder = response.body();
+                    populateOrderDetail(currentOrder); // cập nhật lại giao diện
+                } else {
+                    Toast.makeText(OrderDetailActivity.this, "Hủy đơn thất bại", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderDetail> call, Throwable t) {
+                Toast.makeText(OrderDetailActivity.this, "Lỗi khi kết nối đến server", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Lỗi hủy đơn", t);
+            }
+        });
     }
 
     private void loadOrderDetail(String orderId) {
@@ -97,48 +136,68 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void populateOrderDetail(OrderDetail order) {
-        tvOrderBy.setText("Người đặt: " + order.user_id);
-        tvOrderLocation.setText("Thời gian tạo: " + formatDate(order.created_at));
-        tvOrderStatus.setText("Trạng thái: " + convertStatus(order.status));
-        tvScheduledTime.setText("Thời gian giao: " + formatDate(order.scheduled_time));
-        tvNote.setText("Ghi chú: " + (order.note.isEmpty() ? "Không có" : order.note));
-        tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.total_price));
+        tvOrderBy.setText("Người đặt: " + order.getUser_id());
+        tvOrderLocation.setText("Thời gian tạo: " + formatDate(order.getCreated_at()));
+        tvOrderStatus.setText("Trạng thái: " + convertStatus(order.getStatus()));
+        tvScheduledTime.setText("Thời gian giao: " + formatDate(order.getScheduled_time()));
+        tvNote.setText("Ghi chú: " + (order.getNote() == null || order.getNote().isEmpty() ? "Không có" : order.getNote()));
+        tvTotalPrice.setText("Tổng tiền: " + formatMoney(order.getTotal_price()));
+
+        this.currentOrder = order;
+
+        // Kích hoạt nút hủy nếu đơn hàng đang chờ xác nhận
+        if ("pending".equalsIgnoreCase(order.getStatus())) {
+            btnCancelOrder.setEnabled(true);
+            btnCancelOrder.setAlpha(1.0f); // hiện rõ
+        } else {
+            btnCancelOrder.setEnabled(false);
+            btnCancelOrder.setAlpha(0.5f); // làm mờ
+        }
 
         orderItemsContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (int i = 0; i < order.items.size(); i++) {
-            OrderItem item = order.items.get(i);
+        List<OrderItem> items = order.getItems();
+
+        for (OrderItem item : items) {
             View itemView = inflater.inflate(R.layout.item_order_detail, orderItemsContainer, false);
 
             TextView tvFoodName = itemView.findViewById(R.id.tvFoodName);
             TextView tvQuantityPrice = itemView.findViewById(R.id.tvQuantityPrice);
             ImageView imgFood = itemView.findViewById(R.id.imgFood);
             Button feedback = itemView.findViewById(R.id.feedback);
-            feedback.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(OrderDetailActivity.this, ReviewFoodActivity.class); // hoặc tên Activity bạn dùng để gửi đánh giá
 
-                    intent.putExtra("food_id", item.food_id);  // truyền ID món ăn
-                    intent.putExtra("food_quantity", item.quantity); // truyền số lượng đã đặt (nếu cần)
-                    intent.putExtra("food_name", item.name); // tuỳ ý truyền thêm
+            Food food = item.getFood_id();
+            if (food != null) {
+                tvFoodName.setText(food.getName());
+                tvQuantityPrice.setText("x" + item.getQuantity() + " • " + formatMoney(item.getPrice() * item.getQuantity()));
 
-                    startActivity(intent);
-                }
-            });
-            tvFoodName.setText(item.name);
-            tvQuantityPrice.setText("x" + item.quantity + " • " + formatMoney(item.price * item.quantity));
+                // Load ảnh từ URL (hoặc tên file ghép BASE_IMAGE_URL)
+                String imageUrl = food.getImageUrl();
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    if (!imageUrl.startsWith("http")) {
+                        imageUrl = BASE_IMAGE_URL + imageUrl;
+                    }
 
-            // Hiển thị ảnh theo thứ tự trong food_images (nếu có)
-            if (order.food_images != null && i < order.food_images.size()) {
-                int resId = getResources().getIdentifier(order.food_images.get(i), "drawable", getPackageName());
-                if (resId != 0) {
-                    imgFood.setImageResource(resId);
+                    Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.sample_food)
+                            .error(R.drawable.sample_food)
+                            .into(imgFood);
                 } else {
                     imgFood.setImageResource(R.drawable.sample_food);
                 }
+
+                feedback.setOnClickListener(v -> {
+                    Intent intent = new Intent(OrderDetailActivity.this, ReviewFoodActivity.class);
+                    intent.putExtra("food_id", food.getId());
+                    intent.putExtra("food_quantity", item.getQuantity());
+                    intent.putExtra("food_name", food.getName());
+                    startActivity(intent);
+                });
             } else {
+                tvFoodName.setText("Không xác định");
+                tvQuantityPrice.setText("x" + item.getQuantity());
                 imgFood.setImageResource(R.drawable.sample_food);
             }
 

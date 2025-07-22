@@ -18,7 +18,9 @@ import com.example.foodorder.activity.FoodActivity;
 import com.example.foodorder.activity.HomeActivity;
 import com.example.foodorder.models.Food;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
     private List<Food> foodList;
@@ -64,7 +66,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
         holder.tvName.setText(food.getName());
         holder.tvDesc.setText(food.getDescription());
-        holder.tvPrice.setText(String.format("$%.2f", food.getPrice()));
+
+        Locale vietnam = new Locale("vi", "VN");
+        NumberFormat currencyFormat = NumberFormat.getNumberInstance(vietnam);
+        String formattedPrice = currencyFormat.format(food.getPrice()) + " VND";
+        holder.tvPrice.setText(formattedPrice);
 
         holder.stars.setRating((float) food.getRating());
 

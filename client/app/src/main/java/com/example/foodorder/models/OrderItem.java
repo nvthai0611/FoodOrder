@@ -2,38 +2,36 @@ package com.example.foodorder.models;
 
 import java.io.Serializable;
 
-public class OrderItem implements Serializable {
-    public String food_id;
-    public String name;
-    public int quantity;
-    public int price;
-
-    private String image_url;
+public class OrderItem {
+    private String _id;
+    private Food food_id;
+    private int quantity;
+    private int price;
 
     public OrderItem() {
     }
 
-    public OrderItem(String food_id, String name, int quantity, int price) {
+    public OrderItem(Food food_id, String _id, int quantity, int price) {
         this.food_id = food_id;
-        this.name = name;
+        this._id = _id;
         this.quantity = quantity;
         this.price = price;
     }
 
-    public String getFood_id() {
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public Food getFood_id() {
         return food_id;
     }
 
-    public void setFood_id(String food_id) {
+    public void setFood_id(Food food_id) {
         this.food_id = food_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getQuantity() {
@@ -51,12 +49,5 @@ public class OrderItem implements Serializable {
     public void setPrice(int price) {
         this.price = price;
     }
-
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
 }
+
