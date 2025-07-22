@@ -1,10 +1,7 @@
 package com.example.foodorder.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.fragment.app.Fragment;
@@ -20,34 +17,23 @@ import com.example.foodorder.Fragment.HomeFragment;
 import com.example.foodorder.Fragment.OrderHistoryFragment;
 import com.example.foodorder.Fragment.UserProfileFragment;
 import com.example.foodorder.R;
-import com.example.foodorder.activity.user.UserProfileActivity;
 import com.example.foodorder.base.BaseActivity;
-import com.example.foodorder.models.Food;
-import com.example.foodorder.network.ApiClient;
-import com.example.foodorder.network.HomeService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class HomeActivity extends BaseActivity {
+    private Socket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
-
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-
-
-
+        initSocket();
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
@@ -84,5 +70,33 @@ public class HomeActivity extends BaseActivity {
                 .commit();
     }
 
+    private void initSocket() {
+        try {
+            IO.Options opts = IO.Options.builder()
+                    .setReconnection(true)  // Bật auto reconnect
+                    .setReconnectionAttempts(5)  // Thử tối đa 5 lần
+                    .build();
+
+            mSocket = IO.socket("http://10.0.2.2:9999", opts);
+            mSocket.on(Socket.EVENT_CONNECT, args ->
+                    Log.d("SOCKET", "Connected: " + mSocket.id()));
+            mSocket.on("messageFromServer", onMessage);
+            mSocket.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private final Emitter.Listener onMessage = args -> runOnUiThread(() -> {
+        if (args.length > 0) Log.d("check", "check");
+    });
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    if (mSocket != null) {
+//        mSocket.off("messageFromServer", onMessage);
+        mSocket.disconnect();
+    }
+}
 
 }

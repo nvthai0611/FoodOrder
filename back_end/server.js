@@ -1,6 +1,6 @@
 const express = require("express");
 const http = require("http"); // Thêm để tạo server HTTP
-const socketIo = require("socket.io"); // socket.io v2.4.1
+const { Server } = require("socket.io"); // socket.io v2.4.1
 const app = express();
 const cors = require("cors");
 const apiRoutes = require("./routers/api");
@@ -16,13 +16,7 @@ const Cart = require("./models/Cart");
 const axios = require('axios');
 // --- Socket Configuration ---
 const server = http.createServer(app); // tạo server HTTP
-// Khởi tạo socket.io v2
-const io = socketIo(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
+
 // --- EJS Configuration ---
 app.set('view engine', 'ejs'); // Set EJS as the template engine
 app.set('views', path.join(__dirname, '/admin/views')); // Specify the directory for your EJS files
@@ -146,23 +140,24 @@ connectDB()
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// --- SOCKET.IO ---
-io.on("connection", (socket) => {
-  console.log("🟢 Client kết nối:", socket.id);
+const io = new Server(server, {
+  cors: { origin: '*' }         
+});
 
-  // Nhận đơn hàng từ Android hoặc web
-  socket.on("new_order", (data) => {
-    console.log("📦 Đơn hàng mới:", data);
-    // Gửi broadcast đến tất cả admin
-    io.emit("admin_new_order", data);
+io.on('connection', socket => {
+  console.log('Client connected:', socket.id);
+
+  socket.on('messageFromClient', data => {
+    console.log('Nhận từ client: ', data);
+    socket.emit('messageFromServer', `Đã nhận: ${data}`);
   });
 
-  socket.on("disconnect", () => {
-    console.log("🔴 Client ngắt kết nối:", socket.id);
-  });
+  socket.on('disconnect', () =>
+    console.log('Client disconnected:', socket.id)
+  );
 });
 // Start the server
 const PORT = process.env.PORT || 9999;
-app.listen(PORT, "0.0.0.0", () =>
+server.listen(PORT, "0.0.0.0", () =>
   console.log(`Server running on port http://localhost:${PORT}`)
 );
