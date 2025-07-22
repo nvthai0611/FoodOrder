@@ -3,12 +3,16 @@ package com.example.foodorder.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.foodorder.R;
+import com.example.foodorder.utils.SocketManager;
+
+import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+
+        // Khởi động socket
+        SocketManager.getInstance().connect();
 
         // Kiểm tra SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
