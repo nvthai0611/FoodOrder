@@ -29,6 +29,8 @@ import com.example.foodorder.network.PaymentService;
 import com.example.foodorder.response.PaymentCheckResponse;
 import com.example.foodorder.utils.RoutingUtils;
 
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -191,6 +193,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     isPaymentSuccess = true;
                     handler.removeCallbacks(paymentCheckRunnable);
+
                     Toast.makeText(CheckoutActivity.this, "✅ Đã thanh toán thành công!", Toast.LENGTH_LONG).show();
                 }
             }
@@ -202,6 +205,22 @@ public class CheckoutActivity extends AppCompatActivity {
         });
     }
 
+//    private void initSocket(String body) {
+//        try {
+//            IO.Options opts = IO.Options.builder()
+//                    .setReconnection(true)  // Bật auto reconnect
+//                    .setReconnectionAttempts(5)  // Thử tối đa 5 lần
+//                    .build();
+//
+//            mSocket = IO.socket("http://10.0.2.2:9999", opts);
+//            mSocket.on(Socket.EVENT_CONNECT, args ->
+//                    Log.d("SOCKET", "Connected: " + mSocket.id()));
+//            mSocket.on("messageFromServer");
+//            mSocket.connect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void codCheckout() {
         Toast.makeText(this, "🚛 Thanh toán khi nhận hàng chưa hỗ trợ", LENGTH_SHORT).show();
     }

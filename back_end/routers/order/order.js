@@ -1,6 +1,6 @@
-const express = require("express"); 
-const router = express.Router(); 
-const Order = require("../../models/Order"); 
+const express = require("express");
+const router = express.Router();
+const Order = require("../../models/Order");
 const mongoose = require("mongoose");
 
 // 🔹 GET /api/orders → Trả về tất cả đơn hàng (kèm thông tin món ăn)
@@ -23,7 +23,8 @@ router.get("/", async (req, res) => {
 router.get("/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
-
+    console.log(userId);
+    
     const orders = await Order.find({ user_id: userId })
       .populate({
         path: 'items.food_id',
@@ -33,7 +34,8 @@ router.get("/:userId", async (req, res) => {
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: "Không có đơn hàng nào cho user này" });
     }
-
+    console.log("đang ở order: ", orders);
+    
     res.json(orders);
   } catch (err) {
     console.error("❌ Lỗi khi lấy đơn hàng theo userId:", err);
