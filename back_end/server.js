@@ -141,20 +141,41 @@ connectDB()
   .catch((err) => console.error("MongoDB connection error:", err));
 
 const io = new Server(server, {
-  cors: { origin: '*' }         
+  cors: { origin: '*' }
 });
 
 io.on('connection', socket => {
   console.log('Client connected:', socket.id);
 
+  // Lắng nghe sự kiện từ client và phát lại cho tất cả các client
   socket.on('messageFromClient', data => {
     console.log('Nhận từ client: ', data);
-    socket.emit('messageFromServer', `Đã nhận: ${data}`);
+    io.emit('admin_new_order', {
+      orderCode: 'MESSAGE-' + Date.now(),
+      totalPrice: data.totalPrice,
+      userName: data.userId,
+      title: "Đơn hàng mới",
+      message: data
+    });
   });
 
-  socket.on('disconnect', () =>
-    console.log('Client disconnected:', socket.id)
-  );
+  // Lắng nghe sự kiện gửi thông báo thủ công từ admin
+  socket.on('manual_admin_notification', (data) => {
+    console.log('Nhận thông báo thủ công từ admin:', data);
+
+    // Gửi thông báo này đến tất cả các client đang kết nối
+    io.emit('admin_new_order', {
+      orderCode: 'MANUAL-' + Date.now(),
+      totalPrice: 'N/A',
+      userName: 'Admin',
+      title: data.title,
+      message: data.message
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
 });
 // Start the server
 const PORT = process.env.PORT || 9999;
