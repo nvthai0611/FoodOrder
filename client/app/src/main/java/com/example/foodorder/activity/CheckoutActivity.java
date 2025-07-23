@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.DisplayCutoutCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,8 +27,10 @@ import com.example.foodorder.Adapter.CartAdapter;
 import com.example.foodorder.R;
 import com.example.foodorder.models.Cart;
 import com.example.foodorder.models.CartItem;
+import com.example.foodorder.models.Order;
 import com.example.foodorder.models.PaymentInfo;
 import com.example.foodorder.network.ApiClient;
+import com.example.foodorder.network.OrderService;
 import com.example.foodorder.network.PaymentService;
 import com.example.foodorder.response.PaymentCheckResponse;
 import com.example.foodorder.utils.RoutingUtils;
@@ -46,6 +52,7 @@ import retrofit2.Response;
 
 public class CheckoutActivity extends AppCompatActivity {
     private Socket mSocket;
+    private static final int BASE_MARGIN = 16;
 
     private Cart cart;
     private String userId;
@@ -54,24 +61,44 @@ public class CheckoutActivity extends AppCompatActivity {
     private Handler handler = new Handler();
     private Runnable paymentCheckRunnable;
 
+    private OrderService orderService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_checkout);
+
+        View checkoutLayout = findViewById(R.id.checkoutLayout);
+        TextView checkoutTitle = findViewById(R.id.checkoutTitle);
+
+        ViewCompat.setOnApplyWindowInsetsListener(checkoutLayout, (v, insets) -> {
+            DisplayCutoutCompat cutout = insets.getDisplayCutout();
+            if (cutout != null) {
+                int topInset = cutout.getSafeInsetTop();
+
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) checkoutTitle.getLayoutParams();
+                params.topMargin = topInset + dpToPx(BASE_MARGIN);
+                checkoutTitle.setLayoutParams(params);
+            }
+            return insets;
+        });
+
+
+        orderService = ApiClient.getClient().create(OrderService.class);
         userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                 .getString("uId", null);
         String fullName = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                 .getString("uName", null);
 
         if (userId == null) {
-            RoutingUtils.redirect(this, LoginActivity.class, true);
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
             return;
         }
 
         cart = (Cart) getIntent().getSerializableExtra("cart");
         if (cart == null) {
-            RoutingUtils.redirect(this, HomeActivity.class, true);
+            RoutingUtils.redirect(this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
             return;
         }
 
@@ -198,7 +225,7 @@ public class CheckoutActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PaymentCheckResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<PaymentCheckResponse> call, @NonNull Throwable t) {
                 Toast.makeText(CheckoutActivity.this, "Lỗi kiểm tra thanh toán", Toast.LENGTH_SHORT).show();
             }
         });
@@ -221,8 +248,43 @@ public class CheckoutActivity extends AppCompatActivity {
 //        }
 //    }
     private void codCheckout() {
-        Toast.makeText(this, "🚛 Thanh toán khi nhận hàng chưa hỗ trợ", LENGTH_SHORT).show();
+        String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
+        if (userId == null) {
+            Log.w("CHK_LOG", "How? No user detected");
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+            return;
+        }
+        String note = "There's no note";
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("userId", userId);
+        payload.put("note", note);
+        payload.put("scheduledTime", null);
+
+        Call<Void> call = orderService.createOrder(payload);
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(CheckoutActivity.this, "Bon Appetit!", Toast.LENGTH_LONG).show();
+                    RoutingUtils.redirect(CheckoutActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+                } else {
+                    Toast.makeText(CheckoutActivity.this, "Không thể tạo đơn", Toast.LENGTH_LONG).show();
+                    RoutingUtils.redirect(CheckoutActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e("CHK_LOG", "Order failed: ", t);
+                Toast.makeText(CheckoutActivity.this, "Lỗi tạo đơn hàng", Toast.LENGTH_LONG).show();
+                RoutingUtils.redirect(CheckoutActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+            }
+        });
     }
 
-
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
 }

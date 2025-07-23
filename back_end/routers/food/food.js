@@ -64,11 +64,11 @@ router.get('/by-id/:foodId', async (req, res) => {
 
 router.get("/relatefood-by-categoryId/:categoryId/:foodId",async (req, res) => {
   const { categoryId, foodId } = req.params;
-  console.log("relete food id:" , categoryId, foodId);
+  // console.log("relete food id:" , categoryId, foodId);
   
   try {
     const food = await Food.find({ category: categoryId, is_available: true, _id : { $ne: foodId }}).populate('category');
-    console.log("relete food check:" , food);
+    // console.log("relete food check:" , food);
     
     if (!food) {
       return res.status(404).json({ error: 'Food not found' });

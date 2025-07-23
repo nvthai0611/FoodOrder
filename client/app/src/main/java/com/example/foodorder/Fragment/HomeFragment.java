@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
 
         FloatingActionButton btnCart = requireActivity().findViewById(R.id.btnCart);
         btnCart.setOnClickListener(v -> {
-            RoutingUtils.redirect(HomeFragment.this.getActivity(), CartActivity.class, false);
+            RoutingUtils.redirect(HomeFragment.this.getActivity(), CartActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_KEEP);
         });
     }
 
