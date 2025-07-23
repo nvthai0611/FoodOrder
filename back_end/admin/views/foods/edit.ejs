@@ -12,7 +12,7 @@
       <%= message %>
     </div>
   <% } %>
-  <form action="/admin/product/<%= food._id %>/update" method="POST" class="row g-3">
+  <form action="/admin/product/<%= food._id %>/update" method="POST" enctype="multipart/form-data" class="row g-3">
     <input type="hidden" name="_method" value="PUT">
 
     <div class="col-md-6">
@@ -32,8 +32,15 @@
       <input name="price" type="number" class="form-control" value="<%= food.price %>" required>
     </div>
     <div class="col-md-6">
-      <label class="form-label">Ảnh (URL)</label>
-      <input name="image_url" class="form-control" value="<%= food.image_url %>">
+      <label class="form-label">Ảnh</label>
+      <input type="file" name="image_upload" class="form-control" accept="image/*" id="imageUploadEdit">
+      <div class="mt-2">
+        <% if (food.image_url) { %>
+          <img id="imagePreviewEdit" src="<%= food.image_url %>" alt="Ảnh sản phẩm hiện tại" class="img-thumbnail" style="max-width: 200px;">
+        <% } else { %>
+          <img id="imagePreviewEdit" src="#" alt="Xem trước ảnh" class="img-thumbnail" style="max-width: 200px; display: none;">
+        <% } %>
+      </div>
     </div>
     <div class="col-md-12">
       <label class="form-label">Mô tả</label>
@@ -48,5 +55,28 @@
       <a href="/admin/product" class="btn btn-secondary">Quay lại</a>
     </div>
   </form>
+
+  <script>
+    const imageUploadEdit = document.getElementById('imageUploadEdit');
+    const imagePreviewEdit = document.getElementById('imagePreviewEdit');
+
+    imageUploadEdit.addEventListener('change', function() {
+      const file = this.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreviewEdit.src = e.target.result;
+          imagePreviewEdit.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      } else {
+        // Nếu không có file mới được chọn, và trước đó đã có ảnh, giữ ảnh cũ
+        // Nếu không có ảnh cũ, ẩn preview
+        if (!imagePreviewEdit.src || imagePreviewEdit.src === window.location.href + '#') { // Check if src is empty or '#'
+            imagePreviewEdit.style.display = 'none';
+        }
+      }
+    });
+  </script>
 </body>
 </html>

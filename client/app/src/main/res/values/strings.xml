@@ -74,6 +74,7 @@
     <string name="Old_Password">Old Password</string>
     <string name="New_Password">New Password</string>
     <string name="Confirm_New_Password">Confirm New Password</string>
+    <string name="log_out">LOG OUT</string>
 
     <!-- Checkout and Cart -->
     <string name="checkout_title">Thanh toán</string>

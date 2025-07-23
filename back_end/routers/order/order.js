@@ -1,6 +1,6 @@
-const express = require("express"); 
-const router = express.Router(); 
-const Order = require("../../models/Order"); 
+const express = require("express");
+const router = express.Router();
+const Order = require("../../models/Order");
 const mongoose = require("mongoose");
 
 // 🔹 GET /api/orders → Trả về tất cả đơn hàng (kèm thông tin món ăn)
