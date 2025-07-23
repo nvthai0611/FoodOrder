@@ -25,10 +25,12 @@ import java.util.Locale;
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder>{
     private List<Food> foodList;
     private Context context;
+    private boolean isBestSellerFoodAdapter;
 
-    public FoodAdapter(Context context, List<Food> foodList) {
+    public FoodAdapter(Context context, List<Food> foodList, boolean isBestSellerFoodAdapter) {
         this.context = context;
         this.foodList = foodList;
+        this.isBestSellerFoodAdapter = isBestSellerFoodAdapter;
     }
 
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
@@ -49,7 +51,11 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @NonNull
     @Override
     public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_food, parent, false);
+        if(isBestSellerFoodAdapter) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_food, parent, false);
+            return new FoodViewHolder(view);
+        }
+        View view = LayoutInflater.from(context).inflate(R.layout.item_food_category, parent, false);
         return new FoodViewHolder(view);
     }
 

@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 1));
 
         fetchFoodsBestSellerList();
-        adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList);
+        adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList, true);
         recyclerView.setAdapter(adapterBestSeller);
 
         // cho phần Foos
@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
 
         FloatingActionButton btnCart = requireActivity().findViewById(R.id.btnCart);
         btnCart.setOnClickListener(v -> {
-            RoutingUtils.redirect(HomeFragment.this.getActivity(), CartActivity.class, false);
+            RoutingUtils.redirect(HomeFragment.this.getActivity(), CartActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_KEEP);
         });
     }
 
@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment {
 
         // Gán adapter cho food
         filteredFoods = allFoods;
-        adapter = new FoodAdapter(requireContext(), filteredFoods);
+        adapter = new FoodAdapter(requireContext(), filteredFoods, false);
         rvFoods.setAdapter(adapter);
     }
 
