@@ -61,6 +61,21 @@
             border: none; /* Remove default border */
             padding: 0; /* Remove default padding */
             background-color: #ffffff; /* Ensure white background */
+            /* Đảm bảo dropdown menu ban đầu được ẩn đúng cách theo Bootstrap */
+            display: none; /* Đây là giá trị mặc định của Bootstrap cho dropdown-menu */
+            position: absolute; /* Quan trọng cho việc định vị */
+            z-index: 1000; /* Đảm bảo nó nằm trên các nội dung khác */
+            float: left; /* Đảm bảo nó không bị ảnh hưởng bởi layout khác */
+            min-width: 10rem; /* Kích thước mặc định của Bootstrap */
+            padding: 0.5rem 0;
+            margin: 0;
+            font-size: 1rem;
+            color: #212529;
+            text-align: left;
+            list-style: none;
+            background-clip: padding-box;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: 0.375rem;
         }
 
         .notification-dropdown .dropdown-header {
@@ -141,6 +156,22 @@
             background-color: #f8d7da; /* Light red background on hover */
             color: #a71d2a;
         }
+
+        /* --- CÁC QUY TẮC CSS QUAN TRỌNG ĐỂ ÉP HIỂN THỊ KHI DROPDOWN MỞ --- */
+        /* Quy tắc này sẽ được ưu tiên cao nhất để hiển thị dropdown khi nó có class 'show' */
+        .notification-dropdown.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            /* Đảm bảo không bị ẩn bởi transform hoặc pointer-events */
+            transform: none !important;
+            pointer-events: auto !important;
+            z-index: 1050 !important; /* Đảm bảo nó nằm trên các nội dung khác */
+        }
+        /* Đảm bảo nút toggle luôn tương tác được */
+        .dropdown-toggle {
+            pointer-events: auto !important;
+        }
     </style>
 </head>
 <body>
@@ -163,9 +194,9 @@
                     <a class="nav-link" href="/admin/orders">Orders Management</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Notifications <span class="badge bg-danger rounded-pill notification-badge d-none" id="notificationCount">0</span>
-                    </a>
+                    </button>
                     <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="navbarDropdownNotifications" id="notificationList">
                         </ul>
                 </li>
@@ -179,8 +210,33 @@
     <p>Real-time notifications will appear in the "Notifications" dropdown.</p>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof bootstrap === 'undefined') {
+            console.error("LỖI: Bootstrap JavaScript không tải được! Dropdown sẽ không hoạt động.");
+        } else {
+            console.log("Bootstrap JavaScript đã tải thành công.");
+
+            // Cố gắng khởi tạo Dropdown thủ công ngay khi DOM và Bootstrap sẵn sàng
+            const notificationsDropdownElement = document.getElementById('navbarDropdownNotifications');
+            if (notificationsDropdownElement) {
+                let dropdownInstance = bootstrap.Dropdown.getInstance(notificationsDropdownElement);
+                if (!dropdownInstance) {
+                    dropdownInstance = new bootstrap.Dropdown(notificationsDropdownElement);
+                    console.log("Bootstrap Dropdown instance created/found successfully:", dropdownInstance);
+                } else {
+                    console.log("Bootstrap Dropdown instance already exists.");
+                }
+            } else {
+                console.error("Không tìm thấy phần tử dropdown 'navbarDropdownNotifications'.");
+            }
+        }
+    });
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // --- Existing Navbar Active Link Logic (keep as is) ---
@@ -228,8 +284,6 @@
 
         socket.on("connect", () => {
             console.log("Admin EJS socket connected:", socket.id);
-            // Optional: Emit to join an admin-specific room if your server supports it
-            // socket.emit("joinAdminRoom");
         });
 
         socket.on("admin_new_order", (orderData) => {
@@ -248,12 +302,6 @@
             saveNotifications();
             renderNotifications(); // Re-render the dropdown with new notification
 
-            // Optional: Play a sound
-            const audio = new Audio('/sounds/notification.mp3'); // Make sure you have this file in your public/sounds directory
-            audio.play().catch(e => console.error("Error playing notification sound:", e));
-
-            // Optional: Show a custom toast notification (if you integrate a toast library)
-            // For now, a simple console log
             console.log(`Thông báo đơn hàng mới: ${newNotification.title}`);
         });
 
@@ -289,25 +337,22 @@
 
             if (notifications.length === 0) {
                 const noNotiItem = document.createElement('li');
-                noNotiItem.classList.add('no-notifications-message'); // Apply the new styling class
-                // Dòng này đã được thay đổi để hiển thị "Không có đơn hàng nào"
-                noNotiItem.innerHTML = '<a class="dropdown-item text-center text-muted" href="#" onclick="return false;">Không có đơn hàng nào</a>';
+                noNotiItem.classList.add('no-notifications-message', 'text-center', 'text-muted');
+                noNotiItem.textContent = 'Không có thông báo nào.';
                 notificationList.appendChild(noNotiItem);
             } else {
                 notifications.forEach((noti, index) => {
                     const listItem = document.createElement('li');
-                    // Add Bootstrap's dropdown-item class for base styling + custom notification-item
                     listItem.classList.add('dropdown-item', 'notification-item');
                     if (!noti.read) {
                         listItem.classList.add('unread');
                     }
-                    listItem.setAttribute('data-index', index); // Use data-index to identify which notification
+                    listItem.setAttribute('data-index', index);
 
                     const time = new Date(noti.timestamp).toLocaleString('vi-VN', {
                         hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
                     });
 
-                    // Enhanced content structure with specific classes for styling
                     listItem.innerHTML = `
                         <div class="noti-title">${noti.title}</div>
                         <div class="noti-message">${noti.message}</div>
@@ -315,34 +360,28 @@
                     `;
                     notificationList.appendChild(listItem);
 
-                    // Add click event listener to mark as read
                     listItem.addEventListener('click', function() {
-                        markAsRead(index); // Mark this notification as read
-
-                        // Optional: Navigate to order details page or open a modal
-                        // if (noti.orderData && noti.orderData.orderId) {
-                        //     window.location.href = `/admin/orders/${noti.orderData.orderId}`;
-                        // }
+                        markAsRead(index);
                     });
                 });
             }
 
-            // Add clear all button and divider at the end
-            const dividerItem = document.createElement('li');
-            dividerItem.innerHTML = '<hr class="dropdown-divider">';
-            notificationList.appendChild(dividerItem);
+            if (notifications.length > 0) {
+                const dividerItem = document.createElement('li');
+                dividerItem.innerHTML = '<hr class="dropdown-divider">';
+                notificationList.appendChild(dividerItem);
 
-            const clearAllItem = document.createElement('li');
-            clearAllItem.innerHTML = '<a class="dropdown-item text-center text-danger" href="#" id="clearNotificationsInner">🗑️ Xóa tất cả thông báo</a>';
-            notificationList.appendChild(clearAllItem);
+                const clearAllItem = document.createElement('li');
+                clearAllItem.innerHTML = '<a class="dropdown-item text-center text-danger" href="#" id="clearNotificationsInner">🗑️ Xóa tất cả thông báo</a>';
+                notificationList.appendChild(clearAllItem);
 
-            // Re-attach event listener for clear all button (important as it's re-rendered)
-            document.getElementById('clearNotificationsInner').addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default link behavior
-                clearAllNotifications(); // Call the clear all function
-            });
+                document.getElementById('clearNotificationsInner').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    clearAllNotifications();
+                });
+            }
 
-            updateNotificationCount(); // Update the unread count badge
+            updateNotificationCount();
         }
 
         // Function to update the unread notification count badge
@@ -350,9 +389,9 @@
             const unreadCount = notifications.filter(noti => !noti.read).length;
             notificationCountSpan.textContent = unreadCount;
             if (unreadCount > 0) {
-                notificationCountSpan.classList.remove('d-none'); // Show badge if count > 0
+                notificationCountSpan.classList.remove('d-none');
             } else {
-                notificationCountSpan.classList.add('d-none'); // Hide badge if count is 0
+                notificationCountSpan.classList.add('d-none');
             }
         }
     });

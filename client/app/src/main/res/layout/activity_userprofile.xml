@@ -309,16 +309,39 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:cornerRadius="16dp"
-                    android:layout_marginBottom="16dp" /> <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_logOut"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/log_out"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/red_500" app:cornerRadius="16dp"
-                app:strokeColor="@color/red_500" app:strokeWidth="2dp" /> </LinearLayout>
+                    android:layout_marginBottom="16dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_logOut"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="@string/log_out"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textStyle="bold"
+                    android:textColor="@color/red_500"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/red_500"
+                    app:strokeWidth="2dp"
+                    android:layout_marginBottom="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_testSocket"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Test Socket"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textStyle="bold"
+                    android:textColor="@color/red_500"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/red_500"
+                    app:strokeWidth="2dp"
+                    android:layout_marginBottom="16dp" />
+                 </LinearLayout>
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
