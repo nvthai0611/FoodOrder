@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 1));
 
         fetchFoodsBestSellerList();
-        adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList);
+        adapterBestSeller = new FoodAdapter(requireContext(), foodsBestSellerList, true);
         recyclerView.setAdapter(adapterBestSeller);
 
         // cho phần Foos
@@ -245,7 +245,7 @@ public class HomeFragment extends Fragment {
 
         // Gán adapter cho food
         filteredFoods = allFoods;
-        adapter = new FoodAdapter(requireContext(), filteredFoods);
+        adapter = new FoodAdapter(requireContext(), filteredFoods, false);
         rvFoods.setAdapter(adapter);
     }
 
