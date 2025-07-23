@@ -29,6 +29,7 @@ import com.example.foodorder.network.PaymentService;
 import com.example.foodorder.response.PaymentCheckResponse;
 import com.example.foodorder.utils.RoutingUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -54,11 +55,13 @@ public class CheckoutActivity extends AppCompatActivity {
     private Handler handler = new Handler();
     private Runnable paymentCheckRunnable;
 
+    private final String PATH_BE = "http://10.0.2.2:9999";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_checkout);
+        initSocket(); // 🔌 Khởi tạo socket
         userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                 .getString("uId", null);
         String fullName = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
@@ -194,6 +197,8 @@ public class CheckoutActivity extends AppCompatActivity {
                     isPaymentSuccess = true;
                     handler.removeCallbacks(paymentCheckRunnable);
                     Toast.makeText(CheckoutActivity.this, "✅ Đã thanh toán thành công!", Toast.LENGTH_LONG).show();
+                    // 🚀 Gửi socket về server
+                    sendSocketPaymentSuccess();
                 }
             }
 
@@ -204,22 +209,59 @@ public class CheckoutActivity extends AppCompatActivity {
         });
     }
 
-//    private void initSocket(String body) {
-//        try {
-//            IO.Options opts = IO.Options.builder()
-//                    .setReconnection(true)  // Bật auto reconnect
-//                    .setReconnectionAttempts(5)  // Thử tối đa 5 lần
-//                    .build();
-//
-//            mSocket = IO.socket("http://10.0.2.2:9999", opts);
-//            mSocket.on(Socket.EVENT_CONNECT, args ->
-//                    Log.d("SOCKET", "Connected: " + mSocket.id()));
-//            mSocket.on("messageFromServer");
-//            mSocket.connect();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void initSocket() {
+        try {
+            IO.Options opts = IO.Options.builder()
+                    .setReconnection(true)
+                    .setReconnectionAttempts(5)
+                    .build();
+
+            mSocket = IO.socket(PATH_BE, opts);
+            mSocket.on(Socket.EVENT_CONNECT, args -> Log.d("SOCKET", "Connected: " + mSocket.id()));
+            mSocket.on("messageFromServer", onMessage);
+            mSocket.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendSocketPaymentSuccess() {
+        try {
+            if (mSocket != null && mSocket.connected()) {
+                // 👉 Gửi thông báo đơn hàng mới từ client
+                JSONObject message = new JSONObject();
+                message.put("userId", userId);
+                message.put("totalPrice", totalPrice);
+                message.put("status", "SUCCESS");
+                message.put("timestamp", System.currentTimeMillis());
+
+                JSONArray itemsArray = new JSONArray();
+                for (CartItem item : cart.getCartItems()) {
+                    JSONObject itemObj = new JSONObject();
+                    itemObj.put("productId", item.getFoodId());
+                    itemObj.put("name", item.getName());
+                    itemObj.put("price", item.getPrice());
+                    itemObj.put("quantity", item.getQuantity());
+                    itemsArray.put(itemObj);
+                }
+                message.put("items", itemsArray);
+
+                // 🟡 Gửi dưới dạng string JSON để server xử lý đúng
+                String messageString = message.toString();
+
+                mSocket.emit("messageFromClient", messageString);
+                Log.d("SOCKET", "Đã gửi messageFromClient: " + messageString);
+            } else {
+                Log.e("SOCKET", "⚠️ Socket chưa kết nối");
+            }
+        } catch (Exception e) {
+            Log.e("SOCKET", "❌ Lỗi gửi socket: " + e.getMessage());
+        }
+    }
+
+    private final Emitter.Listener onMessage = args -> runOnUiThread(() -> {
+        if (args.length > 0) Log.d("SOCKET", "Đã nhận phản hồi từ server");
+    });
     private void codCheckout() {
         Toast.makeText(this, "🚛 Thanh toán khi nhận hàng chưa hỗ trợ", LENGTH_SHORT).show();
     }
