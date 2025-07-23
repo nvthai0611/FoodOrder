@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         tvToLogin.setOnClickListener(v -> {
-            RoutingUtils.redirect(this, LoginActivity.class, true);
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
         });
     }
 
@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(RegisterActivity.this, "Đăng kí thành công!", Toast.LENGTH_SHORT).show();
-                    RoutingUtils.redirect(RegisterActivity.this, LoginActivity.class, true);
+                    RoutingUtils.redirect(RegisterActivity.this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thất bại! Vui lòng thử lại.", Toast.LENGTH_SHORT).show();
                 }

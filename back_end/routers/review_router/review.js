@@ -55,7 +55,7 @@ router.post('/create', async (req, res) => {
 
 router.get('/getByFoodId/:foodId', async (req, res) => {
   const { foodId } = req.params;
-  console.log("Get reviews for foodId:", foodId);
+  // console.log("Get reviews for foodId:", foodId);
   try {
     const reviews = await Review.find({ food_id: foodId }).populate('user_id').sort({ created_at: -1 });
      // Nếu bạn muốn gộp tên vào kết quả
@@ -68,7 +68,7 @@ router.get('/getByFoodId/:foodId', async (req, res) => {
       comment: review.comment,
       created_at: review.created_at
     }));
-    console.log(response);
+    // console.log(response);
     
     res.json(response);
   } catch (error) {

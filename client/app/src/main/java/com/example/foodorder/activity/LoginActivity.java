@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         tvSignup.setOnClickListener(v -> {
-            RoutingUtils.redirect(LoginActivity.this, RegisterActivity.class, true);
+            RoutingUtils.redirect(LoginActivity.this, RegisterActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
         });
     }
     private void loginUser(String email, String password) {
