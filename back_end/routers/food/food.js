@@ -14,7 +14,7 @@ router.get('/all-foods-best-sellers', async (req, res) => {
 // GET /api/food/all-food
 router.get('/all-foods', async (req, res) => {
     try {
-    const allFoods = await Food.find({ is_available: true }).populate('category'); 
+    const allFoods = await Food.find({ is_available: true, isBestSeller: { $ne: true }}).populate('category'); 
     res.json(allFoods);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -37,7 +37,8 @@ router.get('/by-category/:categoryId', async (req, res) => {
   try {
     const foodsByCategory = await Food.find({
       category: categoryId,
-      is_available: true // optional: lọc theo is_available nếu cần
+      is_available: true
+      , isBestSeller: { $ne: true }
     }).populate('category');
 
     res.json(foodsByCategory);
