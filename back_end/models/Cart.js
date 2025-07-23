@@ -13,7 +13,7 @@ const CartItemSchema = new Schema({
         type: Number,
         default: 1
     },
-    image: String       // Optional thumbnail reference
+    image: String      
 }, { _id: false });
 
 const CartSchema = new Schema({

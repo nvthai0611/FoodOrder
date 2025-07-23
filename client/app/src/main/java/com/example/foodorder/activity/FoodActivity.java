@@ -160,7 +160,7 @@ public class FoodActivity extends AppCompatActivity {
             String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
 
             if (userId == null) {
-                RoutingUtils.redirect(this, LoginActivity.class, true);
+                RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
             } else {
                 CartItem item = new CartItem(foodId, name, foodPrice, quantity, imageUrl);
 
