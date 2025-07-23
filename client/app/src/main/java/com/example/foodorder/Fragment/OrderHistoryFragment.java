@@ -1,7 +1,10 @@
 package com.example.foodorder.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodorder.Adapter.OrderHistoryAdapter;
 import com.example.foodorder.R;
+import com.example.foodorder.activity.MainActivity;
 import com.example.foodorder.activity.OrderDetailActivity;
+import com.example.foodorder.activity.OrderHistoryActivity;
 import com.example.foodorder.models.Order;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.OrderService;
@@ -34,7 +39,6 @@ public class OrderHistoryFragment extends Fragment {
     private OrderHistoryAdapter adapter;
     private List<Order> originalOrderList;
 
-    private static final String USER_ID = "64b9b842f5b123456789abcd"; // Có thể truyền từ ngoài nếu cần
 
     public OrderHistoryFragment() {}
 
@@ -44,7 +48,19 @@ public class OrderHistoryFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_order_history, container, false);
+        // Sử dụng getActivity().getSharedPreferences trong Fragment
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String uId = sharedPreferences.getString("uId", null);
+        String uName = sharedPreferences.getString("uName", null);
+        String uEmail = sharedPreferences.getString("uEmail", null);
 
+        if (uId == null && uName == null && uEmail == null) {
+            // Nếu đã đăng nhập thì chuyển về MainActivity
+            Intent intent = new Intent(requireActivity(), MainActivity.class);
+            startActivity(intent);
+            requireActivity().finish(); // dùng requireActivity() để gọi finish()
+            return view; // vẫn cần return view ở cuối
+        }
         recyclerOrderHistory = view.findViewById(R.id.recyclerOrderHistory);
         etSearch = view.findViewById(R.id.etSearch);
 
@@ -57,7 +73,7 @@ public class OrderHistoryFragment extends Fragment {
             return true;
         });
 
-        fetchOrdersByUser(USER_ID);
+        fetchOrdersByUser(uId);
 
         return view;
     }
@@ -86,6 +102,7 @@ public class OrderHistoryFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Order>> call, Throwable t) {
+                Log.e("fetchOrders", "Lỗi: " + t.getMessage());
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

@@ -220,6 +220,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     isPaymentSuccess = true;
                     handler.removeCallbacks(paymentCheckRunnable);
+
                     Toast.makeText(CheckoutActivity.this, "✅ Đã thanh toán thành công!", Toast.LENGTH_LONG).show();
                 }
             }

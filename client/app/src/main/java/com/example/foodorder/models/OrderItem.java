@@ -6,12 +6,12 @@ public class OrderItem {
     private String _id;
     private Food food_id;
     private int quantity;
-    private int price;
+    private double price;
 
     public OrderItem() {
     }
 
-    public OrderItem(Food food_id, String _id, int quantity, int price) {
+    public OrderItem(Food food_id, String _id, int quantity, double price) {
         this.food_id = food_id;
         this._id = _id;
         this.quantity = quantity;
@@ -42,7 +42,7 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

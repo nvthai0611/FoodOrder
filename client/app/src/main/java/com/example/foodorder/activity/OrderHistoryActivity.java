@@ -1,6 +1,7 @@
 package com.example.foodorder.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -32,12 +33,22 @@ public class OrderHistoryActivity extends BaseActivity {
     private List<Order> originalOrderList;
 
     private static final String TAG = "OrderHistoryActivity";
-    private static final String USER_ID = "64b9b842f5b123456789abcd";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String uId = sharedPreferences.getString("uId", null);
+        String uName = sharedPreferences.getString("uName", null);
+        String uEmail = sharedPreferences.getString("uEmail", null);
+        if (uId != null && uName != null && uEmail != null) {
+            // Nếu đã đăng nhập trước đó thì vào Home luôn
+            Intent intent = new Intent(OrderHistoryActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // đóng MainActivity
+            return;
+        };
 
         recyclerOrderHistory = findViewById(R.id.recyclerOrderHistory);
         recyclerOrderHistory.setLayoutManager(new LinearLayoutManager(this));
@@ -51,7 +62,7 @@ public class OrderHistoryActivity extends BaseActivity {
             return true;
         });
 
-        fetchOrdersByUser(USER_ID);
+        fetchOrdersByUser(uId);
     }
 
     private void fetchOrdersByUser(String userId) {
