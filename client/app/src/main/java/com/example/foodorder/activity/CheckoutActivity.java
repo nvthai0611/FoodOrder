@@ -1,5 +1,8 @@
 package com.example.foodorder.activity;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,16 +35,23 @@ import com.example.foodorder.network.PaymentService;
 import com.example.foodorder.response.PaymentCheckResponse;
 import com.example.foodorder.utils.RoutingUtils;
 
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CheckoutActivity extends AppCompatActivity {
+    private Socket mSocket;
     private static final int BASE_MARGIN = 16;
 
     private Cart cart;
@@ -120,7 +130,6 @@ public class CheckoutActivity extends AppCompatActivity {
         }
         return Math.round(total * 100.0) / 100.0; // làm tròn 2 chữ số thập phân
     }
-
     private void ppCheckout() {
         Map<String, String> body = new HashMap<>();
         body.put("userId", userId);
@@ -129,7 +138,7 @@ public class CheckoutActivity extends AppCompatActivity {
         PaymentService service = ApiClient.getClient().create(PaymentService.class);
         service.createPaymentInfo(body).enqueue(new Callback<PaymentInfo>() {
             @Override
-            public void onResponse(@NonNull Call<PaymentInfo> call, @NonNull Response<PaymentInfo> response) {
+            public void onResponse(Call<PaymentInfo> call, Response<PaymentInfo> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     showPaymentDialog(response.body());
                 } else {
@@ -138,7 +147,7 @@ public class CheckoutActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<PaymentInfo> call, @NonNull Throwable t) {
+            public void onFailure(Call<PaymentInfo> call, Throwable t) {
                 Toast.makeText(CheckoutActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
             }
         });
@@ -148,13 +157,15 @@ public class CheckoutActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Thanh toán");
 
+        // Inflate layout của dialog
         View view = getLayoutInflater().inflate(R.layout.dialog_qr_payment, null);
-        builder.setView(view);
+        builder.setView(view); // Gán layout vào dialog
 
         TextView txtBankInfo = view.findViewById(R.id.txtBankInfo);
         TextView txtNote = view.findViewById(R.id.txtNote);
         ImageView imgQr = view.findViewById(R.id.imgQr);
 
+        // Hiển thị thông tin chuyển khoản
         txtBankInfo.setText(
                 "Ngân hàng: " + info.getBankName() +
                         "\nSố tài khoản: " + info.getAccountNumber() +
@@ -164,10 +175,24 @@ public class CheckoutActivity extends AppCompatActivity {
 
         txtNote.setText("Nội dung: " + info.getNote());
 
+        // Load ảnh QR bằng Glide
         Glide.with(this).load(info.getQrUrl()).into(imgQr);
 
-        builder.setNegativeButton("Huỷ", null);
-        builder.create().show();
+        // ĐẶT NÚT HUỶ TRƯỚC KHI .create()
+        builder.setNegativeButton("Huỷ", (dialogInterface, i) -> {
+            // Hủy handler khi nhấn "Huỷ"
+            handler.removeCallbacks(paymentCheckRunnable);
+        });
+
+        // TẠO dialog SAU khi đã cấu hình đầy đủ nút
+        AlertDialog dialog = builder.create();
+
+        // Nếu người dùng bấm ra ngoài dialog hoặc bấm back → cũng hủy handler
+        dialog.setOnDismissListener(d -> {
+            handler.removeCallbacks(paymentCheckRunnable);
+        });
+
+        dialog.show(); // Hiển thị dialog lên
 
         // Tự động kiểm tra trạng thái thanh toán mỗi 3 giây
         paymentCheckRunnable = new Runnable() {
@@ -175,11 +200,11 @@ public class CheckoutActivity extends AppCompatActivity {
             public void run() {
                 if (!isPaymentSuccess) {
                     checkPaymentStatus(info.getNote(), String.format(Locale.US, "%.0f", info.getAmount()));
-                    handler.postDelayed(this, 3000);
+                    handler.postDelayed(this, 3000); // Lặp lại sau 3 giây
                 }
             }
         };
-        handler.post(paymentCheckRunnable);
+        handler.post(paymentCheckRunnable); // Bắt đầu lặp kiểm tra
     }
 
     private void checkPaymentStatus(String orderCode, String amount) {
@@ -191,7 +216,7 @@ public class CheckoutActivity extends AppCompatActivity {
         PaymentService service = ApiClient.getClient().create(PaymentService.class);
         service.checkPaymentStatus(body).enqueue(new Callback<PaymentCheckResponse>() {
             @Override
-            public void onResponse(@NonNull Call<PaymentCheckResponse> call, @NonNull Response<PaymentCheckResponse> response) {
+            public void onResponse(Call<PaymentCheckResponse> call, Response<PaymentCheckResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     isPaymentSuccess = true;
                     handler.removeCallbacks(paymentCheckRunnable);
@@ -206,6 +231,22 @@ public class CheckoutActivity extends AppCompatActivity {
         });
     }
 
+//    private void initSocket(String body) {
+//        try {
+//            IO.Options opts = IO.Options.builder()
+//                    .setReconnection(true)  // Bật auto reconnect
+//                    .setReconnectionAttempts(5)  // Thử tối đa 5 lần
+//                    .build();
+//
+//            mSocket = IO.socket("http://10.0.2.2:9999", opts);
+//            mSocket.on(Socket.EVENT_CONNECT, args ->
+//                    Log.d("SOCKET", "Connected: " + mSocket.id()));
+//            mSocket.on("messageFromServer");
+//            mSocket.connect();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void codCheckout() {
         String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
         if (userId == null) {

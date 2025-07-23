@@ -67,6 +67,7 @@ public class FoodActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_fooddetail);
 
+
         // Khởi tạo FavoriteManager
         favoriteManager = new FavoriteManager(this);
 

@@ -1,98 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .navbar-nav .nav-link.active {
-      background-color: rgba(255, 255, 255, 0.1); /* A subtle background for active link */
-      color: #fff; /* White text for active link */
-      border-radius: 5px; /* Slightly rounded corners */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base Navbar Styles (keep existing) */
+        .navbar-nav .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 5px;
+        }
+        .navbar-nav .nav-link:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.75);
+        }
 
-    /* Optional: Add hover effect for non-active links */
-    .navbar-nav .nav-link:not(.active):hover {
-      background-color: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.75);
-    }
-  </style>
+        /* --- Notification Dropdown & Items Styling --- */
+
+        /* Dropdown Toggle Badge */
+        .notification-badge {
+            position: absolute;
+            top: 0px; /* Adjusted for better alignment */
+            right: -8px; /* Adjusted for better alignment */
+            background-color: #dc3545; /* Bootstrap danger red */
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px; /* Slightly larger padding */
+            font-size: 0.7em;
+            line-height: 1;
+            min-width: 20px; /* Ensure circular shape */
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+            animation: pulse-ring 1.5s infinite ease-in-out; /* Add a pulse animation */
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8);
+                opacity: 0.7;
+            }
+        }
+
+        /* Notification Dropdown Menu */
+        .notification-dropdown {
+            min-width: 350px; /* Slightly wider */
+            max-height: 450px; /* Taller */
+            overflow-y: auto;
+            border-radius: 8px; /* More rounded corners */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15); /* Stronger shadow */
+            border: none; /* Remove default border */
+            padding: 0; /* Remove default padding */
+            background-color: #ffffff; /* Ensure white background */
+            /* Đảm bảo dropdown menu ban đầu được ẩn đúng cách theo Bootstrap */
+            display: none; /* Đây là giá trị mặc định của Bootstrap cho dropdown-menu */
+            position: absolute; /* Quan trọng cho việc định vị */
+            z-index: 1000; /* Đảm bảo nó nằm trên các nội dung khác */
+            float: left; /* Đảm bảo nó không bị ảnh hưởng bởi layout khác */
+            min-width: 10rem; /* Kích thước mặc định của Bootstrap */
+            padding: 0.5rem 0;
+            margin: 0;
+            font-size: 1rem;
+            color: #212529;
+            text-align: left;
+            list-style: none;
+            background-clip: padding-box;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: 0.375rem;
+        }
+
+        .notification-dropdown .dropdown-header {
+            padding: 15px 20px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #343a40; /* Dark gray for header */
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef); /* Light gradient */
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .notification-dropdown .dropdown-item {
+            padding: 12px 20px; /* More vertical padding */
+            border-bottom: 1px solid #f0f0f0; /* Lighter border */
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s; /* Add transform for hover effect */
+            white-space: normal; /* Allow text to wrap */
+        }
+        /* Target the actual last notification item, not the "clear all" or divider */
+        .notification-dropdown .notification-item:last-of-type {
+            border-bottom: none;
+        }
+        .notification-dropdown .dropdown-item:hover {
+            background-color: #f5f5f5; /* Lighter hover */
+            transform: translateX(3px); /* Slight slide on hover */
+        }
+
+        /* Unread Notification Item */
+        .notification-item.unread {
+            background: linear-gradient(to right, #eaf6ff, #dcf0ff); /* Gentle blue gradient for unread */
+            font-weight: 500; /* Medium font weight */
+            color: #0056b3; /* Darker blue text for unread */
+            border-left: 4px solid #007bff; /* Highlight with a blue left border */
+        }
+        .notification-item.unread:hover {
+            background: linear-gradient(to right, #d4ebff, #c2e0ff); /* Darker blue on hover for unread */
+        }
+
+        /* Notification Content Details */
+        .notification-item .noti-title {
+            font-size: 1rem;
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+        .notification-item .noti-message {
+            font-size: 0.875rem;
+            color: #6c757d; /* Medium gray for message */
+            line-height: 1.4;
+        }
+        .notification-item .noti-timestamp {
+            font-size: 0.75rem;
+            color: #99aab5; /* Lighter gray for timestamp */
+            margin-top: 8px; /* More space above timestamp */
+            display: block; /* Ensure it takes full width */
+            text-align: right; /* Align timestamp to the right */
+        }
+
+        /* "No Notifications" and "Clear All" Items */
+        .notification-dropdown .no-notifications-message { /* New class for the "No new notifications" item */
+            padding: 20px;
+            text-align: center;
+            font-style: italic;
+            color: #999;
+            cursor: default; /* No pointer for this item */
+        }
+        .notification-dropdown #clearNotificationsInner { /* Target the inner clear all button */
+            color: #dc3545; /* Red text for clear all */
+            font-weight: bold;
+            background-color: #fff; /* Ensure white background */
+            border-top: 1px solid #eee; /* Separator line */
+            padding: 15px 20px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .notification-dropdown #clearNotificationsInner:hover {
+            background-color: #f8d7da; /* Light red background on hover */
+            color: #a71d2a;
+        }
+
+        /* --- CÁC QUY TẮC CSS QUAN TRỌNG ĐỂ ÉP HIỂN THỊ KHI DROPDOWN MỞ --- */
+        /* Quy tắc này sẽ được ưu tiên cao nhất để hiển thị dropdown khi nó có class 'show' */
+        .notification-dropdown.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            /* Đảm bảo không bị ẩn bởi transform hoặc pointer-events */
+            transform: none !important;
+            pointer-events: auto !important;
+            z-index: 1050 !important; /* Đảm bảo nó nằm trên các nội dung khác */
+        }
+        /* Đảm bảo nút toggle luôn tương tác được */
+        .dropdown-toggle {
+            pointer-events: auto !important;
+        }
+    </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-  <div class="container">
-    <a class="navbar-brand" href="/admin">Admin Panel</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/admin">User Management</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/product">Product Management</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/orders">Orders Management</a>
-        </li>
-      </ul>
+    <div class="container">
+        <a class="navbar-brand" href="/admin">Admin Panel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">User Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/product">Product Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/orders">Orders Management</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle" href="#" id="navbarDropdownNotifications" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Notifications <span class="badge bg-danger rounded-pill notification-badge d-none" id="notificationCount">0</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="navbarDropdownNotifications" id="notificationList">
+                        </ul>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
 
-<!-- <div class="container">
-  <h1>Welcome to the Admin Panel!</h1>
-  <p>Click on "Admin Panel" in the brand or "User Management" in the navigation to see it light up.</p>
-  <p>Try navigating to other links and refreshing the page to see the active state persist.</p>
-</div> -->
+<div class="container">
+    <h1>Welcome to the Admin Panel!</h1>
+    <p>Real-time notifications will appear in the "Notifications" dropdown.</p>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-    const adminPanelBrand = document.querySelector('.navbar-brand[href="/admin"]');
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof bootstrap === 'undefined') {
+            console.error("LỖI: Bootstrap JavaScript không tải được! Dropdown sẽ không hoạt động.");
+        } else {
+            console.log("Bootstrap JavaScript đã tải thành công.");
 
-    function setActiveLink(href) {
-      navLinks.forEach(nav => nav.classList.remove('active')); // Remove active from all
-      const targetLink = document.querySelector(`.navbar-nav .nav-link[href="${href}"]`);
-      if (targetLink) {
-        targetLink.classList.add('active'); // Add active to the specific link
-        localStorage.setItem('activeLink', href); // Store the active link
-      }
-    }
-
-    // Event listener for navigation links
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(event) {
-        // Prevent default only if you're handling navigation purely client-side
-        // event.preventDefault(); // Uncomment if you are using a SPA framework and don't want a full page reload
-
-        setActiveLink(this.getAttribute('href'));
-      });
+            // Cố gắng khởi tạo Dropdown thủ công ngay khi DOM và Bootstrap sẵn sàng
+            const notificationsDropdownElement = document.getElementById('navbarDropdownNotifications');
+            if (notificationsDropdownElement) {
+                let dropdownInstance = bootstrap.Dropdown.getInstance(notificationsDropdownElement);
+                if (!dropdownInstance) {
+                    dropdownInstance = new bootstrap.Dropdown(notificationsDropdownElement);
+                    console.log("Bootstrap Dropdown instance created/found successfully:", dropdownInstance);
+                } else {
+                    console.log("Bootstrap Dropdown instance already exists.");
+                }
+            } else {
+                console.error("Không tìm thấy phần tử dropdown 'navbarDropdownNotifications'.");
+            }
+        }
     });
+</script>
 
-    // Event listener for the "Admin Panel" brand link
-    if (adminPanelBrand) {
-      adminPanelBrand.addEventListener('click', function(event) {
-        // event.preventDefault(); // Uncomment if you are using a SPA framework
-        setActiveLink('/admin'); // Explicitly activate User Management (which has href="/admin")
-      });
-    }
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Existing Navbar Active Link Logic (keep as is) ---
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        const adminPanelBrand = document.querySelector('.navbar-brand[href="/admin"]');
 
-    // Check localStorage on page load to set the active link
-    const storedActiveLink = localStorage.getItem('activeLink');
-    const currentPath = window.location.pathname;
+        function setActiveLink(href) {
+            navLinks.forEach(nav => nav.classList.remove('active'));
+            const targetLink = document.querySelector(`.navbar-nav .nav-link[href="${href}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+                localStorage.setItem('activeLink', href);
+            }
+        }
 
-    if (storedActiveLink) {
-      setActiveLink(storedActiveLink);
-    } else if (currentPath === '/admin' || currentPath === '/admin/') {
-      // If no stored link, but current page is admin root, activate User Management
-      setActiveLink('/admin');
-    }
-  });
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                setActiveLink(this.getAttribute('href'));
+            });
+        });
+
+        if (adminPanelBrand) {
+            adminPanelBrand.addEventListener('click', function(event) {
+                setActiveLink('/admin');
+            });
+        }
+
+        const storedActiveLink = localStorage.getItem('activeLink');
+        const currentPath = window.location.pathname;
+
+        if (storedActiveLink) {
+            setActiveLink(storedActiveLink);
+        } else if (currentPath === '/admin' || currentPath === '/admin/') {
+            setActiveLink('/admin');
+        }
+
+        // --- Socket.IO Notifications for Admin Panel ---
+        const socket = io();
+        const notificationList = document.getElementById('notificationList');
+        const notificationCountSpan = document.getElementById('notificationCount');
+
+        // Load notifications from localStorage on page load
+        let notifications = JSON.parse(localStorage.getItem('adminNotifications')) || [];
+        renderNotifications(); // Initial render of loaded notifications
+
+        socket.on("connect", () => {
+            console.log("Admin EJS socket connected:", socket.id);
+        });
+
+        socket.on("admin_new_order", (orderData) => {
+            console.log("🎉 Admin EJS nhận đơn hàng mới:", orderData);
+
+            const newNotification = {
+                id: orderData.orderCode || `noti-${Date.now()}`, // Ensure unique ID
+                title: `🛍️ Đơn hàng mới từ: ${orderData.userName}`,
+                message: `🧾 Mã đơn: ${orderData.orderCode}, 💰 Tổng: ${orderData.totalPrice?.toLocaleString('vi-VN')}₫`,
+                timestamp: new Date().toISOString(),
+                read: false, // Mark as unread by default
+                orderData: orderData // Store full data for potential future use
+            };
+
+            notifications.unshift(newNotification); // Add to the beginning (newest first)
+            saveNotifications();
+            renderNotifications(); // Re-render the dropdown with new notification
+
+            console.log(`Thông báo đơn hàng mới: ${newNotification.title}`);
+        });
+
+        // Function to save current notifications to localStorage
+        function saveNotifications() {
+            localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+        }
+
+        // Function to mark a specific notification as read
+        function markAsRead(index) {
+            if (notifications[index] && !notifications[index].read) {
+                notifications[index].read = true;
+                saveNotifications();
+                renderNotifications(); // Re-render to update UI (remove unread styling)
+            }
+        }
+
+        // Function to clear all notifications
+        function clearAllNotifications() {
+            notifications = []; // Empty the array
+            saveNotifications();
+            renderNotifications(); // Re-render (will show "No notifications")
+        }
+
+        // Function to render/re-render the notification list
+        function renderNotifications() {
+            notificationList.innerHTML = ''; // Clear existing list items
+
+            // Add the fixed header for the dropdown
+            const headerItem = document.createElement('li');
+            headerItem.innerHTML = '<h6 class="dropdown-header">🔔 Thông báo của Admin</h6>';
+            notificationList.appendChild(headerItem);
+
+            if (notifications.length === 0) {
+                const noNotiItem = document.createElement('li');
+                noNotiItem.classList.add('no-notifications-message', 'text-center', 'text-muted');
+                noNotiItem.textContent = 'Không có thông báo nào.';
+                notificationList.appendChild(noNotiItem);
+            } else {
+                notifications.forEach((noti, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('dropdown-item', 'notification-item');
+                    if (!noti.read) {
+                        listItem.classList.add('unread');
+                    }
+                    listItem.setAttribute('data-index', index);
+
+                    const time = new Date(noti.timestamp).toLocaleString('vi-VN', {
+                        hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
+                    });
+
+                    listItem.innerHTML = `
+                        <div class="noti-title">${noti.title}</div>
+                        <div class="noti-message">${noti.message}</div>
+                        <div class="noti-timestamp">${time}</div>
+                    `;
+                    notificationList.appendChild(listItem);
+
+                    listItem.addEventListener('click', function() {
+                        markAsRead(index);
+                    });
+                });
+            }
+
+            if (notifications.length > 0) {
+                const dividerItem = document.createElement('li');
+                dividerItem.innerHTML = '<hr class="dropdown-divider">';
+                notificationList.appendChild(dividerItem);
+
+                const clearAllItem = document.createElement('li');
+                clearAllItem.innerHTML = '<a class="dropdown-item text-center text-danger" href="#" id="clearNotificationsInner">🗑️ Xóa tất cả thông báo</a>';
+                notificationList.appendChild(clearAllItem);
+
+                document.getElementById('clearNotificationsInner').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    clearAllNotifications();
+                });
+            }
+
+            updateNotificationCount();
+        }
+
+        // Function to update the unread notification count badge
+        function updateNotificationCount() {
+            const unreadCount = notifications.filter(noti => !noti.read).length;
+            notificationCountSpan.textContent = unreadCount;
+            if (unreadCount > 0) {
+                notificationCountSpan.classList.remove('d-none');
+            } else {
+                notificationCountSpan.classList.add('d-none');
+            }
+        }
+    });
 </script>
 </body>
 </html>
