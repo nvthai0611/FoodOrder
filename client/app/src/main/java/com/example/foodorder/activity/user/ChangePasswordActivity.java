@@ -2,15 +2,19 @@ package com.example.foodorder.activity.user;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.foodorder.activity.LoginActivity;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.UserService;
 import com.example.foodorder.R;
@@ -105,8 +109,21 @@ public class ChangePasswordActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    Toast.makeText(ChangePasswordActivity.this, "Password updated successfully!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    Toast.makeText(ChangePasswordActivity.this, "Password updated successfully, You will exit the login screen.!", Toast.LENGTH_SHORT).show();
+                    // Tạo Handler để trì hoãn tác vụ
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        // 1. Xóa SharedPreferences
+                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear(); // Xóa tất cả dữ liệu
+                        editor.apply();
+
+                        // 2. Chuyển sang màn hình đăng nhập
+                        Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+                        // Đặt cờ để xóa hết các màn hình cũ
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }, 1000); // 1000ms = 1 giây
                 } else {
                     Toast.makeText(ChangePasswordActivity.this, "Update failed!", Toast.LENGTH_SHORT).show();
                 }

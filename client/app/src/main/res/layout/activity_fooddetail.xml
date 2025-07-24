@@ -83,24 +83,7 @@
                 android:padding="@dimen/padding_large"
                 android:background="@color/color_white">
 
-                <!-- Category & Time -->
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:id="@+id/tvCategory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/padding_small"
-                        android:paddingEnd="@dimen/padding_small"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:text="@string/category_banh_mi"
-                        android:textSize="@dimen/text_size_small"
-                        android:textColor="@color/color_text_secondary"
-                        android:background="@drawable/rounded_tag_background" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -108,7 +91,6 @@
                         android:text="@string/preparation_time"
                         android:textSize="@dimen/text_size_small"
                         android:textColor="@color/color_text_secondary" />
-                </LinearLayout>
 
                 <!-- Title -->
                 <TextView
@@ -142,13 +124,6 @@
                         android:text="4.8"
                         android:textSize="@dimen/text_size_medium"
                         android:textColor="@color/color_text_primary" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:text="(124 đánh giá) • 320 kcal"
-                        android:textSize="@dimen/text_size_small"
-                        android:textColor="@color/color_text_secondary" />
                 </LinearLayout>
 
                 <!-- Prices -->
@@ -216,9 +191,9 @@
                             android:id="@+id/btnDecrease"
                             android:layout_width="@dimen/button_icon_size_small"
                             android:layout_height="@dimen/button_icon_size_small"
-                            android:background="@drawable/circle_button_background"
+                            android:background="@drawable/ic_minus"
                             android:contentDescription="@string/btn_decrease"
-                            android:src="@drawable/decrease"
+                            android:src="@drawable/ic_minus"
                             app:tint="@color/color_text_primary" />
 
                         <TextView
@@ -234,13 +209,12 @@
                             android:id="@+id/btnIncrease"
                             android:layout_width="@dimen/button_icon_size_small"
                             android:layout_height="@dimen/button_icon_size_small"
-                            android:background="@drawable/circle_button_background"
-                            android:src="@drawable/increase"
+                            android:background="@drawable/ic_plus"
+                            android:src="@drawable/ic_plus"
                             android:contentDescription="@string/btn_increase"
                             app:tint="@color/color_text_primary" />
                     </LinearLayout>
                 </LinearLayout>
-
                 <!-- Add to Cart -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddToCart"
@@ -284,9 +258,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:paddingHorizontal="@dimen/padding_large">
-                <!-- Review items will be added programmatically or as separate includes -->
             </LinearLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

@@ -3,7 +3,6 @@ package com.example.foodorder.activity;
 import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -65,7 +64,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private Runnable paymentCheckRunnable;
 
     private final String PATH_BE = "http://10.0.2.2:9999";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +131,6 @@ public class CheckoutActivity extends AppCompatActivity {
         }
         return Math.round(total * 100.0) / 100.0; // làm tròn 2 chữ số thập phân
     }
-
     private void ppCheckout() {
         Map<String, String> body = new HashMap<>();
         body.put("userId", userId);
@@ -227,10 +224,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     Toast.makeText(CheckoutActivity.this, "✅ Đã thanh toán thành công!", Toast.LENGTH_LONG).show();
                     // 🚀 Gửi socket về server
                     sendSocketPaymentSuccess();
-                    Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
-                    intent.putExtra("navigateTo", "order_history");
-                    startActivity(intent);
-                    finish(); // Nếu không muốn quay lại màn Checkout
                 }
             }
 
@@ -294,7 +287,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private final Emitter.Listener onMessage = args -> runOnUiThread(() -> {
         if (args.length > 0) Log.d("SOCKET", "Đã nhận phản hồi từ server");
     });
-
     private void codCheckout() {
         String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
         if (userId == null) {
