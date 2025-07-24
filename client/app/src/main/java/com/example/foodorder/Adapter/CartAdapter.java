@@ -17,6 +17,7 @@ import com.example.foodorder.R;
 import com.example.foodorder.models.Cart;
 import com.example.foodorder.models.CartItem;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,7 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 .placeholder(R.drawable.gradient_avatar_background)
                 .into(holder.itemImage);
         holder.itemName.setText(item.getName());
-        holder.itemPrice.setText(String.format(Locale.US, "%.2fđ", item.getPrice()));
+        holder.itemPrice.setText(formatCurrency(item.getPrice()));
         holder.itemQty.setText(String.format(Locale.US, "Số lượng: %d", item.getQuantity()));
 
         if (editable) {
@@ -93,5 +94,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         void onIncrease(int position);
 
         void onDecrease(int position);
+    }
+
+    private String formatCurrency(double price) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return formatter.format(price);
     }
 }

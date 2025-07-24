@@ -88,6 +88,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         View checkoutLayout = findViewById(R.id.checkoutLayout);
         TextView checkoutTitle = findViewById(R.id.checkoutTitle);
+        ImageButton btnBack = findViewById(R.id.btnBack);
 
         ViewCompat.setOnApplyWindowInsetsListener(checkoutLayout, (v, insets) -> {
             DisplayCutoutCompat cutout = insets.getDisplayCutout();
@@ -97,6 +98,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) checkoutTitle.getLayoutParams();
                 params.topMargin = topInset + dpToPx(BASE_MARGIN);
                 checkoutTitle.setLayoutParams(params);
+
+                ViewGroup.MarginLayoutParams backParams = (ViewGroup.MarginLayoutParams) btnBack.getLayoutParams();
+                backParams.topMargin = topInset + dpToPx(BASE_MARGIN);
+                btnBack.setLayoutParams(backParams);
             }
             return insets;
         });
@@ -108,7 +113,7 @@ public class CheckoutActivity extends AppCompatActivity {
         TextView total = findViewById(R.id.total);
         TextView name = findViewById(R.id.billingName);
 
-        total.setText("Tổng tiền: " + totalPrice + "đ");
+        total.setText("Tổng tiền: " + formatCurrency(totalPrice));
         name.setText(fullName);
 
         RecyclerView recyclerView = findViewById(R.id.cartRecyclerView);
@@ -117,7 +122,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         Button btnPrepaid = findViewById(R.id.btnPrepaid);
         Button btnCOD = findViewById(R.id.btnPayOnDelivery);
-        ImageButton btnBack = findViewById(R.id.btnBack);
 
         btnPrepaid.setOnClickListener(v -> ppCheckout());
         btnCOD.setOnClickListener(v -> codCheckout());
@@ -302,7 +306,7 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(CheckoutActivity.this, "Bon Appetit!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CheckoutActivity.this, "Đặt hàng thành công", Toast.LENGTH_LONG).show();
                     RoutingUtils.redirect(CheckoutActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
                 } else {
                     Toast.makeText(CheckoutActivity.this, "Không thể tạo đơn", Toast.LENGTH_LONG).show();
@@ -324,5 +328,9 @@ public class CheckoutActivity extends AppCompatActivity {
         return Math.round(dp * density);
     }
 
+    private String formatCurrency(double price) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return formatter.format(price);
+    }
 
 }
