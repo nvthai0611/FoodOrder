@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,20 +110,20 @@ public class CheckoutActivity extends AppCompatActivity {
         TextView total = findViewById(R.id.total);
         TextView name = findViewById(R.id.billingName);
 
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
-        String formattedPrice = formatter.format(totalPrice);
-        total.setText("Tổng tiền: " + formattedPrice);
+        total.setText("Tổng tiền: " + totalPrice + "đ");
         name.setText(fullName);
 
         RecyclerView recyclerView = findViewById(R.id.cartRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CartAdapter(cart));
+        recyclerView.setAdapter(new CartAdapter(cart, CartAdapter.NO_LISTENER, CartAdapter.IS_CHECKOUT_ACTIVITY));
 
         Button btnPrepaid = findViewById(R.id.btnPrepaid);
         Button btnCOD = findViewById(R.id.btnPayOnDelivery);
+        ImageButton btnBack = findViewById(R.id.btnBack);
 
         btnPrepaid.setOnClickListener(v -> ppCheckout());
         btnCOD.setOnClickListener(v -> codCheckout());
+        btnBack.setOnClickListener(v -> RoutingUtils.redirect(CheckoutActivity.this, CartActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH));
     }
 
     private double calculateTotalPrice(Cart cart) {

@@ -124,8 +124,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "API call failed", t);
+                if (isAdded() && getActivity() != null) {
+                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "API call failed", t);
+                }
             }
         });
     }
@@ -142,15 +144,15 @@ public class HomeFragment extends Fragment {
                     allFoods.addAll(response.body());
                     adapter.notifyDataSetChanged();
 
-                    Log.e(TAG, "Response success:");
-                    for (Food food : allFoods) {
-                        Log.e(TAG, "Food item: " +
-                                "\n - Name: " + food.getName() +
-                                "\n - Description: " + food.getDescription() +
-                                "\n - Price: " + food.getPrice() +
-                                "\n - Image URL: " + food.getImageUrl() +
-                                "\n - Category: " + (food.getCategory() != null ? food.getCategory().getName() : "null"));
-                    }
+//                    Log.e(TAG, "Response success:");
+//                    for (Food food : allFoods) {
+//                        Log.e(TAG, "Food item: " +
+//                                "\n - Name: " + food.getName() +
+//                                "\n - Description: " + food.getDescription() +
+//                                "\n - Price: " + food.getPrice() +
+//                                "\n - Image URL: " + food.getImageUrl() +
+//                                "\n - Category: " + (food.getCategory() != null ? food.getCategory().getName() : "null"));
+//                    }
                 } else {
                     Toast.makeText(requireContext(), "Failed to get data", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Response error: " + response.message());
@@ -159,8 +161,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "API call failed", t);
+                if (isAdded() && getActivity() != null) {
+                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "API call failed", t);
+                }
             }
         });
     }
@@ -194,8 +198,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Food>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "API call failed", t);
+                if (isAdded() && getActivity() != null) {
+                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "API call failed", t);
+                }
             }
         });
     }
@@ -229,8 +235,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "API call failed", t);
+                if (isAdded() && getActivity() != null) {
+                    Toast.makeText(requireContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "API call failed", t);
+                }
             }
         });
     }

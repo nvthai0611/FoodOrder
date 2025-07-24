@@ -1,8 +1,12 @@
 package com.example.foodorder.models;
 
+import com.example.foodorder.activity.FoodActivity;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class CartItem implements Serializable {
+    @SerializedName("food")
     private String foodId;
     private String name;
     private Double price;
@@ -10,10 +14,6 @@ public class CartItem implements Serializable {
 
     public String getFoodId() {
         return foodId;
-    }
-
-    public void setFoodId(String foodId) {
-        this.foodId = foodId;
     }
 
     private String image;
