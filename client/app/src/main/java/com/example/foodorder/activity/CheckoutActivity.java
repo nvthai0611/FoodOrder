@@ -257,29 +257,25 @@ public class CheckoutActivity extends AppCompatActivity {
     private void sendSocketPaymentSuccess() {
         try {
             if (mSocket != null && mSocket.connected()) {
-                // 👉 Gửi thông báo đơn hàng mới từ client
-                JSONObject message = new JSONObject();
-                message.put("userId", userId);
-                message.put("totalPrice", totalPrice);
-                message.put("status", "SUCCESS");
-                message.put("timestamp", System.currentTimeMillis());
+                JSONObject jsonData = new JSONObject();
+                jsonData.put("userId", userId);                    // Ví dụ: "666abc000001000000000001"
+                jsonData.put("totalPrice", totalPrice);            // Ví dụ: 2000
+                jsonData.put("status", "SUCCESS");
+                jsonData.put("timestamp", System.currentTimeMillis());
 
                 JSONArray itemsArray = new JSONArray();
                 for (CartItem item : cart.getCartItems()) {
                     JSONObject itemObj = new JSONObject();
-                    itemObj.put("productId", item.getFoodId());
                     itemObj.put("name", item.getName());
                     itemObj.put("price", item.getPrice());
                     itemObj.put("quantity", item.getQuantity());
                     itemsArray.put(itemObj);
                 }
-                message.put("items", itemsArray);
 
-                // 🟡 Gửi dưới dạng string JSON để server xử lý đúng
-                String messageString = message.toString();
+                jsonData.put("items", itemsArray);
 
-                mSocket.emit("messageFromClient", messageString);
-                Log.d("SOCKET", "Đã gửi messageFromClient: " + messageString);
+                mSocket.emit("messageFromClient", jsonData);
+                Log.d("SOCKET", "Đã gửi messageFromClient: " + jsonData.toString());
             } else {
                 Log.e("SOCKET", "⚠️ Socket chưa kết nối");
             }
