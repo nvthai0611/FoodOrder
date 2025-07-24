@@ -76,6 +76,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(ForgotPasswordActivity.this, "Mật khẩu mới đã gửi qua email!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+                    startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(ForgotPasswordActivity.this, "Không gửi được. Kiểm tra email hoặc thử lại.", Toast.LENGTH_LONG).show();
