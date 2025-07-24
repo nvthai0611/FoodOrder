@@ -29,6 +29,7 @@ import com.example.foodorder.network.CartService;
 import com.example.foodorder.utils.RoutingUtils;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -52,6 +53,8 @@ public class CartActivity extends BaseActivity {
 
         View cartLayout = findViewById(R.id.cartLayout);
         TextView cartTitle = findViewById(R.id.cartTitle);
+        ImageButton btnBack = findViewById(R.id.btnBack);
+
 
         ViewCompat.setOnApplyWindowInsetsListener(cartLayout, (v, insets) -> {
             DisplayCutoutCompat cutout = insets.getDisplayCutout();
@@ -61,9 +64,14 @@ public class CartActivity extends BaseActivity {
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) cartTitle.getLayoutParams();
                 params.topMargin = topInset + dpToPx(BASE_MARGIN);
                 cartTitle.setLayoutParams(params);
+
+                ViewGroup.MarginLayoutParams backParams = (ViewGroup.MarginLayoutParams) btnBack.getLayoutParams();
+                backParams.topMargin = topInset + dpToPx(BASE_MARGIN);
+                btnBack.setLayoutParams(backParams);
             }
             return insets;
         });
+
         cartService = ApiClient.getClient().create(CartService.class);
 
         userId = getCurrentUserId();
@@ -83,7 +91,6 @@ public class CartActivity extends BaseActivity {
             checkout();
         });
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
             RoutingUtils.redirect(CartActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
         });
@@ -115,7 +122,7 @@ public class CartActivity extends BaseActivity {
                                 CartItem item = cart.getCartItems().get(position);
                                 item.setQuantity(item.getQuantity() + 1);
                                 adapter.notifyItemChanged(position);
-                                totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
+                                totalPriceText.setText(formatCurrency(calculateTotal(cart)));
                                 updateCart();
                             }
 
@@ -130,13 +137,13 @@ public class CartActivity extends BaseActivity {
                                     cart.getCartItems().remove(position);
                                     adapter.notifyItemRemoved(position);
                                 }
-                                totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
+                                totalPriceText.setText(formatCurrency(calculateTotal(cart)));
                                 updateCart();
                             }
                         }, CartAdapter.IS_CART_ACTIVITY);
                     }
                     recyclerView.setAdapter(adapter);
-                    totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
+                    totalPriceText.setText(formatCurrency(calculateTotal(cart)));
                 } else {
                     try {
                         String errorMsg = response.errorBody().string();
@@ -200,5 +207,10 @@ public class CartActivity extends BaseActivity {
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
+    }
+
+    private String formatCurrency(double price) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return formatter.format(price);
     }
 }
