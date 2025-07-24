@@ -1,8 +1,11 @@
 package com.example.foodorder.Adapter;
 
+import static android.view.View.GONE;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,15 +21,24 @@ import java.util.List;
 import java.util.Locale;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-    private List<CartItem> cartItems;
+    public static final boolean IS_CART_ACTIVITY = true;
+    public static final boolean IS_CHECKOUT_ACTIVITY = false;
+    public static final OnCartItemChangeListener NO_LISTENER = null;
+    private final List<CartItem> cartItems;
+    private OnCartItemChangeListener listener;
 
-    public CartAdapter(Cart cart) {
+    private boolean editable;
+
+    public CartAdapter(Cart cart, OnCartItemChangeListener listener, boolean flag) {
         this.cartItems = cart.getCartItems();
+        this.listener = listener;
+        this.editable = flag;
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView itemName, itemPrice, itemQty;
         ImageView itemImage;
+        Button btnIncrease, btnDecrease;
 
         public CartViewHolder(View itemView) {
             super(itemView);
@@ -34,6 +46,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             itemName = itemView.findViewById(R.id.cartItemName);
             itemPrice = itemView.findViewById(R.id.cartItemPrice);
             itemQty = itemView.findViewById(R.id.cartItemQty);
+            btnIncrease = itemView.findViewById(R.id.btnIncrease);
+            btnDecrease = itemView.findViewById(R.id.btnDecrease);
         }
     }
 
@@ -53,19 +67,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 .placeholder(R.drawable.gradient_avatar_background)
                 .into(holder.itemImage);
         holder.itemName.setText(item.getName());
-        holder.itemPrice.setText(String.format(Locale.US, "$%.2f", item.getPrice()));
+        holder.itemPrice.setText(String.format(Locale.US, "%.2fđ", item.getPrice()));
         holder.itemQty.setText(String.format(Locale.US, "Số lượng: %d", item.getQuantity()));
 
-        //TODO: Create logic redirect to the food detail when click on item in cart
-//        holder.itemView.setOnClickListener(v -> {
-//            Bundle extras = new Bundle();
-//            extras.putInt("id", item.id);
-//            Routing.redirect(holder.itemView.getContext(), FoodActivity.class, extras);
-//        });
+        if (editable) {
+            holder.btnIncrease.setOnClickListener(v -> {
+                listener.onIncrease(position);
+            });
+
+            holder.btnDecrease.setOnClickListener(v -> {
+                listener.onDecrease(position);
+            });
+        } else {
+            holder.btnIncrease.setVisibility(GONE);
+            holder.btnDecrease.setVisibility(GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
         return cartItems.size();
+    }
+
+    public interface OnCartItemChangeListener {
+        void onIncrease(int position);
+
+        void onDecrease(int position);
     }
 }

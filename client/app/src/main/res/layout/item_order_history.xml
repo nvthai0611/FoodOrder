@@ -53,7 +53,8 @@
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/sample_food" />
+            android:src="@drawable/sample_food"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvMoreProducts"
@@ -62,7 +63,8 @@
             android:text="+3 món"
             android:textColor="#999999"
             android:gravity="center_vertical"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
