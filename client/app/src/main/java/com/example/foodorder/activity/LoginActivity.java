@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.loginButton);
         TextView tvSignup = findViewById(R.id.signupText);
+        TextView tvForgotPassword = findViewById(R.id.forgotPasswordText);
 
         loginService = ApiClient.getClient().create(LoginService.class);
 
@@ -59,6 +60,10 @@ public class LoginActivity extends AppCompatActivity {
 
         tvSignup.setOnClickListener(v -> {
             RoutingUtils.redirect(LoginActivity.this, RegisterActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+        });
+
+        tvForgotPassword.setOnClickListener(v -> {
+            RoutingUtils.redirect(LoginActivity.this, ForgotPasswordActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
         });
     }
     private void loginUser(String email, String password) {
