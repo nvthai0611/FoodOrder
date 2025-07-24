@@ -115,7 +115,7 @@ app.post("/check-payment-status", async (req, res) => {
       })),
       total_price: amount,
       status_payment: "paid",
-      status: "pending",
+      status: "preparing",
       note: orderCode
     });
 

@@ -33,7 +33,6 @@ public class HomeActivity extends BaseActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
-        initSocket();
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
@@ -70,33 +69,6 @@ public class HomeActivity extends BaseActivity {
                 .commit();
     }
 
-    private void initSocket() {
-        try {
-            IO.Options opts = IO.Options.builder()
-                    .setReconnection(true)  // Bật auto reconnect
-                    .setReconnectionAttempts(5)  // Thử tối đa 5 lần
-                    .build();
 
-            mSocket = IO.socket("http://10.0.2.2:9999", opts);
-            mSocket.on(Socket.EVENT_CONNECT, args ->
-                    Log.d("SOCKET", "Connected: " + mSocket.id()));
-            mSocket.on("messageFromServer", onMessage);
-            mSocket.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private final Emitter.Listener onMessage = args -> runOnUiThread(() -> {
-        if (args.length > 0) Log.d("check", "check");
-    });
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    if (mSocket != null) {
-//        mSocket.off("messageFromServer", onMessage);
-        mSocket.disconnect();
-    }
-}
 
 }
