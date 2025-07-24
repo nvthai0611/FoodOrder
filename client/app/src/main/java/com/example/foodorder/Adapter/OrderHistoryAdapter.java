@@ -69,7 +69,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 if (food != null && food.getImageUrl() != null) {
                     String imageUrl = food.getImageUrl();
 
-                    // Nếu image chỉ là tên file, thêm BASE_IMAGE_URL
                     if (!imageUrl.startsWith("http")) {
                         imageUrl = BASE_IMAGE_URL + imageUrl;
                     }
@@ -79,29 +78,28 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             }
         }
 
-        // Load ảnh 1 bằng Glide
         if (imageUrls.size() > 0) {
+            holder.imgProduct1.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(imageUrls.get(0))
                     .placeholder(R.drawable.sample_food)
                     .error(R.drawable.sample_food)
                     .into(holder.imgProduct1);
         } else {
-            holder.imgProduct1.setImageResource(R.drawable.sample_food);
+            holder.imgProduct1.setVisibility(View.GONE);
         }
 
-        // Load ảnh 2 bằng Glide
         if (imageUrls.size() > 1) {
+            holder.imgProduct2.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(imageUrls.get(1))
                     .placeholder(R.drawable.sample_food)
                     .error(R.drawable.sample_food)
                     .into(holder.imgProduct2);
         } else {
-            holder.imgProduct2.setImageResource(R.drawable.sample_food);
+            holder.imgProduct2.setVisibility(View.GONE);
         }
 
-        // Hiển thị "+x món" nếu > 2
         if (imageUrls.size() > 2) {
             holder.tvMoreProducts.setVisibility(View.VISIBLE);
             holder.tvMoreProducts.setText("+" + (imageUrls.size() - 2) + " món");
@@ -109,7 +107,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             holder.tvMoreProducts.setVisibility(View.GONE);
         }
 
-        // Mở chi tiết đơn
         holder.btnViewDetail.setOnClickListener(v -> {
             Intent intent = new Intent(context, OrderDetailActivity.class);
             intent.putExtra("order_id", order.get_id());
