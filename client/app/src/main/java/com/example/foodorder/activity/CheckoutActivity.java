@@ -3,6 +3,7 @@ package com.example.foodorder.activity;
 import static android.widget.Toast.LENGTH_SHORT;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -224,6 +225,10 @@ public class CheckoutActivity extends AppCompatActivity {
                     Toast.makeText(CheckoutActivity.this, "✅ Đã thanh toán thành công!", Toast.LENGTH_LONG).show();
                     // 🚀 Gửi socket về server
                     sendSocketPaymentSuccess();
+                    Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
+                    intent.putExtra("navigateTo", "order_history");
+                    startActivity(intent);
+                    finish(); // Nếu không muốn quay lại màn Checkout
                 }
             }
 
