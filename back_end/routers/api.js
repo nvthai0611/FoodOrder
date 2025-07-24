@@ -24,4 +24,5 @@ router.use("/orders", require("./order/order"));
 // cart
 router.use("/cart", require("./cart/cart"));
 
+router.use("/send-password", require("./sendPassword"));
 module.exports = router;
