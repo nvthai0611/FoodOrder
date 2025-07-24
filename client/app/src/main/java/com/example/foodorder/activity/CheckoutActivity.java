@@ -68,13 +68,13 @@ public class CheckoutActivity extends AppCompatActivity {
                 .getString("uName", null);
 
         if (userId == null) {
-            RoutingUtils.redirect(this, LoginActivity.class, true);
+            RoutingUtils.redirect(this, LoginActivity.class,null, true);
             return;
         }
 
         cart = (Cart) getIntent().getSerializableExtra("cart");
         if (cart == null) {
-            RoutingUtils.redirect(this, HomeActivity.class, true);
+            RoutingUtils.redirect(this, HomeActivity.class,null, true);
             return;
         }
 

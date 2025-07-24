@@ -96,35 +96,35 @@ public class UserProfileFragment extends Fragment {
             });
         }
 
-        btn_testSocket = view.findViewById(R.id.btn_testSocket);
+//        btn_testSocket = view.findViewById(R.id.btn_testSocket);
 
         mSocket.connect();
 
-        btn_testSocket.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    JSONObject jsonData = new JSONObject();
-                    jsonData.put("userId", "666abc000001000000000001");
-                    jsonData.put("totalPrice", 2000);
-                    jsonData.put("status", "SUCCESS");
-                    jsonData.put("timestamp", 1753323882282L);
-
-                    JSONArray itemsArray = new JSONArray();
-                    JSONObject item = new JSONObject();
-                    item.put("name", "Grilled Chicken Salad");
-                    item.put("price", 2000);
-                    item.put("quantity", 1);
-
-                    itemsArray.put(item);
-
-                    jsonData.put("items", itemsArray);
-
-                    mSocket.emit("messageFromClient", jsonData);
-                } catch (JSONException e) {
-                    Log.d("me", "error send message " + e.getMessage());
-                }
-            }
-        });
+//        btn_testSocket.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                try {
+//                    JSONObject jsonData = new JSONObject();
+//                    jsonData.put("userId", "666abc000001000000000001");
+//                    jsonData.put("totalPrice", 2000);
+//                    jsonData.put("status", "SUCCESS");
+//                    jsonData.put("timestamp", 1753323882282L);
+//
+//                    JSONArray itemsArray = new JSONArray();
+//                    JSONObject item = new JSONObject();
+//                    item.put("name", "Grilled Chicken Salad");
+//                    item.put("price", 2000);
+//                    item.put("quantity", 1);
+//
+//                    itemsArray.put(item);
+//
+//                    jsonData.put("items", itemsArray);
+//
+//                    mSocket.emit("messageFromClient", jsonData);
+//                } catch (JSONException e) {
+//                    Log.d("me", "error send message " + e.getMessage());
+//                }
+//            }
+//        });
 
         btn_changePass.setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), ChangePasswordActivity.class);
