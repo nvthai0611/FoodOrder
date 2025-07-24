@@ -158,46 +158,7 @@ public class FoodActivity extends AppCompatActivity {
 
         // Thêm vào giỏ hàng
         btnAddToCart.setOnClickListener(v -> {
-            String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
-
-            if (userId == null) {
-                RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
-            } else {
-                CartItem item = new CartItem(foodId, name, foodPrice, quantity, imageUrl);
-
-                Cart cart = new Cart();
-                cart.setUserId(userId);
-                cart.setCartItems(item);
-                Call<Cart> cartCall = cartService.createOrUpdateCart(cart);
-
-                cartCall.enqueue(new Callback<Cart>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
-                        if (response.isSuccessful()) {
-                            String message = quantity + " x " + name + " đã được thêm vào giỏ hàng!";
-                            Toast.makeText(FoodActivity.this, message, Toast.LENGTH_SHORT).show();
-                        } else {
-                            try {
-                                String errorMsg = response.errorBody().string();
-                                Log.e("FOO_ACT", errorMsg);
-                                Toast.makeText(FoodActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                Toast.makeText(FoodActivity.this, "Không thể thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<Cart> call, @NonNull Throwable t) {
-                        Toast.makeText(FoodActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Intent backIntent = new Intent(FoodActivity.this, HomeActivity.class);
-                backIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(backIntent);
-                finish();
-            }
+            addToCart(foodId, name, foodPrice, quantity, imageUrl);
         });
 
         // Quay lại Home
@@ -249,6 +210,7 @@ public class FoodActivity extends AppCompatActivity {
             }
         });
     }
+
     private void displayReviews(List<Review> reviews) {
         LinearLayout reviewContainer = findViewById(R.id.reviewContainer);
         reviewContainer.removeAllViews(); // clear cũ nếu có
@@ -304,6 +266,45 @@ public class FoodActivity extends AppCompatActivity {
                 Toast.makeText(FoodActivity.this, "Không thể tải đánh giá", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void addToCart(String foodId, String name, double foodPrice, int quantity, String imageUrl) {
+        String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("uId", null);
+
+        if (userId == null) {
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+        } else {
+            CartItem item = new CartItem(foodId, name, foodPrice, quantity, imageUrl);
+
+            Cart cart = new Cart();
+            cart.setUserId(userId);
+            cart.setCartItems(item);
+            Call<Cart> cartCall = cartService.createOrAdd(cart);
+
+            cartCall.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
+                    if (response.isSuccessful()) {
+                        String message = FoodActivity.this.quantity + " x " + name + " đã được thêm vào giỏ hàng!";
+                        Toast.makeText(FoodActivity.this, message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        try {
+                            String errorMsg = response.errorBody().string();
+                            Log.e("FOO_ACT", errorMsg);
+                            Toast.makeText(FoodActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            Toast.makeText(FoodActivity.this, "Không thể thêm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Cart> call, @NonNull Throwable t) {
+                    Toast.makeText(FoodActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            RoutingUtils.redirect(this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH, Intent.FLAG_ACTIVITY_CLEAR_TOP, Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
     }
 
     // Cập nhật icon yêu thích

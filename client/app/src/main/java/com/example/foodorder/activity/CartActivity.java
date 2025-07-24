@@ -1,11 +1,13 @@
 package com.example.foodorder.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.example.foodorder.Adapter.CartAdapter;
 import com.example.foodorder.R;
 import com.example.foodorder.base.BaseActivity;
 import com.example.foodorder.models.Cart;
+import com.example.foodorder.models.CartItem;
 import com.example.foodorder.network.ApiClient;
 import com.example.foodorder.network.CartService;
 import com.example.foodorder.utils.RoutingUtils;
@@ -34,10 +37,10 @@ import retrofit2.Response;
 
 public class CartActivity extends BaseActivity {
     private static final int BASE_MARGIN = 16;
-
+    private String userId;
     private RecyclerView recyclerView;
     private CartAdapter adapter;
-    private Cart cart;
+    private Cart cart = null;
     private TextView totalPriceText;
     private CartService cartService;
 
@@ -61,8 +64,16 @@ public class CartActivity extends BaseActivity {
             }
             return insets;
         });
-
         cartService = ApiClient.getClient().create(CartService.class);
+
+        userId = getCurrentUserId();
+        if (userId != null) {
+            fetchCart(userId);
+        } else {
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+            return;
+        }
+
         totalPriceText = findViewById(R.id.totalPrice);
         recyclerView = findViewById(R.id.cartRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -72,15 +83,18 @@ public class CartActivity extends BaseActivity {
             checkout();
         });
 
-        String userId = getCurrentUserId();
-        if (userId != null) {
-            fetchCart(userId);
-        } else {
-            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
-        }
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> {
+            RoutingUtils.redirect(CartActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+        });
     }
 
     private void checkout() {
+        if (cart.getCartItems().isEmpty()) {
+            Toast.makeText(CartActivity.this, "Giỏ hàng rỗng", Toast.LENGTH_SHORT).show();
+            RoutingUtils.redirect(CartActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+            return;
+        }
         Bundle extras = new Bundle();
         extras.putSerializable("cart", cart);
         extras.putString("total", totalPriceText.getText().toString());
@@ -89,14 +103,40 @@ public class CartActivity extends BaseActivity {
 
     private void fetchCart(String userId) {
         Call<Cart> call = cartService.getCart(userId);
-        call.enqueue(new Callback<Cart>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     cart = response.body();
-                    adapter = new CartAdapter(cart);
+                    if (!cart.getCartItems().isEmpty()) {
+                        adapter = new CartAdapter(cart, new CartAdapter.OnCartItemChangeListener() {
+                            @Override
+                            public void onIncrease(int position) {
+                                CartItem item = cart.getCartItems().get(position);
+                                item.setQuantity(item.getQuantity() + 1);
+                                adapter.notifyItemChanged(position);
+                                totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
+                                updateCart();
+                            }
+
+                            @Override
+                            public void onDecrease(int position) {
+                                if(position < 0) return;
+                                CartItem item = cart.getCartItems().get(position);
+                                if (item.getQuantity() > 1) {
+                                    item.setQuantity(item.getQuantity() - 1);
+                                    adapter.notifyItemChanged(position);
+                                } else {
+                                    cart.getCartItems().remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                }
+                                totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
+                                updateCart();
+                            }
+                        }, CartAdapter.IS_CART_ACTIVITY);
+                    }
                     recyclerView.setAdapter(adapter);
-                    totalPriceText.setText(String.format(Locale.US, "$%.2f", calculateTotal(cart)));
+                    totalPriceText.setText(String.format(Locale.US, "%.2fđ", calculateTotal(cart)));
                 } else {
                     try {
                         String errorMsg = response.errorBody().string();
@@ -115,6 +155,34 @@ public class CartActivity extends BaseActivity {
                 RoutingUtils.redirect(CartActivity.this, HomeActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
             }
         });
+    }
+
+    private void updateCart() {
+        if (userId == null) {
+            RoutingUtils.redirect(this, LoginActivity.class, RoutingUtils.NO_EXTRAS, RoutingUtils.ACTIVITY_FINISH);
+        } else {
+            Call<Cart> cartCall = cartService.update(this.cart);
+            cartCall.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(@NonNull Call<Cart> call, @NonNull Response<Cart> response) {
+                    if (response.isSuccessful()) {
+                        Log.i("CAR_ACT", "Cart modified");
+                    } else {
+                        try {
+                            String errorMsg = response.errorBody().string();
+                            Log.e("CAR_ACT", errorMsg);
+                        } catch (IOException e) {
+                            Toast.makeText(CartActivity.this, "Không thể sửa vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Cart> call, @NonNull Throwable t) {
+                    Toast.makeText(CartActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private Double calculateTotal(Cart cart) {
