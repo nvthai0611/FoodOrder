@@ -27,8 +27,9 @@ router.get("/:userId", async (req, res) => {
     console.log(userId);
     
     const orders = await Order.find({ user_id: userId })
-      .populate({
-        path: 'items.food_id',
+      .sort({ created_at: -1 })
+      .populate({ 
+        path: 'items.food_id', 
         select: 'name image_url price'
       });
 
@@ -37,13 +38,12 @@ router.get("/:userId", async (req, res) => {
         .status(404)
         .json({ message: "Không có đơn hàng nào cho user này" });
     }
-    console.log("đang ở order: ", orders);
-    
+
     res.json(orders);
   } catch (err) {
     console.error("❌ Lỗi khi lấy đơn hàng theo userId:", err);
-    res.status(500).json({ message: "Lỗi server", error: err.message });
-  }
+    res.status(500).json({ message: "Lỗi server", error: err.message }); 
+  } 
 });
 
 // 🔹 GET /api/orders/detail/:orderId → Trả về chi tiết đơn hàng (kèm thông tin món ăn)
