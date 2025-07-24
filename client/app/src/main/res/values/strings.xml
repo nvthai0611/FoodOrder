@@ -86,5 +86,10 @@
     <string name="total_placeholder">$0.00</string>
     <string name="phone_placeholder">00000000000</string>
 
+    <!-- Fragment -->
+    <string name="Home">Home</string>
+    <string name="Orders">Orders</string>
+    <string name="Favorite">Favorite</string>
+    <string name="Profile">Profile</string>
 
 </resources>
